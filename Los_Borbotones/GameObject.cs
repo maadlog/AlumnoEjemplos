@@ -16,6 +16,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public abstract void Init();
         public abstract void Update(float elapsedTime);
         public abstract void Render(float elapsedTime);
+        
+        public void dispose()
+        {
+            mesh.dispose();
+        }
 
         public Vector3 getPosition()
         {

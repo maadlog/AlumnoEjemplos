@@ -118,7 +118,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// </summary>
         public override void close()
         {
-
+            gameManager.close();
         }
 
     }

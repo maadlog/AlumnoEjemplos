@@ -57,5 +57,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             player1.Render(elapsedTime);
             scene.renderAll();
         }
+
+        internal void close()
+        {
+            scene.disposeAll();
+            player1.dispose();
+        }
     }
 }
