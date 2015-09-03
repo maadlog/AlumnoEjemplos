@@ -88,6 +88,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
+    <Compile Include="Los_Borbotones\Enemy.cs" />
+    <Compile Include="Los_Borbotones\GameManager.cs" />
+    <Compile Include="Los_Borbotones\GameObject.cs" />
+    <Compile Include="Los_Borbotones\Player1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
