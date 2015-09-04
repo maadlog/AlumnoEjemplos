@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Los_Borbotones\Enemy_lvl_1.cs" />
     <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
     <Compile Include="Los_Borbotones\Enemy.cs" />
     <Compile Include="Los_Borbotones\GameManager.cs" />
