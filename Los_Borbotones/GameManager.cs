@@ -33,11 +33,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         #endregion
 
         Player1 player1 = new Player1();
-        List<Enemy> enemies;
+        List<Enemy> enemies = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;
         TgcScene scene;
+        float SPAWN_TIME = 1f;
+        float SPAWN_TIME_COUNTER = 0f;
+
 
         internal void Init()
         {
@@ -52,13 +55,24 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
+            SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
             player1.Update(elapsedTime);
+            if (SPAWN_TIME_COUNTER > SPAWN_TIME) { 
+                Enemy enemigo = new Enemy_lvl_1();
+                enemies.Add(enemigo);
+                enemigo.Init();
+                SPAWN_TIME_COUNTER = 0;
+            }
+
         }
 
         internal void Render(float elapsedTime)
         {
             player1.Render(elapsedTime);
             scene.renderAll();
+            foreach(Enemy enemigo in enemies ){
+                enemigo.Render(elapsedTime);
+            }
         }
 
         internal void close()
