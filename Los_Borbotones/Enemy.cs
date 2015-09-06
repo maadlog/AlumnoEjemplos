@@ -5,7 +5,6 @@ using System.Text;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class Enemy : GameObject
     abstract class Enemy : GameObject
     {
         public float MOVEMENT_SPEED;
@@ -24,7 +23,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Render(float elapsedTime)
         {
-            throw new NotImplementedException();
+            this.mesh.render();
         }
     }
 }
