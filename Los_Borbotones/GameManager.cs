@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class GameManager
+    public class GameManager
     {
         #region Singleton
         private static volatile GameManager instance;
@@ -35,7 +36,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         List<Enemy> enemies;
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
-        public static int ScreenHeight, ScreenWidth;
+        public int ScreenHeight, ScreenWidth;
         TgcScene scene;
 
         internal void Init()
@@ -45,6 +46,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcSceneLoader loader = new TgcSceneLoader();
             scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
 
+            ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
+            ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
         }
 
         internal void Update(float elapsedTime)
@@ -62,6 +65,22 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             scene.disposeAll();
             player1.dispose();
+        }
+
+        public void fireWeapon()
+        {
+            int sh = GameManager.Instance.ScreenHeight;
+            int sw = GameManager.Instance.ScreenWidth;
+
+            Vector3 halfScreen = new Vector3(sw / 2, sh / 2, 0);
+            TgcRay ray = new TgcRay(GuiController.Instance.FpsCamera.Position, GuiController.Instance.FpsCamera.LookAt);
+            Vector3 newPosition = new Vector3(0, 0, 0);
+            foreach(Enemy enemy in enemies){
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemy.mesh.BoundingBox, out newPosition))
+                {
+                    //enemy.die();
+                }
+            }
         }
     }
 }

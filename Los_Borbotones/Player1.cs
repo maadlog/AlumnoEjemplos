@@ -1,9 +1,13 @@
 ﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.Input;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -12,6 +16,9 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         float WEAPON_ORIENTATION_Y;
         Vector3 WEAPON_OFFSET;
+        float HITSCAN_DELAY;
+        float FIRE_DELAY = 0;
+        float MAX_DELAY = 2;
 
         public override void Init()
         {
@@ -20,13 +27,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
             mesh = scene.Meshes[0];
 
-            ///////////////CONFIGURAR CAMARA PRIMERA PERSONA//////////////////
+            ///////////////CONFIGURAR CAMARA PRIMERA PERSONA CUSTOM//////////////////
             //Camara en primera persona, tipo videojuego FPS
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
             //Por default la camara FPS viene desactivada
-            GuiController.Instance.FpsCamera.Enable = true;
+            CustomFpsCamera.Instance.Enable = true;
+            GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 20, 0), new Vector3(0, 0, -1000));
+            CustomFpsCamera.Instance.setCamera(new Vector3(0, 20, 0), new Vector3(0, 0, -1000));
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
@@ -36,6 +44,17 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
             WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
+
+            //Procesamos input de teclado
+            TgcD3dInput input = GuiController.Instance.D3dInput;
+            if (input.keyDown(Key.E) && FIRE_DELAY <= 0)
+            {
+                FIRE_DELAY = MAX_DELAY;
+                //GameManager.Instance.fireWeapon();
+                CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
+            }
+
+            if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
             mesh.Transform = getWeaponTransform(); 
         }
@@ -48,13 +67,16 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public Matrix getWeaponTransform()
         {
-            Matrix fpsMatrixInv = Matrix.Invert(GuiController.Instance.FpsCamera.ViewMatrix);
+            Matrix fpsMatrixInv = Matrix.Invert(CustomFpsCamera.Instance.ViewMatrix);
 
-            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET);
+            float weaponRecoil = FIRE_DELAY/MAX_DELAY;
+
+            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET + new Vector3(0,0, 4* -weaponRecoil));
             Matrix weaponScale = Matrix.Scaling(0.5f, 0.5f, 0.5f);
             Matrix weaponRotationY = Matrix.RotationY(WEAPON_ORIENTATION_Y);
 
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
         }
+
     }
 }
