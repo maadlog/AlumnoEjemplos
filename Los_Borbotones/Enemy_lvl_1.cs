@@ -25,12 +25,13 @@ namespace AlumnoEjemplos.Los_Borbotones
              mesh.AutoTransformEnable = false;
 
              mesh.Transform = CreatorMatrixPosition();
+             this.posicionActual = CreatorMatrixPosition();
                    
             }
         private Matrix CreatorMatrixPosition()
         {
             Random random = new Random();
-            this.ANGLE = random.Next(0, (int)Math.PI);
+            this.ANGLE = random.Next(0, 360) / (int)Math.PI;
 
             Matrix fpsPos = Matrix.Translation(GuiController.Instance.FpsCamera.getPosition());
 
