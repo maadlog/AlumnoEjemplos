@@ -94,6 +94,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             set { acceleration = value; }
         }
 
+        float zoom;
+        /// <summary>
+        /// Zoom de la camara=?
+        /// </summary>
+        public float Zoom
+        {
+            get { return zoom; }
+            set { zoom = value; }
+        }
+
         bool accelerationEnable;
         /// <summary>
         /// Activa o desactiva el efecto de Aceleración/Desaceleración
@@ -222,6 +232,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             velocity = CAMERA_VELOCITY;
             viewMatrix = Matrix.Identity;
             setPosition(CAMERA_POS);
+            zoom = 0f;
 
             rotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
         }
@@ -275,6 +286,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             setCamera(pos, lookAt, DEFAULT_UP_VECTOR);
         }
+
 
         /// <summary>
         /// Moves the camera by dx world units to the left or right; dy
@@ -643,8 +655,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 rotate(heading, pitch, 0.0f);
             }
+
+            //Cambiar el FOV de la proyeccion para dar efecto "zoom"
+
+            GuiController.Instance.D3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI / 4) * (1.01f-zoom), 2f, 1.0f, 1000.0f);
             
-                
+
             updatePosition(direction, elapsedTimeSec);
         }
 
@@ -658,7 +674,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                 return;
             }
 
+        //    d3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI/4) * zoom, (16/9) , 1.0f, 500.0f);
             d3dDevice.Transform.View = viewMatrix;
+
         }
 
         /// <summary>

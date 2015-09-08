@@ -19,6 +19,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         float HITSCAN_DELAY;
         float FIRE_DELAY = 0;
         float MAX_DELAY = 2;
+        float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
+        bool zoomEnabled = false;
 
         public override void Init()
         {
@@ -38,6 +40,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
+
         }
 
         public override void Update(float elapsedTime)
@@ -56,7 +59,25 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
+            if (input.keyPressed(Key.LeftShift))
+            {
+                zoomCamera();
+            }
+
             mesh.Transform = getWeaponTransform(); 
+        
+        }
+
+        public void zoomCamera()
+        {
+            if (zoomEnabled)
+            {
+                CustomFpsCamera.Instance.Zoom = 0;
+                zoomEnabled = false;
+            } else {
+                CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
+                zoomEnabled = true;
+            }
         }
 
         public override void Render(float elapsedTime)

@@ -69,8 +69,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("lookatY", 0);
-
-
+            
 
             ///////////////MODIFIERS//////////////////
 
