@@ -673,8 +673,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 return;
             }
-
-        //    d3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI/4) * zoom, (16/9) , 1.0f, 500.0f);
+            
             d3dDevice.Transform.View = viewMatrix;
 
         }
