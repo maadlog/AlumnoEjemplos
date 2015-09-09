@@ -45,6 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix Traslacion = Matrix.Translation(vectorDireccion * MOVEMENT_SPEED * elapsedTime);
            
             this.mesh.Transform =  MatOrientarObjeto * posicionActual * Traslacion;
+            this.mesh.BoundingBox.transform(MatOrientarObjeto * posicionActual * Traslacion);
             posicionActual = posicionActual * Traslacion;
             
         }
