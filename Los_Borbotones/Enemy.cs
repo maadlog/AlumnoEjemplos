@@ -11,13 +11,15 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     abstract class Enemy : GameObject
     {
-        public float MOVEMENT_SPEED;
+        public float MOVEMENT_SPEED = 10f;
         public float SPAWN_RADIUS;
         public float ANGLE;
         public Matrix posicionActual;
-        
-
+        public float Angulo = 0f;
+        public Vector3 vectorDireccionAnterior = new Vector3(1, 0, 0);
+        public Vector3 Normal;
         public override void Init()
+            
         {
             throw new NotImplementedException();
         }
@@ -26,12 +28,24 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
        Device d3dDevice = GuiController.Instance.D3dDevice;
             Vector3 vectorDireccion;
-            Vector3 inicio = new Vector3(0, 0, 0);
-            vectorDireccion = ( CustomFpsCamera.Instance.Position );
+            
+            
+            vectorDireccion = ( CustomFpsCamera.Instance.Position - new Vector3 (posicionActual.M41, posicionActual.M42, posicionActual.M43) );
+            Vector3 vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
+            vectorDireccionRotacion.Normalize();
+            
+            
             vectorDireccion.Normalize();
-            Vector3 normal = new Vector3(0,1,0);
-            Matrix MatOrientarObjeto = Matrix.RotationAxis(Vector3.Cross(normal, vectorDireccion), (float)Math.Acos(Vector3.Dot(normal, vectorDireccion)));
-            this.mesh.Transform = MatOrientarObjeto * posicionActual;
+            
+            //Matrix MatOrientarObjeto = Matrix.RotationAxis(Vector3.Cross(normal, vectorDireccion), (float)Math.Acos(Vector3.Dot(normal, vectorDireccion)));
+            Angulo = (float)Math.Acos(Vector3.Dot(Normal, vectorDireccionRotacion));
+            
+            Matrix MatOrientarObjeto = Matrix.RotationY(Angulo);
+            
+            Matrix Traslacion = Matrix.Translation(vectorDireccion * MOVEMENT_SPEED * elapsedTime);
+           
+            this.mesh.Transform =  MatOrientarObjeto * posicionActual * Traslacion;
+            posicionActual = posicionActual * Traslacion;
             
         }
 
