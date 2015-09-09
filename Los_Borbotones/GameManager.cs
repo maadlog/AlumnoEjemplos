@@ -1,9 +1,11 @@
 ﻿using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
@@ -41,6 +43,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         float SPAWN_TIME = 1f;
         float SPAWN_TIME_COUNTER = 0f;
 
+        TgcText2d scoreText;
+        float killCount = 0;
+
+        TgcArrow arrow = new TgcArrow();
 
         internal void Init()
         {
@@ -51,6 +57,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
+
+            //Crear texto 1, básico
+            scoreText = new TgcText2d();
+            scoreText.Text = "Score: " + killCount;
+
         }
 
         internal void Update(float elapsedTime)
@@ -64,15 +75,19 @@ namespace AlumnoEjemplos.Los_Borbotones
                 SPAWN_TIME_COUNTER = 0;
             }
 
+            scoreText.Text = "Score: " + killCount;
         }
 
         internal void Render(float elapsedTime)
         {
-            player1.Render(elapsedTime);
+
             scene.renderAll();
             foreach(Enemy enemigo in enemies ){
                 enemigo.Render(elapsedTime);
             }
+            scoreText.render();
+
+            player1.Render(elapsedTime);
         }
 
         internal void close()
@@ -83,16 +98,24 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void fireWeapon()
         {
-            int sh = GameManager.Instance.ScreenHeight;
-            int sw = GameManager.Instance.ScreenWidth;
-
-            Vector3 halfScreen = new Vector3(sw / 2, sh / 2, 0);
-            TgcRay ray = new TgcRay(GuiController.Instance.FpsCamera.Position, GuiController.Instance.FpsCamera.LookAt);
+            TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
-            foreach(Enemy enemy in enemies){
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemy.mesh.BoundingBox, out newPosition))
+
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            { 
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
                 {
-                    //enemy.die();
+                    killCount++;
+
+                    if (enemies.Count == 0)
+                    {
+                        Enemy enemigo = new Enemy_lvl_1();
+                        enemies.Add(enemigo);
+                        enemigo.Init();
+                    }
+
+                    enemies[i].dispose();
+                    enemies.Remove(enemies[i]);
                 }
             }
         }

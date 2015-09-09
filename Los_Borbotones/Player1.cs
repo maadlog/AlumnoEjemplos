@@ -3,10 +3,13 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
@@ -19,6 +22,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         float HITSCAN_DELAY;
         float FIRE_DELAY = 0;
         float MAX_DELAY = 2;
+        TgcStaticSound sound = new TgcStaticSound();
+        string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
 
         public override void Init()
         {
@@ -50,18 +55,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (input.keyDown(Key.E) && FIRE_DELAY <= 0)
             {
                 FIRE_DELAY = MAX_DELAY;
-                //GameManager.Instance.fireWeapon();
+                GameManager.Instance.fireWeapon();
                 CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
+                playSound(weaponSoundDir);
             }
 
             if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
-            mesh.Transform = getWeaponTransform(); 
+            mesh.Transform = getWeaponTransform();            
         }
 
         public override void Render(float elapsedTime)
         {
             mesh.render();
+
             GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 
@@ -78,5 +85,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
         }
 
+        private void playSound(string dir)
+        {
+            sound.dispose();
+            sound.loadSound(dir);
+            sound.play();
+        }
     }
 }

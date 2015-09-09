@@ -25,6 +25,7 @@ namespace AlumnoEjemplos.Los_Borbotones
              mesh.AutoTransformEnable = false;
 
              mesh.Transform = CreatorMatrixPosition();
+             mesh.BoundingBox.transform(CreatorMatrixPosition());
                    
             }
         private Matrix CreatorMatrixPosition()

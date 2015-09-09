@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             this.mesh.render();
+            this.mesh.BoundingBox.render();
         }
     }
 }

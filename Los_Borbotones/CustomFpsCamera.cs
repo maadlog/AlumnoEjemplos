@@ -311,6 +311,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             eye.Y += direction.Y * amount.Y;
             eye.Z += direction.Z * amount.Z;
 
+            lookAt = eye + viewDir;
             reconstructViewMatrix(false);
         }
 
@@ -407,6 +408,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         private void setPosition(Vector3 pos)
         {
             eye = pos;
+            lookAt = eye + viewDir;
             reconstructViewMatrix(false);
         }
 
