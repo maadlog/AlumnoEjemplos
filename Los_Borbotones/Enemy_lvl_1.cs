@@ -25,15 +25,18 @@ namespace AlumnoEjemplos.Los_Borbotones
              mesh.AutoTransformEnable = false;
 
              mesh.Transform = CreatorMatrixPosition();
+
              mesh.BoundingBox.transform(CreatorMatrixPosition());
+
+             this.posicionActual = CreatorMatrixPosition();
                    
             }
         private Matrix CreatorMatrixPosition()
         {
             Random random = new Random();
-            this.ANGLE = random.Next(0, (int)Math.PI);
+            this.ANGLE = random.Next(0, 360) / (int)Math.PI;
 
-            Matrix fpsPos = Matrix.Translation(GuiController.Instance.FpsCamera.getPosition());
+            Matrix fpsPos = Matrix.Translation(CustomFpsCamera.Instance.Position);
 
             Matrix radio = Matrix.Translation(this.SPAWN_RADIUS, 0, 0);
 
@@ -41,7 +44,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Matrix giro = Matrix.RotationY(ANGLE);
 
-            return  escala * radio * giro * fpsPos;
+            Matrix Resultado = escala * radio * giro * fpsPos;
+
+            Normal = (CustomFpsCamera.Instance.Position - (new Vector3(Resultado.M41, 0, Resultado.M43)));
+           // Normal = new Vector3(1, 0, 0);
+            Normal.Normalize();
+            return  Resultado;
+
+
         }
     }
 }

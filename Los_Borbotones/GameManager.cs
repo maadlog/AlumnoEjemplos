@@ -74,6 +74,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemigo.Init();
                 SPAWN_TIME_COUNTER = 0;
             }
+            foreach (Enemy enemigo in enemies)
+            {
+                enemigo.Update(elapsedTime);
+            }
 
             scoreText.Text = "Score: " + killCount;
         }
