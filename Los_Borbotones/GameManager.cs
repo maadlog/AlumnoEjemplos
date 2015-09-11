@@ -8,6 +8,7 @@ using TgcViewer;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Terrain;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -38,10 +39,17 @@ namespace AlumnoEjemplos.Los_Borbotones
         List<Enemy> enemies = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
-        public int ScreenHeight, ScreenWidth;
-        TgcScene scene;
+        public int ScreenHeight, ScreenWidth;        
         float SPAWN_TIME = 1f;
         float SPAWN_TIME_COUNTER = 0f;
+
+        TgcScene Vegetation;
+        TgcSimpleTerrain terrain;
+        string currentHeightmap;
+        string currentTexture;
+        float currentScaleXZ = 20f;
+        float currentScaleY = 1f;
+        private List<TgcMesh> vegetation;
 
         TgcText2d scoreText;
         float killCount = 0;
@@ -52,8 +60,16 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             player1.Init();
 
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1.jpg";
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
+            terrain = new TgcSimpleTerrain();
+            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
+            terrain.loadTexture(currentTexture);
+
+            this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Scenes\\Ciudad\\Ciudad-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\20%-veg-map1-TgcScene.xml");
+            vegetation = Vegetation.Meshes;
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
@@ -84,8 +100,15 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
+            terrain.render();
+            //foreach (TgcMesh v in vegetation)
+            int i;
+            for (i = 1; i < 10; i++)
+            {
+                vegetation[i].render();
+                //if (RenderBoundingBoxes) v.BoundingBox.render();
+            }
 
-            scene.renderAll();
             foreach(Enemy enemigo in enemies ){
                 enemigo.Render(elapsedTime);
             }
@@ -96,7 +119,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void close()
         {
-            scene.disposeAll();
+            Vegetation.disposeAll();
+            terrain.dispose();
             player1.dispose();
         }
 

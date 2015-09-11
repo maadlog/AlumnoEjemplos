@@ -31,7 +31,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Armas\\Canon\\Canon.max-TgcScene.xml");
+            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             ///////////////CONFIGURAR CAMARA PRIMERA PERSONA CUSTOM//////////////////
