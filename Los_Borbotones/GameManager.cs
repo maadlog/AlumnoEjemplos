@@ -47,8 +47,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSimpleTerrain terrain;
         string currentHeightmap;
         string currentTexture;
-        float currentScaleXZ = 20f;
-        float currentScaleY = 1f;
+        float currentScaleXZ = 100f;
+        float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
 
         TgcText2d scoreText;
@@ -60,7 +60,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             player1.Init();
 
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1c.jpg";
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
@@ -68,7 +68,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\20%-veg-map1-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100%-veg-map1c-TgcScene.xml");
             vegetation = Vegetation.Meshes;
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
@@ -103,7 +103,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             terrain.render();
             //foreach (TgcMesh v in vegetation)
             int i;
-            for (i = 1; i < 10; i++)
+            for (i = 1; i < 48; i++)
             {
                 vegetation[i].render();
                 //if (RenderBoundingBoxes) v.BoundingBox.render();
