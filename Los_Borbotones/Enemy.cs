@@ -12,33 +12,38 @@ namespace AlumnoEjemplos.Los_Borbotones
     abstract class Enemy : GameObject
     {
         public float MOVEMENT_SPEED = 10f;
-        public float SPAWN_RADIUS;
-        public float ANGLE;
+        public float SPAWN_RADIUS= 200f;
         public Matrix posicionActual;
-        public float Angulo = 0f;
-        public Vector3 vectorDireccionAnterior = new Vector3(1, 0, 0);
         public Vector3 Normal;
-        public override void Init()
-            
+        public float MESH_SCALE;
+        Vector3 vectorDireccion;
+        Vector3 vectorDireccionRotacion;
+        Device d3dDevice = GuiController.Instance.D3dDevice;
+
+        public override void Init()   
         {
-            throw new NotImplementedException();
+            mesh.AutoTransformEnable = false;
+
+            mesh.Transform = CreatorMatrixPosition();
+
+            mesh.BoundingBox.transform(CreatorMatrixPosition());
+
+            Matrix matt = Matrix.Translation(new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43));
+            Matrix matScale = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
+
+            Matrix giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+            this.posicionActual = matScale * giroInicial * matt;
         }
 
         public override void Update(float elapsedTime)
         {
-       Device d3dDevice = GuiController.Instance.D3dDevice;
-            Vector3 vectorDireccion;
-            
-            
             vectorDireccion = ( CustomFpsCamera.Instance.Position - new Vector3 (posicionActual.M41, posicionActual.M42, posicionActual.M43) );
-            Vector3 vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
+            vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
             vectorDireccionRotacion.Normalize();
             
             
             vectorDireccion.Normalize();
             
-            //Matrix MatOrientarObjeto = Matrix.RotationAxis(Vector3.Cross(normal, vectorDireccion), (float)Math.Acos(Vector3.Dot(normal, vectorDireccion)));
-            //Angulo = (float)Math.Acos(Vector3.Dot(Normal, vectorDireccionRotacion));
 
             Matrix MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
             
@@ -78,11 +83,35 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             return m_mWorld;
         }
+        private Matrix CreatorMatrixPosition()
+        {
+            Random random = new Random();
+            float ANGLE = random.Next(0, 360) / (int)Math.PI;
 
+            Matrix fpsPos = Matrix.Translation(CustomFpsCamera.Instance.Position);
+
+            Matrix radio = Matrix.Translation(this.SPAWN_RADIUS, 0, 0);
+
+            Matrix escala = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
+
+            Matrix giro = Matrix.RotationY(ANGLE);
+
+
+
+            Matrix Resultado = escala * radio * giro * fpsPos;
+
+            Normal = (CustomFpsCamera.Instance.Position - (new Vector3(Resultado.M41, 0, Resultado.M43)));
+            // Normal = new Vector3(1, 0, 0);
+            Normal.Normalize();
+            return Resultado;
+
+
+        }
         public override void Render(float elapsedTime)
         {
             this.mesh.render();
             this.mesh.BoundingBox.render();
         }
+
     }
 }
