@@ -107,6 +107,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
 
 
+
+
+
             gameManager.Update(elapsedTime);
             gameManager.Render(elapsedTime);
         }
