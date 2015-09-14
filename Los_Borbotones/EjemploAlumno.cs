@@ -39,7 +39,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// </summary>
         public override string getDescription()
         {
-            return "Sniper - Descripcion de la idea";
+            return @"Sniper - Descripcion de la idea
+Presionar L para capturar el mouse.";
         }
 
         /// <summary>

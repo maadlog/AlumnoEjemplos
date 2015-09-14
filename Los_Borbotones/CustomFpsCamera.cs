@@ -266,8 +266,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             viewMatrix = Matrix.Identity;
             setPosition(CAMERA_POS);
             zoom = 0f;
-
-            rotateMouseButton = TgcD3dInput.MouseButtons.BUTTON_LEFT;
         }
 
 

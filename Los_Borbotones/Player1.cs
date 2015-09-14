@@ -26,6 +26,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
         bool zoomEnabled = false;
+        float ZOOM_DELAY = 0;
+        float MAX_ZOOM_DELAY = 0.2f;
 
         public override void Init()
         {
@@ -55,7 +57,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Procesamos input de teclado
             TgcD3dInput input = GuiController.Instance.D3dInput;
-            if (input.keyDown(Key.E) && FIRE_DELAY <= 0)
+            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && FIRE_DELAY <= 0)
             {
                 FIRE_DELAY = MAX_DELAY;
                 GameManager.Instance.fireWeapon();
@@ -65,10 +67,13 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
-            if (input.keyPressed(Key.LeftShift))
+            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0)
             {
+                ZOOM_DELAY = MAX_ZOOM_DELAY;
                 zoomCamera();
             }
+
+            if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
             mesh.Transform = getWeaponTransform(); 
         
