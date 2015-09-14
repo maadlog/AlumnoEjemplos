@@ -52,6 +52,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        TgcSprite cross;
 
         TgcText2d scoreText;
         float killCount = 0;
@@ -76,9 +77,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
 
+
+            //-------------User Interface------------
             //Crear texto 1, básico
             scoreText = new TgcText2d();
             scoreText.Text = "Score: " + killCount;
+
+            cross = new TgcSprite();
+            cross.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\cross.png");
+
+            Size screenSize = GuiController.Instance.Panel3d.Size;
+            Size tamaño = cross.Texture.Size;
+            cross.Scaling = new Vector2(0.1f, 0.1f);
+            Vector2 size = new Vector2( tamaño.Width * cross.Scaling.X, tamaño.Height*cross.Scaling.Y);
+            cross.Position = new Vector2((screenSize.Width - size.X) / 2, (screenSize.Height - size.Y) /2);
 
         }
 
@@ -126,6 +138,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText.render();
 
             player1.Render(elapsedTime);
+
+            //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
+            GuiController.Instance.Drawer2D.beginDrawSprite();
+
+            //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
+            cross.render();
+
+            //Finalizar el dibujado de Sprites
+            GuiController.Instance.Drawer2D.endDrawSprite();
+
+
         }
 
         internal void close()
