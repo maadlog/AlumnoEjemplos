@@ -33,6 +33,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             
                    
             }
-       
+        override
+        public void Update(float elapsedTime)
+        {
+            base.Update(elapsedTime);
+            
+        }
+        public override void Render(float elapsedTime)
+        {
+            base.Render(elapsedTime);
+            
+        }
     }
 }

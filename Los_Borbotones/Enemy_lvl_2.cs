@@ -6,6 +6,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -24,7 +25,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             base.Init();
 
-            
+            HEADSHOT_BOUNDINGBOX = new TgcBoundingBox();
         }
     }
 }

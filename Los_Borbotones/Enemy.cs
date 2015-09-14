@@ -24,7 +24,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public  Matrix giroInicial;
         public TgcBoundingBox HEADSHOT_BOUNDINGBOX;
         public Matrix posicionactualHeadshot;
-
+        public Matrix Traslacion;
+        public Matrix MatOrientarObjeto;
         public override void Init()   
         {
             mesh.AutoTransformEnable = false;
@@ -50,15 +51,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             vectorDireccion.Normalize();
             
 
-            Matrix MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
+            MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
             
-            Matrix Traslacion = Matrix.Translation(vectorDireccion * MOVEMENT_SPEED * elapsedTime);
+            Traslacion = Matrix.Translation(vectorDireccion * MOVEMENT_SPEED * elapsedTime);
            
             this.mesh.Transform =  MatOrientarObjeto * posicionActual * Traslacion;
             this.mesh.BoundingBox.transform(MatOrientarObjeto * posicionActual * Traslacion);
-            this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionactualHeadshot * Traslacion);
+            
             posicionActual = posicionActual * Traslacion;
+            this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionactualHeadshot * Traslacion);
             posicionactualHeadshot = posicionactualHeadshot * Traslacion;
+           
             
         }
 
@@ -119,6 +122,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.mesh.render();
             this.mesh.BoundingBox.render();
             this.HEADSHOT_BOUNDINGBOX.render();
+            
         }
 
     }

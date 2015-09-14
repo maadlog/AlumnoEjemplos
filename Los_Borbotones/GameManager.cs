@@ -42,6 +42,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public int ScreenHeight, ScreenWidth;        
         float SPAWN_TIME = 5f;
         float SPAWN_TIME_COUNTER = 0f;
+        public Random random = new Random();
+        int rand;
 
         TgcScene Vegetation;
         TgcSimpleTerrain terrain;
@@ -84,10 +86,19 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
             player1.Update(elapsedTime);
-            if (SPAWN_TIME_COUNTER > SPAWN_TIME) { 
+            if (SPAWN_TIME_COUNTER > SPAWN_TIME) {
+                rand = random.Next(1, 3);
+                if (rand == 1){
                 Enemy enemigo = new Enemy_lvl_1();
                 enemies.Add(enemigo);
                 enemigo.Init();
+                }
+                if (rand == 2)
+                {
+                    Enemy enemigo = new Enemy_lvl_2();
+                    enemies.Add(enemigo);
+                    enemigo.Init();
+                }
                 SPAWN_TIME_COUNTER = 0;
             }
             foreach (Enemy enemigo in enemies)
