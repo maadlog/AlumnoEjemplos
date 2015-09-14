@@ -36,7 +36,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         #endregion
 
         Player1 player1 = new Player1();
-        List<Enemy> enemies = new List<Enemy>();
+        List<Enemy> enemies_lvl_1 = new List<Enemy>();
+        List<Enemy> enemies_lvl_2 = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
@@ -102,18 +103,23 @@ namespace AlumnoEjemplos.Los_Borbotones
                 rand = random.Next(1, 3);
                 if (rand == 1){
                 Enemy enemigo = new Enemy_lvl_1();
-                enemies.Add(enemigo);
+                enemies_lvl_1.Add(enemigo);
                 enemigo.Init();
                 }
                 if (rand == 2)
                 {
                     Enemy enemigo = new Enemy_lvl_2();
-                    enemies.Add(enemigo);
+                    enemies_lvl_2.Add(enemigo);
                     enemigo.Init();
                 }
                 SPAWN_TIME_COUNTER = 0;
             }
-            foreach (Enemy enemigo in enemies)
+            foreach (Enemy enemigo in enemies_lvl_1)
+            {
+                enemigo.Update(elapsedTime);
+            }
+
+            foreach (Enemy enemigo in enemies_lvl_2)
             {
                 enemigo.Update(elapsedTime);
             }
@@ -132,7 +138,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                 //if (RenderBoundingBoxes) v.BoundingBox.render();
             }
 
-            foreach(Enemy enemigo in enemies ){
+            foreach(Enemy enemigo in enemies_lvl_1 ){
+                enemigo.Render(elapsedTime);
+            }
+            foreach (Enemy enemigo in enemies_lvl_2)
+            {
                 enemigo.Render(elapsedTime);
             }
             scoreText.render();
@@ -163,23 +173,56 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
 
-            for (int i = enemies.Count - 1; i >= 0; i--)
-            { 
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
+            for (int i = enemies_lvl_1.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].mesh.BoundingBox, out newPosition))
                 {
-                    killCount++;
+                    killCount++;                    
+                }
 
-                    if (enemies.Count == 0)
-                    {
-                        Enemy enemigo = new Enemy_lvl_1();
-                        enemies.Add(enemigo);
-                        enemigo.Init();
-                    }
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].HEADSHOT_BOUNDINGBOX, out newPosition))
+                {
+                    killCount++;                    
+                }
 
-                    enemies[i].dispose();
-                    enemies.Remove(enemies[i]);
+                eliminarEnemigo_lvl_1(i);
+            }
+
+            for (int i = enemies_lvl_2.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_2[i].mesh.BoundingBox, out newPosition))
+                {
+                    killCount = killCount + 3;
+
+                    eliminarEnemigo_lvl_2(i);
                 }
             }
+        }
+
+        public void eliminarEnemigo_lvl_1(int i)
+        {
+            if (enemies_lvl_1.Count == 0)
+            {
+                Enemy enemigo = new Enemy_lvl_1();
+                enemies_lvl_1.Add(enemigo);
+                enemigo.Init();
+            }
+
+            enemies_lvl_1[i].dispose();
+            enemies_lvl_1.Remove(enemies_lvl_1[i]);
+        }
+
+        public void eliminarEnemigo_lvl_2(int i)
+        {
+            if (enemies_lvl_2.Count == 0)
+            {
+                Enemy enemigo = new Enemy_lvl_1();
+                enemies_lvl_2.Add(enemigo);
+                enemigo.Init();
+            }
+
+            enemies_lvl_2[i].dispose();
+            enemies_lvl_2.Remove(enemies_lvl_2[i]);
         }
     }
 }
