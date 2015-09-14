@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
 
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -19,6 +20,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         Vector3 vectorDireccion;
         Vector3 vectorDireccionRotacion;
         Device d3dDevice = GuiController.Instance.D3dDevice;
+        public float SPAWN_HEIGHT = 0;
+        public  Matrix giroInicial;
+        public TgcBoundingBox HEADSHOT_BOUNDINGBOX;
+        public Matrix posicionactualHeadshot;
 
         public override void Init()   
         {
@@ -31,7 +36,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix matt = Matrix.Translation(new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43));
             Matrix matScale = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
 
-            Matrix giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+        
             this.posicionActual = matScale * giroInicial * matt;
         }
 
@@ -51,7 +56,9 @@ namespace AlumnoEjemplos.Los_Borbotones
            
             this.mesh.Transform =  MatOrientarObjeto * posicionActual * Traslacion;
             this.mesh.BoundingBox.transform(MatOrientarObjeto * posicionActual * Traslacion);
+            this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionactualHeadshot * Traslacion);
             posicionActual = posicionActual * Traslacion;
+            posicionactualHeadshot = posicionactualHeadshot * Traslacion;
             
         }
 
@@ -90,7 +97,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Matrix fpsPos = Matrix.Translation(CustomFpsCamera.Instance.Position);
 
-            Matrix radio = Matrix.Translation(this.SPAWN_RADIUS, 0, 0);
+            Matrix radio = Matrix.Translation(this.SPAWN_RADIUS, SPAWN_HEIGHT, 0);
 
             Matrix escala = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
 
@@ -111,6 +118,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             this.mesh.render();
             this.mesh.BoundingBox.render();
+            this.HEADSHOT_BOUNDINGBOX.render();
         }
 
     }
