@@ -40,7 +40,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
-        float SPAWN_TIME = 1f;
+        float SPAWN_TIME = 5f;
         float SPAWN_TIME_COUNTER = 0f;
 
         TgcScene Vegetation;

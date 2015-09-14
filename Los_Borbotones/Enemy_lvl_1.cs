@@ -28,7 +28,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
              mesh.BoundingBox.transform(CreatorMatrixPosition());
 
-             this.posicionActual = CreatorMatrixPosition();
+            Matrix matt= Matrix.Translation(new Vector3(mesh.Transform.M41,mesh.Transform.M42,mesh.Transform.M43));
+            Matrix matScale = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
+
+            Matrix giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+             this.posicionActual = matScale* giroInicial * matt;
                    
             }
         private Matrix CreatorMatrixPosition()
@@ -43,6 +47,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix escala = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
 
             Matrix giro = Matrix.RotationY(ANGLE);
+
+            
 
             Matrix Resultado = escala * radio * giro * fpsPos;
 
