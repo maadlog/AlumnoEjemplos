@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
+using System.Windows.Forms;
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
@@ -62,6 +64,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         bool moveLeftPressed = false;
         bool moveUpPressed = false;
         bool moveDownPressed = false;
+
+        private bool lockCam = false;
+        protected Point mouseCenter;
 
         #region Getters y Setters
 
@@ -210,6 +215,34 @@ namespace AlumnoEjemplos.Los_Borbotones
         public CustomFpsCamera()
         {
             resetValues();
+            Control focusWindows = GuiController.Instance.D3dDevice.CreationParameters.FocusWindow;
+            mouseCenter = focusWindows.PointToScreen(
+                new Point(
+                    focusWindows.Width / 2,
+                    focusWindows.Height / 2)
+                    );
+        }
+
+        ~CustomFpsCamera()
+        {
+            LockCam = false;
+        }
+
+        public bool LockCam
+        {
+            get { return lockCam; }
+            set
+            {
+                if (!lockCam && value)
+                {
+                    Cursor.Position = mouseCenter;
+
+                    Cursor.Hide();
+                }
+                if (lockCam && !value)
+                    Cursor.Show();
+                lockCam = value;
+            }
         }
 
         /// <summary>
@@ -652,11 +685,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             pitch = d3dInput.YposRelative * rotationSpeed;
             heading = d3dInput.XposRelative * rotationSpeed;
 
+
+            if (GuiController.Instance.D3dInput.keyPressed(Key.L))
+            {
+                LockCam = !LockCam;
+            }
+            
             //Solo rotar si se esta aprentando el boton del mouse configurado
-            if (d3dInput.buttonDown(rotateMouseButton))
+            if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
                 rotate(heading, pitch, 0.0f);
             }
+
+            if (lockCam)
+                Cursor.Position = mouseCenter;
 
             //Cambiar el FOV de la proyeccion para dar efecto "zoom"
 
