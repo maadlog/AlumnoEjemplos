@@ -7,6 +7,7 @@ using System.Text;
 using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.TgcSkeletalAnimation;
 
 
 namespace AlumnoEjemplos.Los_Borbotones 
@@ -23,6 +24,15 @@ namespace AlumnoEjemplos.Los_Borbotones
              TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
              this.mesh = scene.Meshes[0];
              giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+            //carga de animaciones
+            /* TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
+             personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
+                 GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\" + "BasicHuman-TgcSkeletalMesh.xml",
+                 new string[] { 
+                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml",
+                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "StandBy-TgcSkeletalAnim.xml",
+                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Jump-TgcSkeletalAnim.xml"
+                });*/
              
              base.Init();
              HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();

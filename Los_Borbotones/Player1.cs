@@ -91,7 +91,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             mesh.render();
 
-            GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
+           // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 
         public Matrix getWeaponTransform()
