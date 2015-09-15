@@ -12,6 +12,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     abstract class Enemy : GameObject
     {
+        public float health;
+        public float score;
         public float MOVEMENT_SPEED = 10f;
         public float SPAWN_RADIUS= 200f;
         public Matrix posicionActual;

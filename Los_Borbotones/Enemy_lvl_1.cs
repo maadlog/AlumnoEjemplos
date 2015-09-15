@@ -19,6 +19,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSkeletalMesh skeletalMesh;
         override
             public void Init(){
+                health = 100;
+                score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
              TgcSceneLoader loader = new TgcSceneLoader();

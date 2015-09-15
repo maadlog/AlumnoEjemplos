@@ -37,8 +37,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         #endregion
 
         Player1 player1 = new Player1();
-        List<Enemy> enemies_lvl_1 = new List<Enemy>();
-        List<Enemy> enemies_lvl_2 = new List<Enemy>();
+        List<Enemy> enemies = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
@@ -57,13 +56,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite cross;
 
         TgcText2d scoreText;
-        float killCount = 0;
+        float score = 0;
         TgcText2d specialKillText;
         float TEXT_DELAY = 0;
         float TEXT_DELAY_MAX = 2f;
         int killMultiTracker = 0;
-        int killColateralTracker = 0;
-        int killHeadTracker = 0;
         float KILL_DELAY = 0;
         float KILL_DELAY_MAX = 5;        
 
@@ -75,6 +72,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string ultraSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/ultrakill.wav";
         string megaSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/megakill.wav";
         string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/monsterkill.wav";
+        string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/massacre.wav";
         string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/denied.wav";
 
         TgcArrow arrow = new TgcArrow();
@@ -107,7 +105,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             scoreText = new TgcText2d();
-            scoreText.Text = "Score: " + killCount;
+            scoreText.Text = "Score: " + score;
 
             cross = new TgcSprite();
             cross.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\cross.png");
@@ -128,28 +126,23 @@ namespace AlumnoEjemplos.Los_Borbotones
                 rand = random.Next(1, 3);
                 if (rand == 1){
                 Enemy enemigo = new Enemy_lvl_1();
-                enemies_lvl_1.Add(enemigo);
+                enemies.Add(enemigo);
                 enemigo.Init();
                 }
                 if (rand == 2)
                 {
                     Enemy enemigo = new Enemy_lvl_2();
-                    enemies_lvl_2.Add(enemigo);
+                    enemies.Add(enemigo);
                     enemigo.Init();
                 }
                 SPAWN_TIME_COUNTER = 0;
             }
-            foreach (Enemy enemigo in enemies_lvl_1)
+            foreach (Enemy enemigo in enemies)
             {
                 enemigo.Update(elapsedTime);
             }
 
-            foreach (Enemy enemigo in enemies_lvl_2)
-            {
-                enemigo.Update(elapsedTime);
-            }
-
-            scoreText.Text = "Score: " + killCount;
+            scoreText.Text = "Score: " + score;
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
             if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
             if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
@@ -169,11 +162,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 //if (RenderBoundingBoxes) v.BoundingBox.render();
             }
 
-            foreach(Enemy enemigo in enemies_lvl_1 ){
-                enemigo.Render(elapsedTime);
-            }
-            foreach (Enemy enemigo in enemies_lvl_2)
-            {
+            foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
             scoreText.render();
@@ -205,103 +194,97 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
-            killColateralTracker = 0;
-            killHeadTracker = 0;
+            int killHeadTracker = 0;
 
-            for (int i = enemies_lvl_1.Count - 1; i >= 0; i--)
+            for (int i = enemies.Count - 1; i >= 0; i--)
             {
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].HEADSHOT_BOUNDINGBOX, out newPosition))
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].HEADSHOT_BOUNDINGBOX, out newPosition))
                 {
-                    killCount++;
+                    score += 1;
                     killHeadTracker++;
                     specialKillText.Text = "HEADSHOT!!";
                     TEXT_DELAY = TEXT_DELAY_MAX;
                     playSound(headshotSoundDir);
+                    enemies[i].health = 0;
                 }           
 
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].mesh.BoundingBox, out newPosition))
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
                 {
-                    killCount++;
-                    killColateralTracker++;
-                    killMultiTracker++;
-                    eliminarEnemigo_lvl_1(i);
+                    enemies[i].health -= 50;
+                    if (enemies[i].health <= 0)
+                    {
+                        score += enemies[i].score;
+                        eliminarEnemigo(i);
+                        killMultiTracker++;
+                        awardKill();
+                        KILL_DELAY = KILL_DELAY_MAX;
+                    }
                 }                
             }
-
-            for (int i = enemies_lvl_2.Count - 1; i >= 0; i--)
-            {
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_2[i].mesh.BoundingBox, out newPosition))
-                {
-                    killCount += 3;
-                    killMultiTracker++;
-                    killColateralTracker++;
-                    eliminarEnemigo_lvl_2(i);
-                }
-            }
-
-            switch(killMultiTracker){
-                case 2:
-                    specialKillText.Text = "DOUBLE KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(doubleSoundDir);
-                    break;
-                case 3:
-                    specialKillText.Text = "MULTI KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(multiSoundDir);
-                    break;
-                case 4:
-                    specialKillText.Text = "MEGA KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(megaSoundDir);
-                    break;
-                case 5:
-                    specialKillText.Text = "ULTRA KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(ultraSoundDir);
-                    break;
-                case 6:
-                    specialKillText.Text = "MONSTER KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(monsterSoundDir);
-                    break;
-                default:
-                    break;
-            }
+            
             if (killHeadTracker > 1)
             {
                 specialKillText.Text = "HEAD HUNTER!!";
                 TEXT_DELAY = TEXT_DELAY_MAX;
                 playSound(headhunterSoundDir);
+                score += killHeadTracker;
             }
-
-            KILL_DELAY = KILL_DELAY_MAX;
         }
 
-        public void eliminarEnemigo_lvl_1(int i)
+        public void eliminarEnemigo(int i)
         {
-            if (enemies_lvl_1.Count == 0)
+            if (enemies.Count == 0)
             {
                 Enemy enemigo = new Enemy_lvl_1();
-                enemies_lvl_1.Add(enemigo);
+                enemies.Add(enemigo);
                 enemigo.Init();
             }
 
-            enemies_lvl_1[i].dispose();
-            enemies_lvl_1.Remove(enemies_lvl_1[i]);
+            enemies[i].dispose();
+            enemies.Remove(enemies[i]);
         }
 
-        public void eliminarEnemigo_lvl_2(int i)
+        private void awardKill()
         {
-            if (enemies_lvl_2.Count == 0)
+            if (killMultiTracker >= 2)
             {
-                Enemy enemigo = new Enemy_lvl_2();
-                enemies_lvl_2.Add(enemigo);
-                enemigo.Init();
+                score += 2;
+                switch (killMultiTracker)
+                {
+                    case 2:
+                        specialKillText.Text = "DOUBLE KILL";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(doubleSoundDir);
+                        break;
+                    case 3:
+                        specialKillText.Text = "MULTI KILL";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(multiSoundDir);
+                        break;
+                    case 4:
+                        specialKillText.Text = "MEGA KILL";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(megaSoundDir);
+                        break;
+                    case 5:
+                        specialKillText.Text = "ULTRA KILL";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(ultraSoundDir);
+                        break;
+                    case 6:
+                        specialKillText.Text = "MONSTER KILL";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(monsterSoundDir);
+                        break;
+                    case 10:
+                        specialKillText.Text = "MASSACRE";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(massacreSoundDir);
+                        break;
+                    default:
+                        break;
+                }
             }
-
-            enemies_lvl_2[i].dispose();
-            enemies_lvl_2.Remove(enemies_lvl_2[i]);
         }
 
         private void playSound(string dir)
