@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.Los_Borbotones
            public void Init()
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
-            MESH_SCALE = 0.1f;
+            MESH_SCALE = 0.5f;
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.mesh = scene.Meshes[0];

@@ -53,7 +53,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             float y;
             GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
-            float headOffsetY = posicionactualHeadshot.M42 -= posicionActual.M42;  
+            float headOffsetY = posicionactualHeadshot.M42 - posicionActual.M42;  
             
             posicionActual.M42 = y;
             posicionactualHeadshot.M42 = headOffsetY + y;
