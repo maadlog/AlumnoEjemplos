@@ -61,13 +61,21 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcText2d specialKillText;
         float TEXT_DELAY = 0;
         float TEXT_DELAY_MAX = 2f;
-        float killMultiTracker;
-        float KILL_DELAY;
-        float KILL_DELAY_MAX;
-        float killColateralTracker;
+        int killMultiTracker = 0;
+        int killColateralTracker = 0;
+        int killHeadTracker = 0;
+        float KILL_DELAY = 0;
+        float KILL_DELAY_MAX = 5;        
 
         TgcStaticSound sound = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
+        string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headhunter.wav";
+        string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/doublekill.wav";
+        string multiSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/multikill.wav";
+        string ultraSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/ultrakill.wav";
+        string megaSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/megakill.wav";
+        string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/monsterkill.wav";
+        string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/denied.wav";
 
         TgcArrow arrow = new TgcArrow();
 
@@ -92,6 +100,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //-------------User Interface------------
             //Crear texto 1, básico
+            specialKillText = new TgcText2d();
+            specialKillText.Color = Color.Crimson;
+            specialKillText.Align = TgcText2d.TextAlign.CENTER;
+            specialKillText.Position = new Point(0, 100);
+            specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
             scoreText = new TgcText2d();
             scoreText.Text = "Score: " + killCount;
 
@@ -137,6 +151,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             scoreText.Text = "Score: " + killCount;
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
+            if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
+            if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
+                if (killMultiTracker >= 2) { playSound(deniedSoundDir); }
+                killMultiTracker = 0;
+            }
         }
 
         internal void Render(float elapsedTime)
@@ -187,22 +206,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
             killColateralTracker = 0;
+            killHeadTracker = 0;
 
             for (int i = enemies_lvl_1.Count - 1; i >= 0; i--)
             {
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].HEADSHOT_BOUNDINGBOX, out newPosition))
-                {                    
-                    specialKillText = new TgcText2d();
-                    specialKillText.Text = "HEADSHOT!!";
-                    specialKillText.Color = Color.Crimson;
-                    specialKillText.Align = TgcText2d.TextAlign.CENTER;
-                    specialKillText.Position = new Point(0, 100);
-                    specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
-
+                {
                     killCount++;
+                    killHeadTracker++;
+                    specialKillText.Text = "HEADSHOT!!";
                     TEXT_DELAY = TEXT_DELAY_MAX;
                     playSound(headshotSoundDir);
-                }
+                }           
 
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].mesh.BoundingBox, out newPosition))
                 {
@@ -224,9 +239,43 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
             }
 
-            if (killMultiTracker == 2) {
-                
-            };
+            switch(killMultiTracker){
+                case 2:
+                    specialKillText.Text = "DOUBLE KILL";
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(doubleSoundDir);
+                    break;
+                case 3:
+                    specialKillText.Text = "MULTI KILL";
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(multiSoundDir);
+                    break;
+                case 4:
+                    specialKillText.Text = "MEGA KILL";
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(megaSoundDir);
+                    break;
+                case 5:
+                    specialKillText.Text = "ULTRA KILL";
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(ultraSoundDir);
+                    break;
+                case 6:
+                    specialKillText.Text = "MONSTER KILL";
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(monsterSoundDir);
+                    break;
+                default:
+                    break;
+            }
+            if (killHeadTracker > 1)
+            {
+                specialKillText.Text = "HEAD HUNTER!!";
+                TEXT_DELAY = TEXT_DELAY_MAX;
+                playSound(headhunterSoundDir);
+            }
+
+            KILL_DELAY = KILL_DELAY_MAX;
         }
 
         public void eliminarEnemigo_lvl_1(int i)
