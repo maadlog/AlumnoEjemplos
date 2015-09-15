@@ -65,6 +65,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         bool moveUpPressed = false;
         bool moveDownPressed = false;
 
+        //
+        float HeadPosition = 50f;
+
         private bool lockCam = false;
         protected Point mouseCenter;
 
@@ -341,6 +344,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             auxEye += WORLD_YAXIS * dy;
             auxEye += forwards * dz;
 
+            HeadPosition += dy;
+
+            float y;
+            if (GameManager.Instance.interpoledHeight(auxEye.X, auxEye.Z, out y))
+            {
+                auxEye.Y = y;
+                auxEye += HeadPosition * WORLD_YAXIS;
+            }
+
             setPosition(auxEye);
         }
 
@@ -353,6 +365,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             eye.X += direction.X * amount.X;
             eye.Y += direction.Y * amount.Y;
             eye.Z += direction.Z * amount.Z;
+
+            HeadPosition += direction.Y * amount.Y;
+
+            float y;
+            if (GameManager.Instance.interpoledHeight(eye.X, eye.Z, out y))
+            {
+                eye.Y = y;
+                eye += HeadPosition * WORLD_YAXIS;
+            }
 
             lookAt = eye + viewDir;
             reconstructViewMatrix(false);

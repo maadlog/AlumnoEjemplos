@@ -261,5 +261,88 @@ namespace AlumnoEjemplos.Los_Borbotones
             sound.loadSound(dir);
             sound.play();
         }
+
+        /// <summary>
+        /// Retorna la altura del terreno en ese punto utilizando interpolacion bilineal.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool interpoledHeight(float x, float z, out float y)
+        {
+            Vector2 coords;
+            float i;
+            y = 0;
+            Vector3 center = new Vector3(0, 0, 0);
+            Vector3 traslation;
+
+            traslation.X = center.X - (400 / 2);
+            traslation.Y = center.Y;
+            //this.center.Y = traslation.Y;
+            traslation.Z = center.Z - (400 / 2);
+
+            if (!xzToHeightmapCoords(x, z, traslation, out coords)) return false;
+            interpoledIntensity(coords.X, coords.Y, out i);
+
+            y = (i + traslation.Y) * currentScaleY;
+            return true;
+        }
+
+        /// <summary>
+        /// Retorna la intensidad del heightmap en ese punto utilizando interpolacion bilineal.
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="v"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public bool interpoledIntensity(float u, float v, out float i)
+        {
+            i = 0;
+
+            float maxX = terrain.HeightmapData.GetLength(0);
+            float maxZ = terrain.HeightmapData.GetLength(1);
+            if (u >= maxX || v >= maxZ || v < 0 || u < 0) return false;
+
+            int x1, x2, z1, z2;
+            float s, t;
+
+            x1 = (int)FastMath.Floor(u);
+            x2 = x1 + 1;
+            s = u - x1;
+
+            z1 = (int)FastMath.Floor(v);
+            z2 = z1 + 1;
+            t = v - z1;
+
+            if (z2 >= maxZ) z2--;
+            if (x2 >= maxX) x2--;
+
+            float i1 = terrain.HeightmapData[x1, z1] + s * (terrain.HeightmapData[x2, z1] - terrain.HeightmapData[x1, z1]);
+            float i2 = terrain.HeightmapData[x1, z2] + s * (terrain.HeightmapData[x2, z2] - terrain.HeightmapData[x1, z2]);
+
+            i = i1 + t * (i2 - i1);
+            return true;
+
+
+        }
+
+        /// <summary>
+        /// Transforma coordenadas del mundo en coordenadas del heightmap.
+        /// </summary>
+        public bool xzToHeightmapCoords(float x, float z, Vector3 traslation, out Vector2 coords)
+        {
+            float i, j;
+
+            i = x / currentScaleXZ - traslation.X;
+            j = z / currentScaleXZ - traslation.Z;
+
+
+            coords = new Vector2(i, j);
+
+            if (coords.X >= terrain.HeightmapData.GetLength(0) || coords.Y >= terrain.HeightmapData.GetLength(1) || coords.Y < 0 || coords.X < 0) return false;
+
+            return true;
+        }
     }
 }
