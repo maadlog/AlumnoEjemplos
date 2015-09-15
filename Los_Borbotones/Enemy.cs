@@ -43,13 +43,20 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
-            vectorDireccion = ( CustomFpsCamera.Instance.Position - new Vector3 (posicionActual.M41, posicionActual.M42, posicionActual.M43) );
+            Vector3 vectorPosActual = new Vector3 (posicionActual.M41, posicionActual.M42, posicionActual.M43);
+
+            vectorDireccion = ( CustomFpsCamera.Instance.Position -  vectorPosActual );
             vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
             vectorDireccionRotacion.Normalize();
-            
-            
+           
             vectorDireccion.Normalize();
+
+            float y;
+            GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
+            float headOffsetY = posicionactualHeadshot.M42 -= posicionActual.M42;  
             
+            posicionActual.M42 = y;
+            posicionactualHeadshot.M42 = headOffsetY + y;
 
             MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
             
