@@ -12,10 +12,11 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace AlumnoEjemplos.Los_Borbotones 
 {
+
     class Enemy_lvl_1:Enemy
     {
-        
 
+        TgcSkeletalMesh skeletalMesh;
         override
             public void Init(){
              Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -25,33 +26,34 @@ namespace AlumnoEjemplos.Los_Borbotones
              this.mesh = scene.Meshes[0];
              giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
             //carga de animaciones
-            /* TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
-             personaje = skeletalLoader.loadMeshAndAnimationsFromFile(
-                 GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\" + "BasicHuman-TgcSkeletalMesh.xml",
+             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
+             skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(
+                 GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
                  new string[] { 
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Walk-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "StandBy-TgcSkeletalAnim.xml",
-                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\" + "Jump-TgcSkeletalAnim.xml"
-                });*/
-             
+                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Caminando-TgcSkeletalAnim.xml",
+                   
+                });
+             skeletalMesh.playAnimation("Caminando", true);
              base.Init();
              HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
             Matrix escalabox = Matrix.Scaling(new Vector3(0.5f,0.3f,0.5f));
             Matrix traslationbox = Matrix.Translation(new Vector3(0,90f,0));
             HEADSHOT_BOUNDINGBOX.transform(escalabox * traslationbox);
             posicionactualHeadshot = escalabox * traslationbox * posicionActual;
-            
+            skeletalMesh.AutoTransformEnable = false;
                    
             }
         override
         public void Update(float elapsedTime)
         {
             base.Update(elapsedTime);
-            
+            this.skeletalMesh.Transform = MatOrientarObjeto * posicionActual * Traslacion;
         }
         public override void Render(float elapsedTime)
         {
-            base.Render(elapsedTime);
+            skeletalMesh.animateAndRender();
+            this.mesh.BoundingBox.render();
+            this.HEADSHOT_BOUNDINGBOX.render();
             
         }
     }
