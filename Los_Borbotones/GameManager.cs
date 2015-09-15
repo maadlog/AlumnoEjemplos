@@ -9,6 +9,7 @@ using TgcViewer.Utils._2D;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Terrain;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -57,6 +58,16 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         TgcText2d scoreText;
         float killCount = 0;
+        TgcText2d specialKillText;
+        float TEXT_DELAY = 0;
+        float TEXT_DELAY_MAX = 2f;
+        float killMultiTracker;
+        float KILL_DELAY;
+        float KILL_DELAY_MAX;
+        float killColateralTracker;
+
+        TgcStaticSound sound = new TgcStaticSound();
+        string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
 
         TgcArrow arrow = new TgcArrow();
 
@@ -125,6 +136,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
 
             scoreText.Text = "Score: " + killCount;
+            if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
         }
 
         internal void Render(float elapsedTime)
@@ -146,6 +158,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemigo.Render(elapsedTime);
             }
             scoreText.render();
+            if (TEXT_DELAY > 0) { specialKillText.render(); }
 
             player1.Render(elapsedTime);
 
@@ -166,37 +179,54 @@ namespace AlumnoEjemplos.Los_Borbotones
             Vegetation.disposeAll();
             terrain.dispose();
             player1.dispose();
+            specialKillText.dispose();
         }
 
         public void fireWeapon()
         {
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
+            killColateralTracker = 0;
 
             for (int i = enemies_lvl_1.Count - 1; i >= 0; i--)
             {
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].HEADSHOT_BOUNDINGBOX, out newPosition))
+                {                    
+                    specialKillText = new TgcText2d();
+                    specialKillText.Text = "HEADSHOT!!";
+                    specialKillText.Color = Color.Crimson;
+                    specialKillText.Align = TgcText2d.TextAlign.CENTER;
+                    specialKillText.Position = new Point(0, 100);
+                    specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
+                    killCount++;
+                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    playSound(headshotSoundDir);
+                }
+
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].mesh.BoundingBox, out newPosition))
                 {
-                    killCount++;                    
-                }
-
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_1[i].HEADSHOT_BOUNDINGBOX, out newPosition))
-                {
-                    killCount++;                    
-                }
-
-                eliminarEnemigo_lvl_1(i);
+                    killCount++;
+                    killColateralTracker++;
+                    killMultiTracker++;
+                    eliminarEnemigo_lvl_1(i);
+                }                
             }
 
             for (int i = enemies_lvl_2.Count - 1; i >= 0; i--)
             {
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies_lvl_2[i].mesh.BoundingBox, out newPosition))
                 {
-                    killCount = killCount + 3;
-
+                    killCount += 3;
+                    killMultiTracker++;
+                    killColateralTracker++;
                     eliminarEnemigo_lvl_2(i);
                 }
             }
+
+            if (killMultiTracker == 2) {
+                
+            };
         }
 
         public void eliminarEnemigo_lvl_1(int i)
@@ -216,13 +246,20 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             if (enemies_lvl_2.Count == 0)
             {
-                Enemy enemigo = new Enemy_lvl_1();
+                Enemy enemigo = new Enemy_lvl_2();
                 enemies_lvl_2.Add(enemigo);
                 enemigo.Init();
             }
 
             enemies_lvl_2[i].dispose();
             enemies_lvl_2.Remove(enemies_lvl_2[i]);
+        }
+
+        private void playSound(string dir)
+        {
+            sound.dispose();
+            sound.loadSound(dir);
+            sound.play();
         }
     }
 }
