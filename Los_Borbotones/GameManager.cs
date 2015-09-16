@@ -81,6 +81,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
         TgcTexture normalScope;
         TgcTexture zoomedScope;
+        float screenCovered = 12f;
 
         internal void Init()
         {
@@ -404,7 +405,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             Size tamaño = cross.Texture.Size;
             Size screen = GuiController.Instance.Panel3d.Size;
-            cross.Scaling = new Vector2((float)screen.Width / (12 * (float)tamaño.Width), (float)screen.Width / (12 * (float)tamaño.Height));
+            cross.Scaling = new Vector2((float)screen.Width / (screenCovered * (float)tamaño.Width), (float)screen.Width / (screenCovered * (float)tamaño.Height));
             Vector2 size = new Vector2(tamaño.Width * cross.Scaling.X, tamaño.Height * cross.Scaling.Y);
             cross.Position = new Vector2((screen.Width - size.X) / 2, (screen.Height - size.Y) / 2);
         }
@@ -415,12 +416,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 cross.Texture = normalScope;
                 CustomFpsCamera.Instance.Zoom = 0;
+                screenCovered = 12; // 1/12 of screen covered by scope
                 zoomEnabled = false;
             }
             else
             {
                 cross.Texture = zoomedScope;
                 CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
+                screenCovered = 3; // 1/3 of screen covered by scope
                 zoomEnabled = true;
             }
 
