@@ -46,7 +46,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Random random = new Random();
         int rand;
 
-        TgcScene Vegetation;
+        public TgcScene Vegetation;
         TgcSimpleTerrain terrain;
         string currentHeightmap;
         string currentTexture;
@@ -85,8 +85,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Init()
         {
-            player1.Init();
-
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1c.jpg";
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();
@@ -111,6 +109,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
+
+            player1.Init();
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;

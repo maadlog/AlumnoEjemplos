@@ -57,6 +57,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         Vector3 zAxis;
         Vector3 viewDir;
         Vector3 lookAt;
+        Vector3 previousEye;
 
         //Banderas de Input
         bool moveForwardsPressed = false;
@@ -262,6 +263,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             yAxis = new Vector3(0.0f, 1.0f, 0.0f);
             zAxis = new Vector3(0.0f, 0.0f, 1.0f);
             viewDir = new Vector3(0.0f, 0.0f, 1.0f);
+            previousEye = new Vector3(0, 0, 0);
             lookAt = eye + viewDir;
 
             Vector3 pMin = new Vector3(20, 0, 20);
@@ -317,9 +319,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             // Extract the pitch angle from the view matrix.
             accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin((double)viewMatrix.M23));
-            //Vector3 pMin = new Vector3(20, 0, 20);
-            //Vector3 pMax = new Vector3(-20, 60, -20);
-            //boundingBox = new TgcBoundingBox(pMin + eye, pMax + eye);
+            
+            Matrix worldMatrix = viewMatrix;
+            worldMatrix.Invert();
+            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition / 2, 0f));
+            boundingBox.transform(worldMatrix * trans);
         }
 
         /// <summary>
@@ -643,6 +647,20 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// </summary>
         private void reconstructViewMatrix(bool orthogonalizeAxes)
         {
+            bool collide = false;
+
+            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
+                {
+                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(this.boundingBox, obstaculo.BoundingBox);
+                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    {
+                        collide = true;
+                        break;
+                    }
+                }
+
+            if (collide) { eye = previousEye; }
+
             if (orthogonalizeAxes)
             {
                 // Regenerate the camera's local axes to orthogonalize them.
@@ -683,8 +701,20 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Matrix worldMatrix = ViewMatrix;
             worldMatrix.Invert();
+            worldMatrix.M11 = 1;
+            worldMatrix.M12 = 0;
+            worldMatrix.M13 = 0;
+            worldMatrix.M21 = 0;
+            worldMatrix.M22 = 1;
+            worldMatrix.M23 = 0;
+            worldMatrix.M31 = 0;
+            worldMatrix.M32 = 0;
+            worldMatrix.M33 = 1;
             Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition/2, 0f));
             boundingBox.transform(worldMatrix * trans);
+
+            previousEye = eye;
+
         }
 
         /// <summary>
