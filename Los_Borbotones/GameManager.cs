@@ -77,6 +77,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public bool drawBoundingBoxes;
 
+        bool zoomEnabled = false;
+        float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
+        TgcTexture normalScope;
+        TgcTexture zoomedScope;
+
         internal void Init()
         {
             player1.Init();
@@ -121,14 +126,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText = new TgcText2d();
             scoreText.Text = "Score: " + score;
 
+         
             cross = new TgcSprite();
-            cross.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\cross.png");
+            normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\normalScope.png");
+            zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\zoomedScope.png");
+            cross.Texture = normalScope;
 
-            Size screenSize = GuiController.Instance.Panel3d.Size;
-            Size tamaño = cross.Texture.Size;
-            cross.Scaling = new Vector2(0.1f, 0.1f);
-            Vector2 size = new Vector2( tamaño.Width * cross.Scaling.X, tamaño.Height*cross.Scaling.Y);
-            cross.Position = new Vector2((screenSize.Width - size.X) / 2, (screenSize.Height - size.Y) /2);
+            refreshScopeTexture();
 
         }
 
@@ -394,6 +398,34 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (coords.X >= terrain.HeightmapData.GetLength(0) || coords.Y >= terrain.HeightmapData.GetLength(1) || coords.Y < 0 || coords.X < 0) return false;
 
             return true;
+        }
+
+        public void refreshScopeTexture()
+        {
+            Size tamaño = cross.Texture.Size;
+            Size screen = GuiController.Instance.Panel3d.Size;
+            cross.Scaling = new Vector2((float)screen.Width / (12 * (float)tamaño.Width), (float)screen.Width / (12 * (float)tamaño.Height));
+            Vector2 size = new Vector2(tamaño.Width * cross.Scaling.X, tamaño.Height * cross.Scaling.Y);
+            cross.Position = new Vector2((screen.Width - size.X) / 2, (screen.Height - size.Y) / 2);
+        }
+
+        public void zoomCamera()
+        {
+            if (zoomEnabled)
+            {
+                cross.Texture = normalScope;
+                CustomFpsCamera.Instance.Zoom = 0;
+                zoomEnabled = false;
+            }
+            else
+            {
+                cross.Texture = zoomedScope;
+                CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
+                zoomEnabled = true;
+            }
+
+            refreshScopeTexture();
+
         }
     }
 }
