@@ -129,8 +129,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             this.mesh.render();
-            this.mesh.BoundingBox.render();
-            this.HEADSHOT_BOUNDINGBOX.render();
+            if (GameManager.Instance.drawBoundingBoxes)
+            {
+                this.mesh.BoundingBox.render();
+                this.HEADSHOT_BOUNDINGBOX.render();
+            }
             
         }
 

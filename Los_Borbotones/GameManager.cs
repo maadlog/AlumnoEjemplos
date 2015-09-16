@@ -75,7 +75,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/massacre.wav";
         string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/denied.wav";
 
-        TgcArrow arrow = new TgcArrow();
+        public bool drawBoundingBoxes;
 
         internal void Init()
         {
@@ -90,7 +90,21 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
             Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100%-veg-map1c-TgcScene.xml");
+            
             vegetation = Vegetation.Meshes;
+            int i;
+            for (i = 1; i < 48; i++)
+            {
+                Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
+                float y;
+                interpoledHeight(center.X, center.Z, out y);
+                center.Y = y;
+
+                Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
+                Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
+
+                vegetation[i].BoundingBox.transform(scale * trans);
+            }
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
@@ -120,6 +134,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
+            drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
+
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
             player1.Update(elapsedTime);
             if (SPAWN_TIME_COUNTER > SPAWN_TIME) {
@@ -159,7 +175,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             for (i = 1; i < 48; i++)
             {
                 vegetation[i].render();
-                //if (RenderBoundingBoxes) v.BoundingBox.render();
+
+                if (drawBoundingBoxes) { vegetation[i].BoundingBox.render(); }
             }
 
             foreach(Enemy enemigo in enemies){
