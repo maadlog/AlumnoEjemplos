@@ -179,6 +179,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 if (drawBoundingBoxes) { vegetation[i].BoundingBox.render(); }
             }
 
+            if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
+
             foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
