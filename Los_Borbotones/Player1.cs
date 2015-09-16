@@ -24,8 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float MAX_DELAY = 2;
         TgcStaticSound sound = new TgcStaticSound();
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
-        float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
-        bool zoomEnabled = false;
+        
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
 
@@ -43,7 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             CustomFpsCamera.Instance.Enable = true;
             GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
-            CustomFpsCamera.Instance.setCamera(new Vector3(-13000, 50, -16500), new Vector3(0, 0, -1000));
+            CustomFpsCamera.Instance.setCamera(new Vector3(-13000, 20, -16500), new Vector3(0, 0, -1000));
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
@@ -70,26 +69,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0)
             {
                 ZOOM_DELAY = MAX_ZOOM_DELAY;
-                zoomCamera();
+                GameManager.Instance.zoomCamera();
             }
 
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
             mesh.Transform = getWeaponTransform(); 
         
-        }
-
-        public void zoomCamera()
-        {
-            if (zoomEnabled)
-            {
-                CustomFpsCamera.Instance.Zoom = 0;
-                zoomEnabled = false;
-            } else {
-                CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
-                zoomEnabled = true;
-            }
-
         }
 
         public override void Render(float elapsedTime)
