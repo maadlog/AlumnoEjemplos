@@ -58,11 +58,6 @@ Presionar L para capturar el mouse.";
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
-            //Creacion del Game Manager
-            gameManager = GameManager.Instance;
-
-            gameManager.Init();
-
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
@@ -84,6 +79,12 @@ Presionar L para capturar el mouse.";
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
 
+            GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", true);
+
+            //Creacion del Game Manager
+            gameManager = GameManager.Instance;
+
+            gameManager.Init();
         }
 
 

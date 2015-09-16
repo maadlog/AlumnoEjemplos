@@ -12,6 +12,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     abstract class Enemy : GameObject
     {
+        public float health;
+        public float score;
         public float MOVEMENT_SPEED = 10f;
         public float SPAWN_RADIUS= 200f;
         public Matrix posicionActual;
@@ -127,8 +129,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             this.mesh.render();
-            this.mesh.BoundingBox.render();
-            this.HEADSHOT_BOUNDINGBOX.render();
+            if (GameManager.Instance.drawBoundingBoxes)
+            {
+                this.mesh.BoundingBox.render();
+                this.HEADSHOT_BOUNDINGBOX.render();
+            }
             
         }
 

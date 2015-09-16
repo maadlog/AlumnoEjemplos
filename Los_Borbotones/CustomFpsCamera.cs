@@ -9,6 +9,7 @@ using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
 using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -67,6 +68,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         //
         float HeadPosition = 50f;
+        public TgcBoundingBox boundingBox;
 
         private bool lockCam = false;
         protected Point mouseCenter;
@@ -262,6 +264,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             viewDir = new Vector3(0.0f, 0.0f, 1.0f);
             lookAt = eye + viewDir;
 
+            Vector3 pMin = new Vector3(20, 0, 20);
+            Vector3 pMax = new Vector3(-20, HeadPosition, -20);
+            boundingBox = new TgcBoundingBox(pMin + eye, pMax + eye);
+
             accelerationEnable = false;
             acceleration = CAMERA_ACCELERATION;
             currentVelocity = new Vector3(0.0f, 0.0f, 0.0f);
@@ -311,6 +317,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             // Extract the pitch angle from the view matrix.
             accumPitchDegrees = Geometry.RadianToDegree((float)-Math.Asin((double)viewMatrix.M23));
+            //Vector3 pMin = new Vector3(20, 0, 20);
+            //Vector3 pMax = new Vector3(-20, 60, -20);
+            //boundingBox = new TgcBoundingBox(pMin + eye, pMax + eye);
         }
 
         /// <summary>
@@ -671,6 +680,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             viewMatrix.M24 = 0.0f;
             viewMatrix.M34 = 0.0f;
             viewMatrix.M44 = 1.0f;
+
+            Matrix worldMatrix = ViewMatrix;
+            worldMatrix.Invert();
+            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition/2, 0f));
+            boundingBox.transform(worldMatrix * trans);
         }
 
         /// <summary>

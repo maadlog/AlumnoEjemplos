@@ -19,6 +19,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSkeletalMesh skeletalMesh;
         override
             public void Init(){
+                health = 100;
+                score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
              TgcSceneLoader loader = new TgcSceneLoader();
@@ -52,9 +54,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             skeletalMesh.animateAndRender();
-            this.mesh.BoundingBox.render();
-            this.HEADSHOT_BOUNDINGBOX.render();
-            
+            if (GameManager.Instance.drawBoundingBoxes)
+            {
+                this.mesh.BoundingBox.render();
+                this.HEADSHOT_BOUNDINGBOX.render();
+            }
         }
     }
 }
