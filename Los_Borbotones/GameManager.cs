@@ -177,7 +177,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             terrain.render();
             //foreach (TgcMesh v in vegetation)
             int i;
-            for (i = 1; i < 48; i++)
+            int max = vegetation.Count();
+            for (i = 1; i < max; i++)
             {
                 vegetation[i].render();
 

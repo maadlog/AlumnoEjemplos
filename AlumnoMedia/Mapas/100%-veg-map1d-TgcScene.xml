@@ -265,7 +265,7 @@
       <transform pos="[-13084.48,0.5062,-17107.49]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque47" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-12524.36,2.548,-16931.85]" max="[-12373.01,356.411,-16784.67]" />
+      <boundingBox min="[-12667.36,2.548,-17079.03]" max="[-12373.01,356.411,-16784.67]" />
       <originalMesh>0</originalMesh>
       <transform pos="[-12524,2.548,-16931.85]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
