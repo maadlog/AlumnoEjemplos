@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float MAX_DELAY = 2;
         TgcStaticSound sound = new TgcStaticSound();
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
+        Vector3 prevEye;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -47,6 +48,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
 
+            prevEye = CustomFpsCamera.Instance.eye;
         }
 
         public override void Update(float elapsedTime)
@@ -74,8 +76,35 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
-            mesh.Transform = getWeaponTransform(); 
-        
+            mesh.Transform = getWeaponTransform();
+
+            //Colision de la camara con sliding
+            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
+            {
+                Vector3 dirMov = CustomFpsCamera.Instance.eye - prevEye;
+
+                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                {
+                    CustomFpsCamera.Instance.eye = prevEye + new Vector3(dirMov.X, 0, 0);
+                    CustomFpsCamera.Instance.reconstructViewMatrix(false);
+                    TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                    if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    {
+                        CustomFpsCamera.Instance.eye = prevEye + new Vector3(0, 0, dirMov.Z);
+                        CustomFpsCamera.Instance.reconstructViewMatrix(false);
+
+                        TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                        if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                        {
+                            CustomFpsCamera.Instance.eye = prevEye;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            prevEye = CustomFpsCamera.Instance.eye;
         }
 
         public override void Render(float elapsedTime)

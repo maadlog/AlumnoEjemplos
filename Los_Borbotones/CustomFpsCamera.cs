@@ -51,13 +51,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         readonly Vector3 DEFAULT_UP_VECTOR = new Vector3(0.0f, 1.0f, 0.0f);
 
         float accumPitchDegrees;
-        Vector3 eye;
+        public Vector3 eye;
         Vector3 xAxis;
         Vector3 yAxis;
         Vector3 zAxis;
         Vector3 viewDir;
         Vector3 lookAt;
-        Vector3 previousEye;
 
         //Banderas de Input
         bool moveForwardsPressed = false;
@@ -263,7 +262,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             yAxis = new Vector3(0.0f, 1.0f, 0.0f);
             zAxis = new Vector3(0.0f, 0.0f, 1.0f);
             viewDir = new Vector3(0.0f, 0.0f, 1.0f);
-            previousEye = new Vector3(0, 0, 0);
             lookAt = eye + viewDir;
 
             Vector3 pMin = new Vector3(20, 0, 20);
@@ -645,21 +643,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// <summary>
         /// Reconstruct the view matrix.
         /// </summary>
-        private void reconstructViewMatrix(bool orthogonalizeAxes)
+        public void reconstructViewMatrix(bool orthogonalizeAxes)
         {
-            bool collide = false;
-
-            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
-                {
-                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(this.boundingBox, obstaculo.BoundingBox);
-                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
-                    {
-                        collide = true;
-                        break;
-                    }
-                }
-
-            if (collide) { eye = previousEye; }
 
             if (orthogonalizeAxes)
             {
@@ -712,9 +697,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             worldMatrix.M33 = 1;
             Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition/2, 0f));
             boundingBox.transform(worldMatrix * trans);
-
-            previousEye = eye;
-
         }
 
         /// <summary>
