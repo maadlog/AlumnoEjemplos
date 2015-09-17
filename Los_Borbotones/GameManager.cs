@@ -85,7 +85,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Init()
         {
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1c.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1d.jpg";
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
@@ -93,11 +93,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100%-veg-map1c-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100%-veg-map1d-TgcScene.xml");
             
             vegetation = Vegetation.Meshes;
             int i;
-            for (i = 1; i < 48; i++)
+            for (i = 1; i < vegetation.Count; i++)
             {
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
