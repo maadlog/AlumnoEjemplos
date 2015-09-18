@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.TgcSceneLoader;
 
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -28,6 +30,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix posicionactualHeadshot;
         public Matrix Traslacion;
         public Matrix MatOrientarObjeto;
+
         public override void Init()   
         {
             mesh.AutoTransformEnable = false;
@@ -39,8 +42,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix matt = Matrix.Translation(new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43));
             Matrix matScale = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
 
-        
             this.posicionActual = matScale * giroInicial * matt;
+
+            setBaseEffect();
+
         }
 
         public override void Update(float elapsedTime)
@@ -128,13 +133,29 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public override void Render(float elapsedTime)
         {
+
+            setBaseEffectValues(elapsedTime);
+
             this.mesh.render();
+
             if (GameManager.Instance.drawBoundingBoxes)
             {
                 this.mesh.BoundingBox.render();
                 this.HEADSHOT_BOUNDINGBOX.render();
             }
             
+        }
+        
+        public virtual void setBaseEffect()
+        {
+            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "\\Shaders\\enemyBasic.fx");
+            mesh.Technique = "HealthDependentShading";
+        }
+
+        public virtual void setBaseEffectValues(float elapsedTime)
+        {
+            mesh.Effect.SetValue("health", this.health);
+            mesh.Effect.SetValue("g_time", elapsedTime);
         }
 
     }

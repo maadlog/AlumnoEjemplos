@@ -27,6 +27,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             base.Init();
 
+            setBaseEffect();
+
             HEADSHOT_BOUNDINGBOX = new TgcBoundingBox();
         }
     }

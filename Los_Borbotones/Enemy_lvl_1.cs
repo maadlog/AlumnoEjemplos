@@ -8,6 +8,7 @@ using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using TgcViewer.Utils.Shaders;
 
 
 namespace AlumnoEjemplos.Los_Borbotones 
@@ -43,8 +44,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             HEADSHOT_BOUNDINGBOX.transform(escalabox * traslationbox);
             posicionactualHeadshot = escalabox * traslationbox * posicionActual;
             skeletalMesh.AutoTransformEnable = false;
-                   
-            }
+
+            setBaseEffect();
+
+        }
         override
         public void Update(float elapsedTime)
         {
@@ -53,6 +56,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public override void Render(float elapsedTime)
         {
+            setBaseEffectValues(elapsedTime);
+
             skeletalMesh.animateAndRender();
             if (GameManager.Instance.drawBoundingBoxes)
             {
@@ -60,5 +65,20 @@ namespace AlumnoEjemplos.Los_Borbotones
                 this.HEADSHOT_BOUNDINGBOX.render();
             }
         }
+
+        /*
+        public override void setBaseEffect()
+        {
+            skeletalMesh.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "\\Shaders\\enemyBasic.fx");
+            skeletalMesh.Technique = "HealthDependentShading";
+        }
+
+        public override void setBaseEffectValues(float elapsedTime)
+        {
+            skeletalMesh.Effect.SetValue("health", this.health);
+            skeletalMesh.Effect.SetValue("g_time", elapsedTime);
+        }
+        */
+
     }
 }
