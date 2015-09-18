@@ -44,6 +44,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         readonly Vector3 CAMERA_POS = new Vector3(0.0f, 1.0f, 0.0f);
         readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
 
+        //Constantes de FoV
+        public const float FAR_PLANE = 1000f;
+        public const float NEAR_PLANE = 0.1f;
+
         //Ejes para ViewMatrix
         readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
         readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
@@ -747,7 +751,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Cambiar el FOV de la proyeccion para dar efecto "zoom"
 
-            GuiController.Instance.D3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI / 4) * (1.01f-zoom), 2f, 1.0f, 1000.0f);
+            GuiController.Instance.D3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI / 4) * (1.01f-zoom), 2f, NEAR_PLANE, FAR_PLANE + (1000.0f * zoom));
             
 
             updatePosition(direction, elapsedTimeSec);
