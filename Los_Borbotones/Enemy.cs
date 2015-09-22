@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         public float health;
         public float score;
-        public float MOVEMENT_SPEED = 10f;
+        public float MOVEMENT_SPEED = 50f;
         public float SPAWN_RADIUS= 200f;
         public Matrix posicionActual;
         public Vector3 Normal;
@@ -27,9 +27,13 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float SPAWN_HEIGHT = 0;
         public  Matrix giroInicial;
         public TgcBoundingBox HEADSHOT_BOUNDINGBOX;
-        public Matrix posicionactualHeadshot;
+        public Matrix posicionActualHeadshot;
         public Matrix Traslacion;
         public Matrix MatOrientarObjeto;
+        Matrix posicionAnterior;
+        Matrix posicionAnteriorHeadshot;
+        Vector3 vectorDireccionAnterior;
+        Vector3 vectorDireccionRotacionAnterior;
 
         public override void Init()   
         {
@@ -50,33 +54,54 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
-            Vector3 vectorPosActual = new Vector3 (posicionActual.M41, posicionActual.M42, posicionActual.M43);
+            Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
 
-            vectorDireccion = ( CustomFpsCamera.Instance.Position -  vectorPosActual );
+            vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
             vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
             vectorDireccionRotacion.Normalize();
-           
+
             vectorDireccion.Normalize();
 
-            float y;
-            GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
-            float headOffsetY = posicionactualHeadshot.M42 - posicionActual.M42;  
-            
-            posicionActual.M42 = y;
-            posicionactualHeadshot.M42 = headOffsetY + y;
+            updateMovementMatrix(elapsedTime, vectorDireccion);
 
-            MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
-            
-            Traslacion = Matrix.Translation(vectorDireccion * MOVEMENT_SPEED * elapsedTime);
-           
-            this.mesh.Transform =  MatOrientarObjeto * posicionActual * Traslacion;
-            this.mesh.BoundingBox.transform(MatOrientarObjeto * posicionActual * Traslacion);
-            
-            posicionActual = posicionActual * Traslacion;
-            this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionactualHeadshot * Traslacion);
-            posicionactualHeadshot = posicionactualHeadshot * Traslacion;
-           
-            
+            //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
+            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
+            {
+                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                {
+                    posicionActual = posicionAnterior;
+                    posicionActualHeadshot = posicionAnteriorHeadshot;
+                    vectorDireccionRotacion = vectorDireccionRotacionAnterior;
+                    vectorDireccion = vectorDireccionAnterior;
+                    Vector3 dirX = new Vector3(vectorDireccion.X, 0, 0);
+                    dirX.Normalize();
+                    updateMovementMatrix(elapsedTime, dirX);
+
+                    TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                    if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    {
+                        posicionActual = posicionAnterior;
+                        posicionActualHeadshot = posicionAnteriorHeadshot;
+                        Vector3 dirZ = new Vector3(0, 0, vectorDireccion.Z);
+                        dirZ.Normalize();
+                        updateMovementMatrix(elapsedTime, dirZ);
+
+                        TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                        if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                        {
+                            posicionActual = posicionAnterior;
+                            posicionActual = posicionAnteriorHeadshot;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            posicionAnterior = posicionActual;
+            posicionAnteriorHeadshot = posicionActualHeadshot;
+            vectorDireccionRotacionAnterior = vectorDireccionRotacion;
+            vectorDireccionAnterior = vectorDireccion;
         }
 
         private Matrix calcularMatrizOrientacion(Vector3 v)
@@ -144,6 +169,41 @@ namespace AlumnoEjemplos.Los_Borbotones
                 this.HEADSHOT_BOUNDINGBOX.render();
             }
             
+        }
+
+        public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
+        {
+            Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+            
+            float y;
+            GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
+            float headOffsetY = posicionActualHeadshot.M42 - posicionActual.M42;
+
+            posicionActual.M42 = y;
+            posicionActualHeadshot.M42 = headOffsetY + y;
+
+            MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
+
+            Traslacion = Matrix.Translation(Direccion * MOVEMENT_SPEED * elapsedTime);
+
+            Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
+            this.mesh.Transform = transform;
+           /*
+            transform.M11 = 1;
+            transform.M12 = 0;
+            transform.M13 = 0;
+            transform.M21 = 0;
+            transform.M22 = 1;
+            transform.M23 = 0;
+            transform.M31 = 0;
+            transform.M32 = 0;
+            transform.M33 = 1;
+            */
+            this.mesh.BoundingBox.transform(transform);
+
+            posicionActual = posicionActual * Traslacion;
+            this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualHeadshot * Traslacion);
+            posicionActualHeadshot = posicionActualHeadshot * Traslacion;
         }
         
         public virtual void setBaseEffect()

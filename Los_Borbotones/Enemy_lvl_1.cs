@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix escalabox = Matrix.Scaling(new Vector3(0.5f,0.3f,0.5f));
             Matrix traslationbox = Matrix.Translation(new Vector3(0,90f,0));
             HEADSHOT_BOUNDINGBOX.transform(escalabox * traslationbox);
-            posicionactualHeadshot = escalabox * traslationbox * posicionActual;
+            posicionActualHeadshot = escalabox * traslationbox * posicionActual;
             skeletalMesh.AutoTransformEnable = false;
 
             setBaseEffect();
