@@ -16,6 +16,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         public float health;
         public float score;
+        public int attackDamage;
         public float MOVEMENT_SPEED = 50f;
         public float SPAWN_RADIUS= 200f;
         public Matrix posicionActual;
@@ -63,6 +64,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             vectorDireccion.Normalize();
 
             updateMovementMatrix(elapsedTime, vectorDireccion);
+
+            //Colision con Player1
+            TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
+            if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
+            {
+                GameManager.Instance.player1.recibirAtaque(attackDamage);
+            }
 
             //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
             foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)

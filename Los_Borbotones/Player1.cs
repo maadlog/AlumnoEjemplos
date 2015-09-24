@@ -15,7 +15,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class Player1:GameObject
+    public class Player1:GameObject
     {
         float WEAPON_ORIENTATION_Y;
         Vector3 WEAPON_OFFSET;
@@ -25,6 +25,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcStaticSound sound = new TgcStaticSound();
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
+        int vida = 100;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -125,6 +126,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix weaponRotationY = Matrix.RotationY(WEAPON_ORIENTATION_Y);
 
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
+        }
+
+        public void recibirAtaque(int damage)
+        {
+            vida -= damage;
+            if(vida <= 0)
+            {
+                //TODO
+            }
         }
 
         private void playSound(string dir)

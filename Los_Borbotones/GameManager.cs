@@ -36,7 +36,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         #endregion
 
-        Player1 player1 = new Player1();
+        public Player1 player1 = new Player1();
         List<Enemy> enemies = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
@@ -219,31 +219,59 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
+            List<Vector3> posicionObstaculos = new List<Vector3>();
+            bool vegetacionFrenoDisparo = false;
+            foreach (TgcMesh obstaculo in vegetation)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, obstaculo.BoundingBox, out newPosition))
+                posicionObstaculos.Add(newPosition);
+            }
+
             int killHeadTracker = 0;
 
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].HEADSHOT_BOUNDINGBOX, out newPosition))
                 {
-                    score += 1;
-                    killHeadTracker++;
-                    specialKillText.Text = "HEADSHOT!!";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
-                    playSound(headshotSoundDir);
-                    enemies[i].health = 0;
+                    foreach(Vector3 posicion in posicionObstaculos){
+                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
+                        {
+                            vegetacionFrenoDisparo = true;
+                        }
+                    }
+                    if (!vegetacionFrenoDisparo)
+                    {
+                        score += 1;
+                        killHeadTracker++;
+                        specialKillText.Text = "HEADSHOT!!";
+                        TEXT_DELAY = TEXT_DELAY_MAX;
+                        playSound(headshotSoundDir);
+                        enemies[i].health = 0;
+                    }
+                    vegetacionFrenoDisparo = false;
                 }           
 
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
                 {
-                    enemies[i].health -= 50;
-                    if (enemies[i].health <= 0)
-                    {
-                        score += enemies[i].score;
-                        eliminarEnemigo(i);
-                        killMultiTracker++;
-                        awardKill();
-                        KILL_DELAY = KILL_DELAY_MAX;
+                    foreach(Vector3 posicion in posicionObstaculos){
+                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
+                        {
+                            vegetacionFrenoDisparo = true;
+                        }
                     }
+                    if (!vegetacionFrenoDisparo)
+                    {
+                        enemies[i].health -= 50;
+                        if (enemies[i].health <= 0)
+                        {
+                            score += enemies[i].score;
+                            eliminarEnemigo(i);
+                            killMultiTracker++;
+                            awardKill();
+                            KILL_DELAY = KILL_DELAY_MAX;
+                        }
+                    }
+                    vegetacionFrenoDisparo = false;
                 }                
             }
             
