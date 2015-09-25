@@ -37,7 +37,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         #endregion
 
         public Player1 player1 = new Player1();
-        List<Enemy> enemies = new List<Enemy>();
+        public List<Enemy> enemies = new List<Enemy>();
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
@@ -54,6 +54,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
         TgcSprite cross;
+        TgcSkyBox skyBox;
 
         TgcText2d scoreText;
         float score = 0;
@@ -84,7 +85,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float screenCovered = 0.12f;
 
         internal void Init()
-        {
+        {              
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1d.jpg";
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();

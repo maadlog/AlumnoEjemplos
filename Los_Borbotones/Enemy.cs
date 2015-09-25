@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    abstract class Enemy : GameObject
+    public abstract class Enemy : GameObject
     {
         public float health;
         public float score;
@@ -22,8 +22,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix posicionActual;
         public Vector3 Normal;
         public float MESH_SCALE;
-        Vector3 vectorDireccion;
-        Vector3 vectorDireccionRotacion;
+        public Vector3 vectorDireccion;
+        public Vector3 vectorDireccionRotacion;
         Device d3dDevice = GuiController.Instance.D3dDevice;
         public float SPAWN_HEIGHT = 0;
         public  Matrix giroInicial;
@@ -31,10 +31,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix posicionActualHeadshot;
         public Matrix Traslacion;
         public Matrix MatOrientarObjeto;
-        Matrix posicionAnterior;
-        Matrix posicionAnteriorHeadshot;
-        Vector3 vectorDireccionAnterior;
-        Vector3 vectorDireccionRotacionAnterior;
+        public Matrix posicionAnterior;
+        public Matrix posicionAnteriorHeadshot;
+        public Vector3 vectorDireccionAnterior;
+        public Vector3 vectorDireccionRotacionAnterior;
 
         public override void Init()   
         {
@@ -70,6 +70,41 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
             {
                 GameManager.Instance.player1.recibirAtaque(attackDamage);
+                this.posicionActual = this.posicionAnterior;
+                this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
+                this.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
+            }
+
+            //Colision con otros enemigos
+            foreach (Enemy enemy in GameManager.Instance.enemies)
+            {
+                if (this != enemy && TgcCollisionUtils.testAABBAABB(this.mesh.BoundingBox, enemy.mesh.BoundingBox))
+                {
+                    Vector3 eye = CustomFpsCamera.Instance.Position;
+
+                    Vector3 vec1 = new Vector3();
+                    vec1.X = this.posicionActual.M41;
+                    vec1.Y = this.posicionActual.M42;
+                    vec1.Z = this.posicionActual.M43;
+
+                    Vector3 vec2 = new Vector3();
+                    vec2.X = enemy.posicionActual.M41;
+                    vec2.Y = enemy.posicionActual.M42;
+                    vec2.Z = enemy.posicionActual.M43;
+
+                    if (Vector3.Length(eye - vec1) <= Vector3.Length(eye - vec2))
+                    {
+                        enemy.posicionActual = enemy.posicionAnterior;
+                        enemy.posicionActualHeadshot = enemy.posicionAnteriorHeadshot;
+                        enemy.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
+                    }
+                    else
+                    {
+                        this.posicionActual = this.posicionAnterior;
+                        this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
+                        this.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
+                    }
+                }
             }
 
             //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
@@ -196,17 +231,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
             this.mesh.Transform = transform;
-           /*
-            transform.M11 = 1;
-            transform.M12 = 0;
-            transform.M13 = 0;
-            transform.M21 = 0;
-            transform.M22 = 1;
-            transform.M23 = 0;
-            transform.M31 = 0;
-            transform.M32 = 0;
-            transform.M33 = 1;
-            */
+
             this.mesh.BoundingBox.transform(transform);
 
             posicionActual = posicionActual * Traslacion;
