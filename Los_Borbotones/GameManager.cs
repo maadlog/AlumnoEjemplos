@@ -48,6 +48,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public TgcScene Vegetation;
         TgcSimpleTerrain terrain;
+        int heightmapResolution;
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ = 100f;
@@ -87,6 +88,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Init()
         {              
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando3.jpg";
+            //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
+            heightmapResolution = 800;
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
@@ -362,11 +365,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             y = 0;
             Vector3 center = new Vector3(0, 0, 0);
             Vector3 traslation;
-
-            traslation.X = center.X - (400 / 2);
+            traslation.X = center.X - (heightmapResolution / 2);
             traslation.Y = center.Y;
             //this.center.Y = traslation.Y;
-            traslation.Z = center.Z - (400 / 2);
+            traslation.Z = center.Z - (heightmapResolution / 2);
 
             if (!xzToHeightmapCoords(x, z, traslation, out coords)) return false;
             interpoledIntensity(coords.X, coords.Y, out i);
