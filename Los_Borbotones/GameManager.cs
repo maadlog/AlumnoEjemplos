@@ -51,7 +51,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ = 100f;
-        float currentScaleY = 8f;
+        float currentScaleY = 14f;
         private List<TgcMesh> vegetation;
         TgcSprite cross;
         TgcSkyBox skyBox;
@@ -86,7 +86,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Init()
         {              
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "map1d.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando3.jpg";
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
@@ -94,7 +94,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100%-veg-map1d-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100x14-TgcScene.xml");
             
             vegetation = Vegetation.Meshes;
             int i;
