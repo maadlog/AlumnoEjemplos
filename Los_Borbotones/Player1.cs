@@ -26,6 +26,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
         int vida = 100;
+        float intensidadMaximaEscalable = 7;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -78,6 +79,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
             mesh.Transform = getWeaponTransform();
+
+            //Maxima inclinacion sobre terreno
+            float yActual;
+            GameManager.Instance.interpoledIntensityXZ(CustomFpsCamera.Instance.eye.X, CustomFpsCamera.Instance.eye.Z, out yActual);
+
+            if (yActual > intensidadMaximaEscalable)
+            {
+                CustomFpsCamera.Instance.eye = prevEye;
+                CustomFpsCamera.Instance.reconstructViewMatrix(false);
+            }
+
 
             //Colision de la camara con sliding
             foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)

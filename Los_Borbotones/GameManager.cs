@@ -377,6 +377,25 @@ namespace AlumnoEjemplos.Los_Borbotones
             return true;
         }
 
+        public bool interpoledIntensityXZ(float x, float z, out float y)
+        {
+            Vector2 coords;
+            float i;
+            y = 0;
+            Vector3 center = new Vector3(0, 0, 0);
+            Vector3 traslation;
+            traslation.X = center.X - (heightmapResolution / 2);
+            traslation.Y = center.Y;
+            //this.center.Y = traslation.Y;
+            traslation.Z = center.Z - (heightmapResolution / 2);
+
+            if (!xzToHeightmapCoords(x, z, traslation, out coords)) return false;
+            interpoledIntensity(coords.X, coords.Y, out i);
+
+            y = i;
+            return true;
+        }
+
         /// <summary>
         /// Retorna la intensidad del heightmap en ese punto utilizando interpolacion bilineal.
         /// </summary>
