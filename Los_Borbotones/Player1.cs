@@ -26,7 +26,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
         int vida = 100;
-        float intensidadMaximaEscalable = 7;
+        float intensidadMaximaEscalable = 0.35f;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             CustomFpsCamera.Instance.Enable = true;
             GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
-            CustomFpsCamera.Instance.setCamera(new Vector3(-20, 930, -20), new Vector3(0, 0, -1000));
+            CustomFpsCamera.Instance.setCamera(new Vector3(-20, 930, -20), new Vector3(0, 930, -1000));
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
@@ -82,9 +82,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Maxima inclinacion sobre terreno
             float yActual;
-            GameManager.Instance.interpoledIntensityXZ(CustomFpsCamera.Instance.eye.X, CustomFpsCamera.Instance.eye.Z, out yActual);
+            float yAnterior;
+            GameManager.Instance.interpoledHeight(CustomFpsCamera.Instance.eye.X, CustomFpsCamera.Instance.eye.Z, out yActual);
+            GameManager.Instance.interpoledHeight(prevEye.X, prevEye.Z, out yAnterior);
 
-            if (yActual > intensidadMaximaEscalable)
+            if (yActual - yAnterior >= intensidadMaximaEscalable)
             {
                 CustomFpsCamera.Instance.eye = prevEye;
                 CustomFpsCamera.Instance.reconstructViewMatrix(false);

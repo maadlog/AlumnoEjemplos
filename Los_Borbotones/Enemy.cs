@@ -18,7 +18,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float score;
         public int attackDamage;
         public float MOVEMENT_SPEED = 50f;
-        public float SPAWN_RADIUS= 200f;
+        public float SPAWN_RADIUS= 3000f;
         public Matrix posicionActual;
         public Vector3 Normal;
         public float MESH_SCALE;

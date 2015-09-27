@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
 
         //Constantes de FoV
-        public const float FAR_PLANE = 1000f;
+        public const float FAR_PLANE = 10000f;
         public const float NEAR_PLANE = 0.1f;
 
         //Ejes para ViewMatrix
@@ -743,7 +743,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Solo rotar si se esta aprentando el boton del mouse configurado
             if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
-                rotate(heading, pitch, 0.0f);
+                rotate(heading*(1-zoom), pitch*(1-zoom), 0.0f);
             }
 
             if (lockCam)
