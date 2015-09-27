@@ -1,8 +1,8 @@
 <tgcScene>
-  <name>100x14</name>
+  <name>100x8</name>
   <texturesExport enabled="True" dir="Textures" />
   <lightmapExport enabled="False" dir="LightMaps" />
-  <sceneBoundingBox min="[-14133.49,0,-17641.34]" max="[2917.875,6755.125,3648.656]" />
+  <sceneBoundingBox min="[-14133.49,0,-17641.34]" max="[2917.875,2649.315,2061.943]" />
   <materials count="1">
     <m name="Multimaterial" type="Multimaterial">
       <subM name="Standardmaterial" type="Standardmaterial">
@@ -23,7 +23,7 @@
       </subM>
     </m>
   </materials>
-  <meshes count="47">
+  <meshes count="42">
     <mesh name="ArbolBosque" layer="0" type="Original" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-143.356,0,-147.175]" max="[150.994,353.863,147.175]" />
       <coordinatesIdx count="258">0 1 2 2 3 0 4 5 6 6 7 4 8 0 3 3 9 8 5 10 11 11 6 5 12 8 9 9 13 12 10 14 15 15 11 10 1 12 13 13 2 1 14 4 7 7 15 14 16 17 0 0 8 16 18 16 8 8 12 18 19 18 12 12 1 19 19 17 20 20 21 19 17 16 22 22 20 17 16 18 23 23 22 16 18 19 21 21 23 18 21 20 24 24 25 21 20 22 26 26 24 20 22 23 27 27 26 22 23 21 25 25 27 23 0 17 28 28 29 0 17 19 30 30 28 17 19 1 31 31 30 19 1 0 29 29 31 1 29 28 32 32 33 29 28 30 34 34 32 28 30 31 35 35 34 30 31 29 33 33 35 31 33 32 36 36 37 33 32 34 38 38 36 32 34 35 39 39 38 34 35 33 37 37 39 35 40 7 6 6 41 40 42 41 6 6 11 42 43 42 11 11 15 43 40 43 15 15 7 40 2 40 41 41 3 2 9 3 41 41 42 9 13 9 42 42 43 13 2 13 43 43 40 2 44 45 46 46 47 44 48 49 50 50 51 48 52 53 54 54 55 52 56 57 58 58 59 56 </coordinatesIdx>
@@ -55,9 +55,9 @@
       <transform pos="[-12677.65,0,-14616.58]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque14" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-12310,27.101,-14448.4]" max="[-11989.34,412.5983,-14127.74]" />
+      <boundingBox min="[-12310,15.4863,-14448.4]" max="[-11989.34,400.9836,-14127.74]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-12153.83,27.101,-14288.07]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[-12153.83,15.4863,-14288.07]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque15" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-11210.98,0,-15878.28]" max="[-10890.31,385.4973,-15557.61]" />
@@ -75,9 +75,9 @@
       <transform pos="[-11827.15,0,-14055.01]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque18" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-11542.21,13.9368,-13760.78]" max="[-11221.54,399.4341,-13440.12]" />
+      <boundingBox min="[-11542.21,7.9639,-13760.78]" max="[-11221.54,393.4612,-13440.12]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-11386.04,13.9368,-13600.45]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[-11386.04,7.9639,-13600.45]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque19" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-10900.7,0,-13111.2]" max="[-10580.04,385.4973,-12790.54]" />
@@ -120,9 +120,9 @@
       <transform pos="[-12913.41,0,-16167.33]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque44" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-13455.03,5.8689,-15405.25]" max="[-13160.68,359.7319,-15110.9]" />
+      <boundingBox min="[-13455.03,3.3536,-15405.25]" max="[-13160.68,357.2166,-15110.9]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-13311.67,5.8689,-15258.08]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[-13311.67,3.3536,-15258.08]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque45" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-13628.21,0,-17025.42]" max="[-13333.86,353.863,-16731.06]" />
@@ -139,135 +139,110 @@
       <originalMesh>0</originalMesh>
       <transform pos="[-12524,0,-16931.85]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
-    <mesh name="ArbolBosque3" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-2212.974,1540,-1655.766]" max="[-741.2245,3309.315,-184.0132]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-1496.194,1540,-919.8883]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque29" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-1859.909,1540,710.9235]" max="[-1539.246,1925.497,1031.587]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-1703.738,1540,871.2555]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque31" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-194.679,1540,1010.765]" max="[125.9851,1925.497,1331.43]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-38.5071,1540,1171.097]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque36" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-953.3246,1540,120.8234]" max="[-632.6605,1925.497,441.4874]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-797.1527,1540,281.1554]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque32" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-2207.724,1540,-435.8661]" max="[-1887.061,1925.497,-115.202]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-2051.553,1540,-275.5341]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque7" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-789.1782,1540,-1870.75]" max="[682.5734,3309.315,-399.0004]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-72.3969,1540,-1134.875]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque37" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-2169.908,1540,-1645.961]" max="[-1849.244,1925.497,-1325.297]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-2013.736,1540,-1485.629]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque39" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-773.5629,1540,-2744.457]" max="[-452.8988,1925.497,-2423.793]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-617.392,1540,-2584.125]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque41" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[641.9645,1540,-2847.341]" max="[962.6285,1925.497,-2526.677]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[798.1354,1540,-2687.009]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque40" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[1228.163,1540,-1714.153]" max="[1548.828,1925.497,-1393.489]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[1384.335,1540,-1553.821]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
     <mesh name="ArbolBosque38" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[1202.547,1540,-281.6089]" max="[1523.211,1925.497,39.0552]" />
+      <boundingBox min="[1202.547,880,-281.6089]" max="[1523.211,1265.497,39.0552]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[1358.719,1540,-121.2769]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque33" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[222.0569,1540,25.6085]" max="[542.7209,1925.497,346.2726]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[378.2288,1540,185.9406]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque2" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-386.4028,1540,-2672.743]" max="[1085.347,3309.315,-1200.993]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[330.3772,1540,-1936.868]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[1358.719,880,-121.2769]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque1" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[1446.125,1540,-1254.333]" max="[2917.875,3309.315,217.417]" />
+      <boundingBox min="[1446.125,880,-1254.333]" max="[2917.875,2649.315,217.4169]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[2162.906,1540,-518.457]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque35" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-1323.625,1540,-2152.965]" max="[-1002.961,1925.497,-1832.301]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-1167.453,1540,-1992.633]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[2162.906,880,-518.457]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque34" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-797.395,1540,-998.1403]" max="[-476.731,1925.497,-677.4762]" />
+      <boundingBox min="[-797.395,880,-998.1403]" max="[-476.731,1265.497,-677.4762]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-641.2231,1540,-837.8082]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque27" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-1563.148,1540,-276.5624]" max="[-1242.485,1925.497,44.0978]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-1406.976,1540,-116.2323]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque30" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-776.0179,1540,-1827.23]" max="[-455.3539,1925.497,-1506.566]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[-619.8456,1540,-1666.898]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[-641.2231,880,-837.8082]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque25" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[1135.375,1540,522.9829]" max="[1456.04,1925.497,843.6431]" />
+      <boundingBox min="[1135.375,880,522.9829]" max="[1456.04,1265.497,843.6431]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[1291.547,1540,683.313]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque23" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[419.4537,1540,-958.0077]" max="[740.1178,1925.497,-637.3475]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[575.6256,1540,-797.6776]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
-    </mesh>
-    <mesh name="ArbolBosque26" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-89.9762,1540,-3037.277]" max="[230.6879,1925.497,-2716.617]" />
-      <originalMesh>0</originalMesh>
-      <transform pos="[66.1957,1540,-2876.947]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[1291.547,880,683.313]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque24" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-1235.67,1540,1741.279]" max="[-915.0061,1925.497,2061.943]" />
+      <boundingBox min="[-1235.67,880,1741.279]" max="[-915.0061,1265.497,2061.943]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-1079.498,1540,1901.611]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[-1079.498,880,1901.611]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque0" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[248.6931,1540,365.6377]" max="[1720.443,3309.315,1837.388]" />
+      <boundingBox min="[248.6931,880,365.6378]" max="[1720.443,2649.315,1837.388]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[965.4724,1540,1101.514]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[965.4724,880,1101.514]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
     <mesh name="ArbolBosque6" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[1378.249,1540,-99.8804]" max="[2849.999,3309.315,1371.869]" />
+      <boundingBox min="[1378.249,880,-99.8804]" max="[2849.999,2649.315,1371.869]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[2095.029,1540,635.9985]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[2095.029,880,635.9985]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
-    <mesh name="ArbolBosque4" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-2875.511,1540,-689.3839]" max="[1462.534,6755.125,3648.656]" />
+    <mesh name="ArbolBosque33" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[229.4635,880,39.4757]" max="[550.1274,1265.497,360.1398]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-762.7655,1540,1479.636]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+      <transform pos="[385.6354,880,199.8077]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
-    <mesh name="ArbolBosque9" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-822.3762,1540,-547.3738]" max="[649.3738,3309.315,924.3762]" />
+    <mesh name="ArbolBosque31" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-201.9666,880,1017.714]" max="[118.6975,1265.497,1338.379]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-105.5969,1540,188.5071]" rotQuat="[0,0,0,0]" scale="[0.4,0.4,0.4]" />
+      <transform pos="[-45.7947,880,1178.046]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque36" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-966.9415,880,156.6541]" max="[-646.2775,1265.497,477.3181]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-810.7697,880,316.9861]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque27" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-1640.199,880,-264.1021]" max="[-1319.536,1265.497,56.5581]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-1484.027,880,-103.772]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque32" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-2371.369,880,-360.6006]" max="[-2050.706,1265.497,-39.9365]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-2215.198,880,-200.2686]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque29" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-1925.882,880,825.1417]" max="[-1605.219,1265.497,1145.805]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-1769.711,880,985.4736]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque37" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-2289.714,880,-1708.638]" max="[-1969.05,1265.497,-1387.974]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-2133.542,880,-1548.306]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque35" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-1334.749,880,-2241.915]" max="[-1014.085,1265.497,-1921.25]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-1178.577,880,-2081.583]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque39" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-740.3903,880,-2812.374]" max="[-419.7261,1265.497,-2491.709]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-584.2194,880,-2652.042]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque26" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-57.652,880,-3094.327]" max="[263.0121,1265.497,-2773.667]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[98.5199,880,-2933.997]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque30" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-736.0002,880,-1839.196]" max="[-415.3362,1265.497,-1518.532]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[-579.8279,880,-1678.864]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque41" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[529.9375,880,-2361.135]" max="[850.6015,1265.497,-2040.471]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[686.1084,880,-2200.803]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque40" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[1244.127,880,-1664.397]" max="[1564.792,1265.497,-1343.733]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[1400.299,880,-1504.065]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
+    </mesh>
+    <mesh name="ArbolBosque23" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[533.5742,880,-995.4924]" max="[854.2383,1265.497,-674.8322]" />
+      <originalMesh>0</originalMesh>
+      <transform pos="[689.7461,880,-835.1624]" rotQuat="[0,0,0,0]" scale="[0.65,0.65,0.65]" />
     </mesh>
   </meshes>
 </tgcScene>

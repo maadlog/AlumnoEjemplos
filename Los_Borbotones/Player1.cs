@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             CustomFpsCamera.Instance.Enable = true;
             GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
-            CustomFpsCamera.Instance.setCamera(new Vector3(-13000, 20, -16500), new Vector3(0, 0, -1000));
+            CustomFpsCamera.Instance.setCamera(new Vector3(-20, 930, -20), new Vector3(0, 0, -1000));
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
