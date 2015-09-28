@@ -54,7 +54,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        public int vegetacionVisible = 0;
         TgcSprite cross;
+        GrillaRegular grilla;
         TgcSkyBox skyBox;
 
         TgcText2d scoreText;
@@ -101,18 +103,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             vegetation = Vegetation.Meshes;
             int i;
+            Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
                 center.Y = y;
-
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
-                Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
-
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
+            Matrix sceneScale = Matrix.Scaling(new Vector3(1f, 0.4f, 1f));
+            Vegetation.BoundingBox.transform(sceneScale);
 
             player1.Init();
 
@@ -139,6 +141,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             refreshScopeTexture();
 
+            grilla = new GrillaRegular();
+            grilla.create(vegetation, Vegetation.BoundingBox);
+            grilla.createDebugMeshes();
         }
 
         internal void Update(float elapsedTime)
@@ -179,15 +184,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Render(float elapsedTime)
         {
             terrain.render();
-            //foreach (TgcMesh v in vegetation)
-            int i;
-            int max = vegetation.Count();
-            for (i = 1; i < max; i++)
-            {
-                vegetation[i].render();
 
-                if (drawBoundingBoxes) { vegetation[i].BoundingBox.render(); }
-            }
+            grilla.render(GuiController.Instance.Frustum, drawBoundingBoxes);
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
@@ -208,6 +206,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (TEXT_DELAY > 0) { specialKillText.render(); }
 
             player1.Render(elapsedTime);
+
+            //Obtener valor de UserVar (hay que castear)
+            GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
+            int valor = (int)GuiController.Instance.UserVars.getValue("N Vegetacion Visible");
+            vegetacionVisible = 0;
 
         }
 

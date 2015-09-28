@@ -94,6 +94,8 @@
     <Compile Include="Los_Borbotones\Enemy.cs" />
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
+    <Compile Include="Los_Borbotones\GrillaRegular.cs" />
+    <Compile Include="Los_Borbotones\GrillaRegularNode.cs" />
     <Compile Include="Los_Borbotones\Player1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

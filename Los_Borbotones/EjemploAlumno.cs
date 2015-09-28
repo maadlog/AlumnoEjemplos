@@ -61,13 +61,15 @@ Presionar L para capturar el mouse.";
             ///////////////USER VARS//////////////////
 
             //Crear una UserVar
-            GuiController.Instance.UserVars.addVar("lookatY");
+            GuiController.Instance.UserVars.addVar("N Vegetacion Visible");
 
             //Cargar valor en UserVar
-            GuiController.Instance.UserVars.setValue("lookatY", 0);
+            GuiController.Instance.UserVars.setValue("N Vegetacion Visible", 0);
             
 
             ///////////////MODIFIERS//////////////////
+
+            GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", true);
 
             //Crear un modifier para un valor FLOAT
             GuiController.Instance.Modifiers.addFloat("weaponRotation", 0, 2f * (float)Math.PI, 0.1f);
@@ -78,8 +80,6 @@ Presionar L para capturar el mouse.";
 
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
-
-            GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", true);
 
             //Creacion del Game Manager
             gameManager = GameManager.Instance;
@@ -99,18 +99,8 @@ Presionar L para capturar el mouse.";
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-
-            //Obtener valor de UserVar (hay que castear)
-            GuiController.Instance.UserVars.setValue("lookatY", GuiController.Instance.FpsCamera.LookAt.Y);
-            float valor = (float)GuiController.Instance.UserVars.getValue("lookatY");
-
-
             //Obtener valores de Modifiers
             string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
-
-
-
-
 
             gameManager.Update(elapsedTime);
             gameManager.Render(elapsedTime);

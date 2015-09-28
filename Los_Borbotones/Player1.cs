@@ -26,7 +26,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
         int vida = 100;
-        float intensidadMaximaEscalable = 0.35f;
+        float intensidadMaximaEscalable = 0.7f;
+        float sprintTime = 0;
+        float tiredTime = 0;
+        float MAX_SPRINT_TIME = 10;
+        float TIRED_TIME = 5;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -70,10 +74,23 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
+
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0)
             {
                 ZOOM_DELAY = MAX_ZOOM_DELAY;
                 GameManager.Instance.zoomCamera();
+            }
+
+            if (GuiController.Instance.D3dInput.keyDown(Key.LeftShift) && sprintTime < MAX_SPRINT_TIME)
+            {
+                CustomFpsCamera.Instance.MovementSpeed = 300f;
+                sprintTime += elapsedTime;
+                if (sprintTime > MAX_SPRINT_TIME) { tiredTime = 0; }
+            }
+            else { 
+                CustomFpsCamera.Instance.MovementSpeed = CustomFpsCamera.DEFAULT_MOVEMENT_SPEED;
+                tiredTime += elapsedTime;
+                if (tiredTime > TIRED_TIME) { sprintTime = 0; }
             }
 
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
@@ -83,10 +100,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Maxima inclinacion sobre terreno
             float yActual;
             float yAnterior;
+            float movspeed = CustomFpsCamera.Instance.MovementSpeed;
             GameManager.Instance.interpoledHeight(CustomFpsCamera.Instance.eye.X, CustomFpsCamera.Instance.eye.Z, out yActual);
             GameManager.Instance.interpoledHeight(prevEye.X, prevEye.Z, out yAnterior);
 
-            if (yActual - yAnterior >= intensidadMaximaEscalable)
+            if ((yActual - yAnterior)/(movspeed*elapsedTime) >= intensidadMaximaEscalable)
             {
                 CustomFpsCamera.Instance.eye = prevEye;
                 CustomFpsCamera.Instance.reconstructViewMatrix(false);
