@@ -269,7 +269,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             lookAt = eye + viewDir;
 
             Vector3 pMin = new Vector3(20, 0, 20);
-            Vector3 pMax = new Vector3(-20, HeadPosition, -20);
+            Vector3 pMax = new Vector3(-20, HeadPosition * 1.3f, -20);
             boundingBox = new TgcBoundingBox(pMin + eye, pMax + eye);
 
             accelerationEnable = false;
@@ -324,7 +324,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             Matrix worldMatrix = viewMatrix;
             worldMatrix.Invert();
-            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition / 2, 0f));
+            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition, 0f));
             boundingBox.transform(worldMatrix * trans);
         }
 
@@ -699,7 +699,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             worldMatrix.M31 = 0;
             worldMatrix.M32 = 0;
             worldMatrix.M33 = 1;
-            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition/2, 0f));
+            Matrix trans = Matrix.Translation(new Vector3(0f, -HeadPosition, 0f));
             boundingBox.transform(worldMatrix * trans);
         }
 
