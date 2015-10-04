@@ -69,12 +69,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
             if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
             {
-                GameManager.Instance.player1.recibirAtaque(attackDamage);
-                this.posicionActual = this.posicionAnterior;
-                this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
-                this.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
+                GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
+                GameManager.Instance.eliminarEnemigo(this);
+                //this.posicionActual = this.posicionAnterior;
+                //this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
+                //this.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
             }
-
+            
             //Colision con otros enemigos
             foreach (Enemy enemy in GameManager.Instance.enemies)
             {
@@ -106,7 +107,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                 }
             }
-
+            
             //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
             foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
             {

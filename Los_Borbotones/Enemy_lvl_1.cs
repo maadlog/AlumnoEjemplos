@@ -24,7 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
-             attackDamage = 5;
+             attackDamage = 50;
              TgcSceneLoader loader = new TgcSceneLoader();
              TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
              this.mesh = scene.Meshes[0];

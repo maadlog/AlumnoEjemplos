@@ -143,7 +143,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             mesh.render();
-
+            
            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 
@@ -160,12 +160,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
         }
 
-        public void recibirAtaque(int damage)
+        public void recibirAtaque(int damage, float elapsedTime)
         {
             vida -= damage;
             if(vida <= 0)
             {
-                //TODO
+                GameManager.Instance.gameOver(elapsedTime);
             }
         }
 

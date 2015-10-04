@@ -37,12 +37,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         #endregion
 
         public Player1 player1 = new Player1();
-        public List<Enemy> enemies = new List<Enemy>();
+        public List<Enemy> enemies;
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
         float SPAWN_TIME = 5f;
-        float SPAWN_TIME_COUNTER = 0f;
+        float SPAWN_TIME_COUNTER;
         public Random random = new Random();
         int rand;
 
@@ -60,13 +60,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSkyBox skyBox;
 
         TgcText2d scoreText;
-        float score = 0;
+        float score;
         TgcText2d specialKillText;
-        float TEXT_DELAY = 0;
+        float TEXT_DELAY;
         float TEXT_DELAY_MAX = 2f;
-        int killMultiTracker = 0;
-        float KILL_DELAY = 0;
-        float KILL_DELAY_MAX = 5;        
+        int killMultiTracker;
+        float KILL_DELAY;
+        float KILL_DELAY_MAX = 5;
+        public bool GAME_OVER;
 
         TgcStaticSound sound = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
@@ -88,7 +89,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         float screenCovered = 0.12f;
 
         internal void Init()
-        {              
+        {
+            GAME_OVER = false;
+            score = 0;
+            TEXT_DELAY = 0;
+            killMultiTracker = 0;
+            KILL_DELAY = 0;
+            SPAWN_TIME_COUNTER = 0f;
+
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
@@ -117,6 +125,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             Vegetation.BoundingBox.transform(sceneScale);
 
             player1.Init();
+
+            enemies = new List<Enemy>();
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
@@ -167,10 +177,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
                 SPAWN_TIME_COUNTER = 0;
             }
-            foreach (Enemy enemigo in enemies)
-            {
-                enemigo.Update(elapsedTime);
-            }
+
+            enemies.ForEach(enemy => enemy.Update(elapsedTime));
 
             scoreText.Text = "Score: " + score;
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
@@ -178,6 +186,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
                 if (killMultiTracker >= 2) { playSound(deniedSoundDir); }
                 killMultiTracker = 0;
+            }
+
+            if (TEXT_DELAY <= 0 && GAME_OVER)
+            {
+                close();
+                Init();
             }
         }
 
@@ -220,6 +234,21 @@ namespace AlumnoEjemplos.Los_Borbotones
             terrain.dispose();
             player1.dispose();
             specialKillText.dispose();
+            scoreText.dispose();
+            normalScope.dispose();
+            zoomedScope.dispose();
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.dispose();
+            }
+        }
+
+        public void gameOver(float elapsedTime)
+        {
+            if (GAME_OVER) { return; }
+            specialKillText.Text = "GAME OVER";
+            TEXT_DELAY = TEXT_DELAY_MAX;
+            GAME_OVER = true;
         }
 
         public void fireWeapon()
@@ -272,7 +301,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                         if (enemies[i].health <= 0)
                         {
                             score += enemies[i].score;
-                            eliminarEnemigo(i);
+                            eliminarEnemigo(enemies[i]);
                             killMultiTracker++;
                             awardKill();
                             KILL_DELAY = KILL_DELAY_MAX;
@@ -291,7 +320,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
-        public void eliminarEnemigo(int i)
+        public void eliminarEnemigo(Enemy enemy)
         {
             if (enemies.Count == 0)
             {
@@ -300,8 +329,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemigo.Init();
             }
 
-            enemies[i].dispose();
-            enemies.Remove(enemies[i]);
+            enemy.dispose();
+            enemies.Remove(enemy);
         }
 
         private void awardKill()
