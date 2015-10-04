@@ -56,7 +56,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         private List<TgcMesh> vegetation;
         public int vegetacionVisible = 0;
         TgcSprite cross;
-        GrillaRegular grilla;
+        Quadtree quadTree;
         TgcSkyBox skyBox;
 
         TgcText2d scoreText;
@@ -151,9 +151,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             refreshScopeTexture();
 
-            grilla = new GrillaRegular();
-            grilla.create(vegetation, Vegetation.BoundingBox);
-            grilla.createDebugMeshes();
+            quadTree = new Quadtree();
+            quadTree.create(vegetation, Vegetation.BoundingBox);
+            quadTree.createDebugQuadtreeMeshes();
         }
 
         internal void Update(float elapsedTime)
@@ -199,7 +199,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             terrain.render();
 
-            grilla.render(GuiController.Instance.Frustum, drawBoundingBoxes);
+            quadTree.render(GuiController.Instance.Frustum, drawBoundingBoxes);
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
