@@ -26,7 +26,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
         int vida = 100;
-        float intensidadMaximaEscalable = 0.7f;
+        double intensidadMaximaEscalable = Math.Pow(0.7, 2);
         float sprintTime = 0;
         float tiredTime = 0;
         float MAX_SPRINT_TIME = 10;
@@ -103,8 +103,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             float movspeed = CustomFpsCamera.Instance.MovementSpeed;
             GameManager.Instance.interpoledHeight(CustomFpsCamera.Instance.eye.X, CustomFpsCamera.Instance.eye.Z, out yActual);
             GameManager.Instance.interpoledHeight(prevEye.X, prevEye.Z, out yAnterior);
+            double diferenciaPotenciada = Math.Pow((yActual - yAnterior) / (movspeed * elapsedTime), 2);
 
-            if ((yActual - yAnterior)/(movspeed*elapsedTime) >= intensidadMaximaEscalable)
+            if ( diferenciaPotenciada >= intensidadMaximaEscalable)
             {
                 CustomFpsCamera.Instance.eye = prevEye;
                 CustomFpsCamera.Instance.reconstructViewMatrix(false);
