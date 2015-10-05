@@ -23,7 +23,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.mesh = scene.Meshes[0];
-            SPAWN_HEIGHT = 20f;
+            SPAWN_HEIGHT = 1000f;
             giroInicial = Matrix.RotationY(0);
 
             base.Init();
@@ -31,6 +31,43 @@ namespace AlumnoEjemplos.Los_Borbotones
             setBaseEffect();
 
             HEADSHOT_BOUNDINGBOX = new TgcBoundingBox();
+            CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+            LEGS_BOUNDINGBOX = new TgcBoundingBox();
+
+        }
+
+        override public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
+        {
+            Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+
+            //vectorDireccionRotacion = new Vector3(vectorDireccion.X, vectorDireccion.Y, vectorDireccion.Z);
+            //vectorDireccionRotacion.Normalize();
+
+            float y;
+            GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
+            //float headOffsetY = posicionActualHeadshot.M42 - posicionActual.M42;
+
+            
+            if (vectorPosActual.Y < y)
+            {
+                posicionActual.M42 = y;
+            }
+            
+            //posicionActualHeadshot.M42 = headOffsetY + y;
+
+            MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
+
+            Traslacion = Matrix.Translation(Direccion * MOVEMENT_SPEED * elapsedTime);
+
+            Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
+            this.mesh.Transform = transform;
+
+            this.mesh.BoundingBox.transform(transform);
+            this.CHEST_BOUNDINGBOX.transform(transform);
+
+            posicionActual = posicionActual * Traslacion;
+            //this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualHeadshot * Traslacion);
+            //posicionActualHeadshot = posicionActualHeadshot * Traslacion;
         }
     }
 }

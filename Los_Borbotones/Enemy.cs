@@ -28,11 +28,17 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float SPAWN_HEIGHT = 0;
         public  Matrix giroInicial;
         public TgcBoundingBox HEADSHOT_BOUNDINGBOX;
+        public TgcBoundingBox CHEST_BOUNDINGBOX;
+        public TgcBoundingBox LEGS_BOUNDINGBOX;
         public Matrix posicionActualHeadshot;
+        public Matrix posicionActualChest;
+        public Matrix posicionActualLegs;
         public Matrix Traslacion;
         public Matrix MatOrientarObjeto;
         public Matrix posicionAnterior;
         public Matrix posicionAnteriorHeadshot;
+        public Matrix posicionAnteriorChest;
+        public Matrix posicionAnteriorLegs;
         public Vector3 vectorDireccionAnterior;
         public Vector3 vectorDireccionRotacionAnterior;
 
@@ -97,12 +103,16 @@ namespace AlumnoEjemplos.Los_Borbotones
                     {
                         enemy.posicionActual = enemy.posicionAnterior;
                         enemy.posicionActualHeadshot = enemy.posicionAnteriorHeadshot;
+                        enemy.posicionActualChest = enemy.posicionAnteriorChest;
+                        enemy.posicionActualLegs = enemy.posicionAnteriorLegs;
                         enemy.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
                     }
                     else
                     {
                         this.posicionActual = this.posicionAnterior;
                         this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
+                        this.posicionActualChest = this.posicionAnteriorChest;
+                        this.posicionActualLegs = this.posicionAnteriorLegs;
                         this.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
                     }
                 }
@@ -116,6 +126,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 {
                     posicionActual = posicionAnterior;
                     posicionActualHeadshot = posicionAnteriorHeadshot;
+                    posicionActualChest = posicionAnteriorChest;
+                    posicionActualLegs = posicionAnteriorLegs;
                     vectorDireccionRotacion = vectorDireccionRotacionAnterior;
                     vectorDireccion = vectorDireccionAnterior;
                     Vector3 dirX = new Vector3(vectorDireccion.X, 0, 0);
@@ -127,6 +139,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                     {
                         posicionActual = posicionAnterior;
                         posicionActualHeadshot = posicionAnteriorHeadshot;
+                        posicionActualChest = posicionAnteriorChest;
+                        posicionActualLegs = posicionAnteriorLegs;
                         Vector3 dirZ = new Vector3(0, 0, vectorDireccion.Z);
                         dirZ.Normalize();
                         updateMovementMatrix(elapsedTime, dirZ);
@@ -135,7 +149,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                         if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
                         {
                             posicionActual = posicionAnterior;
-                            posicionActual = posicionAnteriorHeadshot;
+                            posicionActualHeadshot = posicionAnteriorHeadshot;
+                            posicionActualChest = posicionAnteriorChest;
+                            posicionActualLegs = posicionAnteriorLegs;
+                            
                         }
                     }
                     break;
@@ -144,11 +161,13 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             posicionAnterior = posicionActual;
             posicionAnteriorHeadshot = posicionActualHeadshot;
+            posicionAnteriorChest = posicionActualChest;
+            posicionAnteriorLegs = posicionActualLegs;
             vectorDireccionRotacionAnterior = vectorDireccionRotacion;
             vectorDireccionAnterior = vectorDireccion;
         }
 
-        private Matrix calcularMatrizOrientacion(Vector3 v)
+        public Matrix calcularMatrizOrientacion(Vector3 v)
         {
             Matrix m_mWorld = new Matrix();
             Vector3 n = new Vector3(0, -1, 0);
@@ -176,7 +195,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             return m_mWorld;
         }
-        private Matrix CreatorMatrixPosition()
+        public Matrix CreatorMatrixPosition()
         {
             Random random = new Random();
             float ANGLE = random.Next(0, 360) / (int)Math.PI;
@@ -211,20 +230,26 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 this.mesh.BoundingBox.render();
                 this.HEADSHOT_BOUNDINGBOX.render();
+                this.CHEST_BOUNDINGBOX.render();
+                this.LEGS_BOUNDINGBOX.render();
             }
             
         }
 
-        public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
+        virtual public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
         {
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             
             float y;
             GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
             float headOffsetY = posicionActualHeadshot.M42 - posicionActual.M42;
+            float chestOffsetY = posicionActualChest.M42 - posicionActual.M42;
+            float legsOffsetY = posicionActualLegs.M42 - posicionActual.M42;
 
             posicionActual.M42 = y;
             posicionActualHeadshot.M42 = headOffsetY + y;
+            posicionActualChest.M42 = chestOffsetY + y;
+            posicionActualLegs.M42 = legsOffsetY + y;
 
             MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
 
@@ -238,6 +263,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             posicionActual = posicionActual * Traslacion;
             this.HEADSHOT_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualHeadshot * Traslacion);
             posicionActualHeadshot = posicionActualHeadshot * Traslacion;
+
+            this.CHEST_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualChest * Traslacion);
+            posicionActualChest = posicionActualChest * Traslacion;
+
+            this.LEGS_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualLegs * Traslacion);
+            posicionActualLegs = posicionActualLegs * Traslacion;
         }
         
         public virtual void setBaseEffect()

@@ -40,10 +40,20 @@ namespace AlumnoEjemplos.Los_Borbotones
              skeletalMesh.playAnimation("Caminando", true);
              base.Init();
              HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
-            Matrix escalabox = Matrix.Scaling(new Vector3(0.5f,0.3f,0.5f));
+             CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+             LEGS_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+            Matrix escalabox = Matrix.Scaling(new Vector3(0.43f,0.3f,0.43f));
             Matrix traslationbox = Matrix.Translation(new Vector3(0,90f,0));
             HEADSHOT_BOUNDINGBOX.transform(escalabox * traslationbox);
             posicionActualHeadshot = escalabox * traslationbox * posicionActual;
+           Matrix escalabox2 = Matrix.Scaling(new Vector3(0.6f, 0.3f, 0.6f));
+            Matrix traslationbox2 = Matrix.Translation(new Vector3(0, 50f, 0));
+            CHEST_BOUNDINGBOX.transform(escalabox2 * traslationbox2);
+            posicionActualChest = escalabox2 * traslationbox2 * posicionActual;
+            Matrix escalabox3 = Matrix.Scaling(new Vector3(0.4f, 0.38f, 0.4f));
+            Matrix traslationbox3 = Matrix.Translation(new Vector3(0, 0f, 0));
+            LEGS_BOUNDINGBOX.transform(escalabox3 * traslationbox3);
+            posicionActualLegs = escalabox3 * traslationbox3 * posicionActual;
             skeletalMesh.AutoTransformEnable = false;
 
             setBaseEffect();
@@ -64,6 +74,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 this.mesh.BoundingBox.render();
                 this.HEADSHOT_BOUNDINGBOX.render();
+                this.CHEST_BOUNDINGBOX.render();
+                this.LEGS_BOUNDINGBOX.render();
             }
         }
 

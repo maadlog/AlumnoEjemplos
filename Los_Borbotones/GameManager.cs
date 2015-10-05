@@ -283,11 +283,12 @@ namespace AlumnoEjemplos.Los_Borbotones
                         TEXT_DELAY = TEXT_DELAY_MAX;
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
+                        eliminarEnemigo(enemies[i]);
                     }
                     vegetacionFrenoDisparo = false;
                 }           
 
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].CHEST_BOUNDINGBOX, out newPosition))
                 {
                     foreach(Vector3 posicion in posicionObstaculos){
                         if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
@@ -308,7 +309,30 @@ namespace AlumnoEjemplos.Los_Borbotones
                         }
                     }
                     vegetacionFrenoDisparo = false;
-                }                
+                }
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].LEGS_BOUNDINGBOX, out newPosition))
+                {
+                    foreach (Vector3 posicion in posicionObstaculos)
+                    {
+                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
+                        {
+                            vegetacionFrenoDisparo = true;
+                        }
+                    }
+                    if (!vegetacionFrenoDisparo)
+                    {
+                        enemies[i].health -= 25;
+                        if (enemies[i].health <= 0)
+                        {
+                            score += enemies[i].score;
+                            eliminarEnemigo(enemies[i]);
+                            killMultiTracker++;
+                            awardKill();
+                            KILL_DELAY = KILL_DELAY_MAX;
+                        }
+                    }
+                    vegetacionFrenoDisparo = false;
+                }  
             }
             
             if (killHeadTracker > 1)
