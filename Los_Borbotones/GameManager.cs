@@ -264,6 +264,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
 
             int killHeadTracker = 0;
+            bool hit = false;
 
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
@@ -275,8 +276,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                             vegetacionFrenoDisparo = true;
                         }
                     }
-                    if (!vegetacionFrenoDisparo)
+                    if (!vegetacionFrenoDisparo && !hit)
                     {
+                        hit = true;
                         score += 1;
                         killHeadTracker++;
                         specialKillText.Text = "HEADSHOT!!";
@@ -296,11 +298,12 @@ namespace AlumnoEjemplos.Los_Borbotones
                             vegetacionFrenoDisparo = true;
                         }
                     }
-                    if (!vegetacionFrenoDisparo)
+                    if (!vegetacionFrenoDisparo && !hit)
                     {
                         enemies[i].health -= 50;
                         if (enemies[i].health <= 0)
                         {
+                            hit = true;
                             score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
                             killMultiTracker++;
@@ -319,11 +322,12 @@ namespace AlumnoEjemplos.Los_Borbotones
                             vegetacionFrenoDisparo = true;
                         }
                     }
-                    if (!vegetacionFrenoDisparo)
+                    if (!vegetacionFrenoDisparo && !hit)
                     {
                         enemies[i].health -= 25;
                         if (enemies[i].health <= 0)
                         {
+                            hit = true;
                             score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
                             killMultiTracker++;
@@ -332,7 +336,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                         }
                     }
                     vegetacionFrenoDisparo = false;
-                }  
+                }
+
+                hit = false;
             }
             
             if (killHeadTracker > 1)
