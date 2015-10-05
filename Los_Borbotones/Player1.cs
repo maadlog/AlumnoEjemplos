@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcStaticSound sound = new TgcStaticSound();
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
-        int vida = 100;
+        public int vida = 100;
         double intensidadMaximaEscalable = Math.Pow(0.7, 2);
         float sprintTime = 0;
         float tiredTime = 0;
@@ -166,6 +166,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void recibirAtaque(int damage, float elapsedTime)
         {
             vida -= damage;
+            GameManager.Instance.healthText.Text = "HEALTH: " + vida;
+            GameManager.Instance.ChangeColorHealth();
             if(vida <= 0)
             {
                 GameManager.Instance.gameOver(elapsedTime);

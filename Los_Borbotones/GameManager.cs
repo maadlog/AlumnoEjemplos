@@ -68,6 +68,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float KILL_DELAY;
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
+        public TgcText2d healthText;
 
         TgcStaticSound sound = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
@@ -139,11 +140,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             specialKillText.Align = TgcText2d.TextAlign.CENTER;
             specialKillText.Position = new Point(0, 100);
             specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
-
+            
             scoreText = new TgcText2d();
-            scoreText.Text = "Score: " + score;
+            scoreText.Text = "SCORE: " + score;
+                scoreText.Color = Color.LightBlue;
+                scoreText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
 
-         
+                healthText = new TgcText2d();
+                healthText.Text = "HEALTH: " + player1.vida;
+                healthText.Color = Color.Green;
+                healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
+            healthText.Position = new Point(0, 250);
+            healthText.Align = TgcText2d.TextAlign.LEFT;
+            
+              
             cross = new TgcSprite();
             normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\normalScope.png");
             zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\zoomedScope.png");
@@ -159,6 +169,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Update(float elapsedTime)
         {
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
+            
 
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
             player1.Update(elapsedTime);
@@ -181,6 +192,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             enemies.ForEach(enemy => enemy.Update(elapsedTime));
 
             scoreText.Text = "Score: " + score;
+            ChangeTextColor();
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
             if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
             if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
@@ -192,6 +204,30 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 close();
                 Init();
+            }
+        }
+
+        private void ChangeTextColor()
+        {
+            if (score >= 0)
+            {
+                scoreText.Color = Color.White;
+            }
+            if (score > 10)
+            {
+                scoreText.Color = Color.Orange;
+            }
+            if (score > 20)
+            {
+                scoreText.Color = Color.Silver;
+            }
+            if (score > 30)
+            {
+                scoreText.Color = Color.Gold;
+            }
+            if(score > 50)
+            {
+                scoreText.Color = Color.LightCyan;
             }
         }
 
@@ -217,6 +253,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             GuiController.Instance.Drawer2D.endDrawSprite();
 
             scoreText.render();
+            healthText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
 
             player1.Render(elapsedTime);
@@ -235,6 +272,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             player1.dispose();
             specialKillText.dispose();
             scoreText.dispose();
+            healthText.dispose();
             normalScope.dispose();
             zoomedScope.dispose();
             foreach (Enemy enemy in enemies)
@@ -288,30 +326,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                         eliminarEnemigo(enemies[i]);
                     }
                     vegetacionFrenoDisparo = false;
-                }           
-
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].CHEST_BOUNDINGBOX, out newPosition))
-                {
-                    foreach(Vector3 posicion in posicionObstaculos){
-                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
-                        {
-                            vegetacionFrenoDisparo = true;
-                        }
-                    }
-                    if (!vegetacionFrenoDisparo && !hit)
-                    {
-                        enemies[i].health -= 50;
-                        if (enemies[i].health <= 0)
-                        {
-                            hit = true;
-                            score += enemies[i].score;
-                            eliminarEnemigo(enemies[i]);
-                            killMultiTracker++;
-                            awardKill();
-                            KILL_DELAY = KILL_DELAY_MAX;
-                        }
-                    }
-                    vegetacionFrenoDisparo = false;
                 }
                 if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].LEGS_BOUNDINGBOX, out newPosition))
                 {
@@ -337,6 +351,30 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     vegetacionFrenoDisparo = false;
                 }
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].CHEST_BOUNDINGBOX, out newPosition))
+                {
+                    foreach(Vector3 posicion in posicionObstaculos){
+                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
+                        {
+                            vegetacionFrenoDisparo = true;
+                        }
+                    }
+                    if (!vegetacionFrenoDisparo && !hit)
+                    {
+                        enemies[i].health -= 50;
+                        if (enemies[i].health <= 0)
+                        {
+                            hit = true;
+                            score += enemies[i].score;
+                            eliminarEnemigo(enemies[i]);
+                            killMultiTracker++;
+                            awardKill();
+                            KILL_DELAY = KILL_DELAY_MAX;
+                        }
+                    }
+                    vegetacionFrenoDisparo = false;
+                }
+            
 
                 hit = false;
             }
@@ -523,6 +561,23 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             refreshScopeTexture();
 
+        }
+
+        public void ChangeColorHealth()
+        {
+            if (player1.vida >=51)
+            {
+                healthText.Color = Color.Green;
+            }
+            if (player1.vida < 51)
+            {
+                healthText.Color = Color.Yellow;
+            }
+            if (player1.vida < 26)
+            {
+                healthText.Color = Color.Red;
+            }
+           
         }
     }
 }

@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         override
            public void Init()
         {
-            health = 150;
+            health = 50;
             score = 3;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
@@ -37,7 +37,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             LEGS_BOUNDINGBOX = new TgcBoundingBox();
             //carga de sonido
             SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\aircraft.wav", new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
-            SonidoMovimiento.MinDistance = 150f;
+            SonidoMovimiento.MinDistance = 75f;
             SonidoMovimiento.play(true);
             
 
