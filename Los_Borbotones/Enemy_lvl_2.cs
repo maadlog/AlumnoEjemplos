@@ -7,6 +7,7 @@ using TgcViewer;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -19,7 +20,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             score = 3;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
-            attackDamage = 25;
+            attackDamage = 100;
+            MOVEMENT_SPEED = 215f;
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.mesh = scene.Meshes[0];
@@ -33,6 +35,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             HEADSHOT_BOUNDINGBOX = new TgcBoundingBox();
             CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
             LEGS_BOUNDINGBOX = new TgcBoundingBox();
+            //carga de sonido
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\aircraft.wav", new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
+            SonidoMovimiento.MinDistance = 150f;
+            SonidoMovimiento.play(true);
+            
 
         }
 

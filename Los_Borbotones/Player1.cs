@@ -42,6 +42,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
             mesh = scene.Meshes[0];
 
+            //hago que los 3dSound sigan al arma
+            GuiController.Instance.DirectSound.ListenerTracking = mesh;
             ///////////////CONFIGURAR CAMARA PRIMERA PERSONA CUSTOM//////////////////
             //Camara en primera persona, tipo videojuego FPS
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional

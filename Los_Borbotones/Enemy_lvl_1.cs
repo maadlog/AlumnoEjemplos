@@ -9,6 +9,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
+using TgcViewer.Utils.Sound;
 
 
 namespace AlumnoEjemplos.Los_Borbotones 
@@ -24,11 +25,14 @@ namespace AlumnoEjemplos.Los_Borbotones
                 score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
+             
              attackDamage = 50;
              TgcSceneLoader loader = new TgcSceneLoader();
              TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
              this.mesh = scene.Meshes[0];
              giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+
+            
             //carga de animaciones
              TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
              skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(
@@ -56,6 +60,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             posicionActualLegs = escalabox3 * traslationbox3 * posicionActual;
             skeletalMesh.AutoTransformEnable = false;
 
+            //carga de sonido
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", new Vector3(posicionActual.M41,posicionActual.M42,posicionActual.M43));
+            SonidoMovimiento.MinDistance = 100f;
+            SonidoMovimiento.play(true);
+            
+            
             setBaseEffect();
 
         }
@@ -92,6 +102,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.Effect.SetValue("g_time", elapsedTime);
         }
         */
-
+        public override void dispose()
+        {
+            base.dispose();
+            skeletalMesh.dispose();
+        }
     }
 }

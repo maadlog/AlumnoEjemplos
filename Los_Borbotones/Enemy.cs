@@ -8,6 +8,7 @@ using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Sound;
 
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -41,6 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix posicionAnteriorLegs;
         public Vector3 vectorDireccionAnterior;
         public Vector3 vectorDireccionRotacionAnterior;
+        public Tgc3dSound SonidoMovimiento ;
 
         public override void Init()   
         {
@@ -165,6 +167,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             posicionAnteriorLegs = posicionActualLegs;
             vectorDireccionRotacionAnterior = vectorDireccionRotacion;
             vectorDireccionAnterior = vectorDireccion;
+            this.SonidoMovimiento.Position = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
         }
 
         public Matrix calcularMatrizOrientacion(Vector3 v)
@@ -269,6 +272,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.LEGS_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualLegs * Traslacion);
             posicionActualLegs = posicionActualLegs * Traslacion;
+
+           
         }
         
         public virtual void setBaseEffect()
@@ -283,5 +288,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh.Effect.SetValue("g_time", elapsedTime);
         }
 
+        override public void dispose(){
+           
+            this.SonidoMovimiento.play(false);
+            this.SonidoMovimiento.stop();
+           // this.SonidoMovimiento.dispose();
+            this.mesh.dispose();
+            this.CHEST_BOUNDINGBOX.dispose();
+            this.HEADSHOT_BOUNDINGBOX.dispose();
+            this.LEGS_BOUNDINGBOX.dispose();
+        }
     }
 }
