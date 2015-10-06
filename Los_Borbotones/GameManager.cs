@@ -10,6 +10,8 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Sound;
+using TgcViewer.Utils.Fog;
+using Microsoft.DirectX.Direct3D;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -82,6 +84,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/denied.wav";
 
         public bool drawBoundingBoxes;
+        public bool invincibility;
 
         bool zoomEnabled = false;
         float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
@@ -164,12 +167,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             quadTree = new Quadtree();
             quadTree.create(vegetation, Vegetation.BoundingBox);
             quadTree.createDebugQuadtreeMeshes();
+
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            d3dDevice.RenderState.FogTableMode = FogMode.Linear;
+            d3dDevice.RenderState.FogVertexMode = FogMode.None;
+            d3dDevice.RenderState.FogColor = Color.LightBlue;
+            d3dDevice.RenderState.FogStart = 3000f;
+            d3dDevice.RenderState.FogEnd = 9000f;
+            d3dDevice.RenderState.FogEnable = true;
         }
 
         internal void Update(float elapsedTime)
         {
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
-            
+            invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];
 
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
             player1.Update(elapsedTime);
@@ -283,7 +294,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void gameOver(float elapsedTime)
         {
-            if (GAME_OVER) { return; }
+            if (GAME_OVER || invincibility) { return; }
             specialKillText.Text = "GAME OVER";
             TEXT_DELAY = TEXT_DELAY_MAX;
             GAME_OVER = true;

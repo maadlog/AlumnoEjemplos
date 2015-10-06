@@ -9,6 +9,7 @@ using System.Text;
 using TgcViewer;
 using TgcViewer.Utils._2D;
 using TgcViewer.Utils.Input;
+using TgcViewer.Utils.Particles;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
@@ -52,6 +53,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Camara en primera persona, tipo videojuego FPS
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
             //Por default la camara FPS viene desactivada
+            GuiController.Instance.RotCamera.Enable = false;
             CustomFpsCamera.Instance.Enable = true;
             GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
@@ -101,6 +103,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
+            //muzzleFlash.Position = WEAPON_OFFSET;
             mesh.Transform = getWeaponTransform();
 
             //Maxima inclinacion sobre terreno
@@ -150,7 +153,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             mesh.render();
-            
            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 

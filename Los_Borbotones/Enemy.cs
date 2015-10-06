@@ -61,6 +61,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix matScale = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
 
             this.posicionActual = matScale * giroInicial * matt;
+            posicionAnterior = posicionActual;
 
             setBaseEffect();
 
@@ -302,7 +303,7 @@ namespace AlumnoEjemplos.Los_Borbotones
            
             this.SonidoMovimiento.play(false);
             this.SonidoMovimiento.stop();
-           // this.SonidoMovimiento.dispose();
+            this.SonidoMovimiento.dispose();
             this.mesh.dispose();
             this.CHEST_BOUNDINGBOX.dispose();
             this.HEADSHOT_BOUNDINGBOX.dispose();

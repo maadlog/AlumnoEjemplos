@@ -71,12 +71,14 @@ Presionar L para capturar el mouse.";
 
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", true);
 
+            GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);
+
             //Crear un modifier para un valor FLOAT
             GuiController.Instance.Modifiers.addFloat("weaponRotation", 0, 2f * (float)Math.PI, 0.1f);
 
             //Crear un modifier para un ComboBox con opciones
-            string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};
-            GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
+            //string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};
+            //GuiController.Instance.Modifiers.addInterval("valorIntervalo", opciones, 0);
 
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
@@ -100,7 +102,7 @@ Presionar L para capturar el mouse.";
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
             //Obtener valores de Modifiers
-            string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
+            //string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
 
             gameManager.Update(elapsedTime);
             gameManager.Render(elapsedTime);
