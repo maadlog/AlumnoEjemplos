@@ -39,7 +39,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                  GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
                  new string[] { 
                     GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Caminando-TgcSkeletalAnim.xml",
-                   
+                   GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Patear-TgcSkeletalAnim.xml",
                 });
              skeletalMesh.playAnimation("Caminando", true);
              base.Init();

@@ -25,10 +25,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcStaticSound sound = new TgcStaticSound();
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         Vector3 prevEye;
-        public int vida = 100;
+        public int vida;
         double intensidadMaximaEscalable = Math.Pow(0.7, 2);
-        float sprintTime = 0;
-        float tiredTime = 0;
+        float sprintTime;
+        float tiredTime;
         float MAX_SPRINT_TIME = 10;
         float TIRED_TIME = 5;
         
@@ -37,6 +37,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Init()
         {
+            vida = 100;
+            sprintTime = 0;
+            tiredTime = 0;
+
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");

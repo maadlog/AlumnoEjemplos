@@ -312,9 +312,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                         if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
                         {
                             vegetacionFrenoDisparo = true;
+                            break;
                         }
                     }
-                    if (!vegetacionFrenoDisparo && !hit)
+                    if (!vegetacionFrenoDisparo)
                     {
                         hit = true;
                         score += 1;
@@ -324,24 +325,28 @@ namespace AlumnoEjemplos.Los_Borbotones
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
                         eliminarEnemigo(enemies[i]);
+                        killMultiTracker++;
+                        awardKill();
+                        KILL_DELAY = KILL_DELAY_MAX;
                     }
                     vegetacionFrenoDisparo = false;
                 }
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].LEGS_BOUNDINGBOX, out newPosition))
+                if (!hit && TgcCollisionUtils.intersectRayAABB(ray, enemies[i].LEGS_BOUNDINGBOX, out newPosition))
                 {
                     foreach (Vector3 posicion in posicionObstaculos)
                     {
                         if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
                         {
                             vegetacionFrenoDisparo = true;
+                            break;
                         }
                     }
-                    if (!vegetacionFrenoDisparo && !hit)
+                    if (!vegetacionFrenoDisparo)
                     {
                         enemies[i].health -= 25;
+                        hit = true;
                         if (enemies[i].health <= 0)
                         {
-                            hit = true;
                             score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
                             killMultiTracker++;
@@ -351,20 +356,20 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     vegetacionFrenoDisparo = false;
                 }
-                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].CHEST_BOUNDINGBOX, out newPosition))
+                if (!hit && TgcCollisionUtils.intersectRayAABB(ray, enemies[i].CHEST_BOUNDINGBOX, out newPosition))
                 {
                     foreach(Vector3 posicion in posicionObstaculos){
                         if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
                         {
                             vegetacionFrenoDisparo = true;
+                            break;
                         }
                     }
-                    if (!vegetacionFrenoDisparo && !hit)
+                    if (!vegetacionFrenoDisparo)
                     {
                         enemies[i].health -= 50;
                         if (enemies[i].health <= 0)
                         {
-                            hit = true;
                             score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
                             killMultiTracker++;
