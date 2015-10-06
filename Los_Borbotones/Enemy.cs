@@ -18,6 +18,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float health;
         public float score;
         public int attackDamage;
+        public bool attacking = false;
+        public bool attacked = false;
+        public float ATTACK_RANGE = 200f;
+        public float attackDelay = 0;
         public float MOVEMENT_SPEED = 125f;
         public float SPAWN_RADIUS= 3000f;
         public Matrix posicionActual;
@@ -65,23 +69,28 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
 
-            vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
-            vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
-            vectorDireccionRotacion.Normalize();
+            if (!attacking)
+            {
+                vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
+                if (vectorDireccion.Length() <= ATTACK_RANGE && attackDelay <= 0) 
+                { 
+                    startAttack();
+                }
+                vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
+                vectorDireccionRotacion.Normalize();
 
-            vectorDireccion.Normalize();
+                vectorDireccion.Normalize();
 
+                attackDelay -= elapsedTime;
+            }
+            
             updateMovementMatrix(elapsedTime, vectorDireccion);
 
             //Colision con Player1
             TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
             if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
             {
-                GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
-                GameManager.Instance.eliminarEnemigo(this);
-                //this.posicionActual = this.posicionAnterior;
-                //this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
-                //this.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
+                attack(elapsedTime);
             }
             
             //Colision con otros enemigos
@@ -297,6 +306,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.CHEST_BOUNDINGBOX.dispose();
             this.HEADSHOT_BOUNDINGBOX.dispose();
             this.LEGS_BOUNDINGBOX.dispose();
+        }
+
+        virtual public void startAttack()
+        {
+            attacking = false;
+        }
+
+        virtual public void attack(float elapsedTime)
+        {
+            GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
+            GameManager.Instance.eliminarEnemigo(this);
         }
     }
 }

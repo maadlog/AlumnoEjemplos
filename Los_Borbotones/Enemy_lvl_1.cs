@@ -19,6 +19,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
 
         TgcSkeletalMesh skeletalMesh;
+        public event TgcViewer.Utils.TgcSkeletalAnimation.TgcSkeletalMesh.AnimationEndsHandler AnimationEnd;
         override
             public void Init(){
                 health = 100;
@@ -26,7 +27,7 @@ namespace AlumnoEjemplos.Los_Borbotones
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
              
-             attackDamage = 50;
+             attackDamage = 25;
              TgcSceneLoader loader = new TgcSceneLoader();
              TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
              this.mesh = scene.Meshes[0];
@@ -42,6 +43,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Patear-TgcSkeletalAnim.xml",
                 });
              skeletalMesh.playAnimation("Caminando", true);
+             skeletalMesh.AnimationEnds += this.onAnimationEnds;
              base.Init();
              HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
              CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
@@ -106,6 +108,34 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             base.dispose();
             skeletalMesh.dispose();
+        }
+
+        public override void attack(float elapsedTime)
+        {
+            if (attacking && !attacked) 
+            {
+                GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
+                attacked = true;
+            }
+        }
+
+        public override void startAttack()
+        {
+            MOVEMENT_SPEED *= 3;
+            skeletalMesh.playAnimation("Patear", false);
+            attackDelay = 2;
+            attacking = true;
+        }
+
+        protected virtual void onAnimationEnds(TgcSkeletalMesh mesh)
+        {
+            if (attacking)
+            {
+                MOVEMENT_SPEED = MOVEMENT_SPEED / 3;
+                skeletalMesh.playAnimation("Caminando");
+                attacking = false;
+                attacked = false;
+            }
         }
     }
 }

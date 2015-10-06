@@ -20,8 +20,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             score = 3;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
-            attackDamage = 100;
-            MOVEMENT_SPEED = 215f;
+            attackDamage = 50;
+            MOVEMENT_SPEED = 170f;
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.mesh = scene.Meshes[0];
