@@ -97,6 +97,21 @@ namespace AlumnoEjemplos.Los_Borbotones
             killMultiTracker = 0;
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f;
+            
+            //Creo skybox
+            skyBox = new TgcSkyBox();
+            skyBox.Center = new Vector3(0, 0, 0);
+            skyBox.Size = new Vector3(11500, 11500, 11500);
+
+            string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
+
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.updateValues();
 
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
@@ -205,6 +220,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 close();
                 Init();
             }
+            skyBox.Center = CustomFpsCamera.Instance.Position;
+            skyBox.updateValues();
         }
 
         private void ChangeTextColor()
@@ -235,6 +252,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             terrain.render();
 
+            skyBox.render();
             quadTree.render(GuiController.Instance.Frustum, drawBoundingBoxes);
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
@@ -275,6 +293,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthText.dispose();
             normalScope.dispose();
             zoomedScope.dispose();
+            skyBox.dispose();
             foreach (Enemy enemy in enemies)
             {
                 enemy.dispose();
