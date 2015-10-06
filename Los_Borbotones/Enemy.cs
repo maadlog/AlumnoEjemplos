@@ -21,6 +21,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public bool attacking = false;
         public bool attacked = false;
         public float ATTACK_RANGE = 200f;
+        public float ATTACK_DELAY = 3f;
         public float attackDelay = 0;
         public float MOVEMENT_SPEED = 125f;
         public float SPAWN_RADIUS= 3000f;

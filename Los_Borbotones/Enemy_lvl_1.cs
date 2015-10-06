@@ -64,7 +64,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //carga de sonido
             SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", new Vector3(posicionActual.M41,posicionActual.M42,posicionActual.M43));
-            SonidoMovimiento.MinDistance = 100f;
+            SonidoMovimiento.MinDistance = 50f;
             SonidoMovimiento.play(true);
             
             
@@ -117,13 +117,20 @@ namespace AlumnoEjemplos.Los_Borbotones
                 GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
                 attacked = true;
             }
+            else if(!attacking)
+            {
+                posicionActual = posicionAnterior;
+                posicionActualHeadshot = posicionAnteriorHeadshot;
+                posicionActualChest = posicionAnteriorChest;
+                posicionActualLegs = posicionAnteriorLegs;
+            }
         }
 
         public override void startAttack()
         {
             MOVEMENT_SPEED *= 3;
             skeletalMesh.playAnimation("Patear", false);
-            attackDelay = 2;
+            attackDelay = ATTACK_DELAY;
             attacking = true;
         }
 
