@@ -14,6 +14,7 @@ using TgcViewer.Utils.Fog;
 using Microsoft.DirectX.Direct3D;
 using System.Collections;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -129,10 +130,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             textureResolution = 1600;
 
             Vector3 posInicial = new Vector3(0, 0, 0);
-            Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas) + cantidadFilasColumnas, (heightmapResolution / cantidadFilasColumnas) + cantidadFilasColumnas);
+            Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
-            Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) + cantidadFilasColumnas, (textureResolution / cantidadFilasColumnas) + cantidadFilasColumnas);
-            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
+            Cropping(currentTexture, (textureResolution / cantidadFilasColumnas), (textureResolution / cantidadFilasColumnas));
+            cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
@@ -273,8 +274,13 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
-            terrain.render();
-
+            //terrain.render();
+            
+            foreach (BoundingTerrain terreno in terrenos)
+            {
+                terreno.terrain.render();
+            }
+          
             skyBox.render();
             quadTree.render(GuiController.Instance.Frustum, drawBoundingBoxes);
 
@@ -705,39 +711,45 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             int i;
             int j;
-            string currentHeightmap;
-            string currentTexture;
+            int total = 0;
+            string heightmapActual;
+            string texturaActual;
             Vector3 esquinaSuperior;
             Vector3 posActual;
             float mediaDistNodo;
             terrenos = new List<BoundingTerrain>();
 
             esquinaSuperior = posInicial;
-            float mediaDistTotal  = (heightmapResolution*currentScaleXZ)/2;
+            //float mediaDistTotal  = (heightmapResolution*currentScaleXZ)/2;
+            float mediaDistTotal = (heightmapResolution / 2);
             esquinaSuperior.X += mediaDistTotal;
             esquinaSuperior.Z -= mediaDistTotal;
 
-            mediaDistNodo = (heightmapResolution*currentScaleXZ)/(2 * (float)Math.Pow(cantidadFilasColumnas,2));
+            //mediaDistNodo = (heightmapResolution * currentScaleXZ) / cantidadFilasColumnas;
+            mediaDistNodo = (heightmapResolution / cantidadFilasColumnas);
+            mediaDistNodo = mediaDistNodo / 2;
 
             posActual = esquinaSuperior;
             posActual.X -= mediaDistNodo;
             posActual.Z += mediaDistNodo;
 
-            for(i=1; i<= cantidadFilasColumnas; i++)
+            for(i=1; i <= cantidadFilasColumnas; i++)
             {
 
                 for (j=1; j <= cantidadFilasColumnas; j++)
                 {
-                    currentHeightmap = heightmap.Remove(heightmap.IndexOf('.'));
-                    currentHeightmap = currentHeightmap +'_' + ((i * j)-1).ToString() + ".jpg";
+                    heightmapActual = heightmap.Remove(heightmap.IndexOf('.'));
+                    heightmapActual = heightmapActual + '_' + total.ToString() + ".jpg";
 
-                    currentTexture = texture.Remove(texture.IndexOf('.'));
-                    currentTexture = currentTexture + '_' + ((i * j)-1).ToString() + ".jpg";
+                    texturaActual = texture.Remove(texture.IndexOf('.'));
+                    texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
+
+                    MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
 
                     TgcSimpleTerrain terreno;
                     terreno = new TgcSimpleTerrain();
-                    terreno.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posActual);
-                    terreno.loadTexture(currentTexture);
+                    terreno.loadHeightmap(heightmapActual, currentScaleXZ, currentScaleY, posActual);
+                    terreno.loadTexture(texturaActual);
 
                     TgcBoundingBox box;
                     Vector3 pMin = posActual;
@@ -754,9 +766,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                     terrenos.Add(bt);
 
                     posActual.Z += mediaDistNodo * 2;
+                    total++;
                 }
-                posActual.Z = 0;
-                posActual.X = mediaDistNodo * 2;
+                posActual.Z = -mediaDistTotal + mediaDistNodo;
+                posActual.X -= mediaDistNodo * 2;
             }
 
             return terrenos;
