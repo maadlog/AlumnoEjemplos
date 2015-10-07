@@ -118,7 +118,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando3.5.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4.3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
@@ -128,7 +128,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100x8 v3-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100x8 v4-TgcScene.xml");
             
             vegetation = Vegetation.Meshes;
             int i;
