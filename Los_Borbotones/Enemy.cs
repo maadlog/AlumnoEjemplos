@@ -178,7 +178,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             posicionAnteriorLegs = posicionActualLegs;
             vectorDireccionRotacionAnterior = vectorDireccionRotacion;
             vectorDireccionAnterior = vectorDireccion;
-            this.SonidoMovimiento.Position = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+            this.SonidoMovimiento.Position = getPosicionActual();
+            
         }
 
         public Matrix calcularMatrizOrientacion(Vector3 v)
@@ -319,6 +320,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
             GameManager.Instance.eliminarEnemigo(this);
+            
+        }
+        public Vector3 getPosicionActual()
+        {
+            Vector3 vec = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+            return vec;
         }
     }
 }

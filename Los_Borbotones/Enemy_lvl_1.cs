@@ -63,8 +63,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.AutoTransformEnable = false;
 
             //carga de sonido
-            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", new Vector3(posicionActual.M41,posicionActual.M42,posicionActual.M43));
-            SonidoMovimiento.MinDistance = 50f;
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", getPosicionActual());
+            SonidoMovimiento.MinDistance = 25f;
             SonidoMovimiento.play(true);
             
             

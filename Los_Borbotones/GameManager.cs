@@ -201,6 +201,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.FogStart = 3000f;
             d3dDevice.RenderState.FogEnd = farplane;
             d3dDevice.RenderState.FogEnable = true;
+           // GuiController.Instance.DirectSound.ListenerTracking = 
         }
 
         internal void Update(float elapsedTime)
