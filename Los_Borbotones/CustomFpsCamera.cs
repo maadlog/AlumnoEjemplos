@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         readonly Vector3 CAMERA_ACCELERATION = new Vector3(400f, 400f, 400f);
 
         //Constantes de FoV
-        public const float FAR_PLANE = 10000f;
+        public const float FAR_PLANE = 50000f;
         public const float NEAR_PLANE = 0.1f;
 
         //Ejes para ViewMatrix

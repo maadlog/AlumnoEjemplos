@@ -36,11 +36,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
             LEGS_BOUNDINGBOX = new TgcBoundingBox();
             //carga de sonido
-            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\aircraft.wav", new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\ufoHum.wav", new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
             SonidoMovimiento.MinDistance = 75f;
             SonidoMovimiento.play(true);
-            
-
         }
 
         override public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)

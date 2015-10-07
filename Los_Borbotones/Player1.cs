@@ -23,15 +23,22 @@ namespace AlumnoEjemplos.Los_Borbotones
         float HITSCAN_DELAY;
         float FIRE_DELAY = 0;
         float MAX_DELAY = 2;
-        TgcStaticSound sound = new TgcStaticSound();
+        TgcStaticSound weaponSound = new TgcStaticSound();
+        TgcStaticSound playerSound = new TgcStaticSound();
+        TgcStaticSound footstepSound = new TgcStaticSound();
+        bool running;
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
+        string breathingSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Breathing.wav";
+        string hitSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Hit.wav";
+        string walkSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Walk.wav";
+        string runSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Run.wav";
         Vector3 prevEye;
         public int vida;
         double intensidadMaximaEscalable = Math.Pow(0.7, 2);
         float sprintTime;
         float tiredTime;
-        float MAX_SPRINT_TIME = 10;
-        float TIRED_TIME = 5;
+        float MAX_SPRINT_TIME = 5;
+        float TIRED_TIME = 4.5f;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -41,6 +48,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             vida = 100;
             sprintTime = 0;
             tiredTime = 0;
+            running = false;
 
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -63,6 +71,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh.AutoTransformEnable = false;
 
             prevEye = CustomFpsCamera.Instance.eye;
+
+            playerSound.loadSound(breathingSoundDir);
+            playSound(footstepSound, walkSoundDir, true);
         }
 
         public override void Update(float elapsedTime)
@@ -77,13 +88,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                 FIRE_DELAY = MAX_DELAY;
                 GameManager.Instance.fireWeapon();
                 CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
-                playSound(weaponSoundDir);
+                playSound(weaponSound,weaponSoundDir, false);
             }
 
             if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
 
 
-            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0)
+            if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0.5f)
             {
                 ZOOM_DELAY = MAX_ZOOM_DELAY;
                 GameManager.Instance.zoomCamera();
@@ -93,12 +104,30 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 CustomFpsCamera.Instance.MovementSpeed = 300f;
                 sprintTime += elapsedTime;
-                if (sprintTime > MAX_SPRINT_TIME) { tiredTime = 0; }
+                if (!running)
+                {
+                    playSound(footstepSound, runSoundDir, true);
+                    running = true;
+                }
+                if (sprintTime > MAX_SPRINT_TIME) 
+                {
+                    playSound(playerSound, breathingSoundDir, false);
+                    tiredTime = 0; 
+                }
             }
             else { 
                 CustomFpsCamera.Instance.MovementSpeed = CustomFpsCamera.DEFAULT_MOVEMENT_SPEED;
                 tiredTime += elapsedTime;
-                if (tiredTime > TIRED_TIME) { sprintTime = 0; }
+                if (running)
+                {
+                    playSound(footstepSound, walkSoundDir, true);
+                    running = false;
+                }
+                if (tiredTime > TIRED_TIME && sprintTime != 0) 
+                {
+                    playerSound.stop();
+                    sprintTime = 0; 
+                }
             }
 
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
@@ -147,6 +176,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
             }
 
+            if (prevEye != CustomFpsCamera.Instance.eye)
+            { footstepSound.play(true); }
+            else { footstepSound.stop(); }
+
             prevEye = CustomFpsCamera.Instance.eye;
         }
 
@@ -171,6 +204,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void recibirAtaque(int damage, float elapsedTime)
         {
+            playSound(playerSound, hitSoundDir, false);
+            FIRE_DELAY = 0.5f;
             vida -= damage;
             GameManager.Instance.healthText.Text = "HEALTH: " + vida;
             GameManager.Instance.ChangeColorHealth();
@@ -180,11 +215,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
-        private void playSound(string dir)
+        private void playSound(TgcStaticSound sound, string dir, bool loop)
         {
             sound.dispose();
-            sound.loadSound(dir);
-            sound.play();
+            sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
+            sound.play(loop);
         }
     }
 }

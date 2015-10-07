@@ -72,6 +72,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public bool GAME_OVER;
         public TgcText2d healthText;
 
+        public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
         TgcStaticSound sound = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
         string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headhunter.wav";
@@ -104,7 +105,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Creo skybox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
-            skyBox.Size = new Vector3(11500, 11500, 11500);
+            float farplane = CustomFpsCamera.FAR_PLANE;
+            skyBox.Size = new Vector3(farplane, farplane, farplane);
 
             string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
 
@@ -188,7 +190,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.FogVertexMode = FogMode.None;
             d3dDevice.RenderState.FogColor = Color.LightBlue;
             d3dDevice.RenderState.FogStart = 3000f;
-            d3dDevice.RenderState.FogEnd = 9000f;
+            d3dDevice.RenderState.FogEnd = farplane;
             d3dDevice.RenderState.FogEnable = true;
         }
 

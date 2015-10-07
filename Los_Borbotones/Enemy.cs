@@ -303,7 +303,7 @@ namespace AlumnoEjemplos.Los_Borbotones
            
             this.SonidoMovimiento.play(false);
             this.SonidoMovimiento.stop();
-            this.SonidoMovimiento.dispose();
+            //this.SonidoMovimiento.dispose();
             this.mesh.dispose();
             this.CHEST_BOUNDINGBOX.dispose();
             this.HEADSHOT_BOUNDINGBOX.dispose();
