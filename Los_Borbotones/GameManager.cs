@@ -12,6 +12,8 @@ using TgcViewer.Utils.Terrain;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.Fog;
 using Microsoft.DirectX.Direct3D;
+using System.Collections;
+using System.Drawing.Imaging;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -51,11 +53,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         public TgcScene Vegetation;
         TgcSimpleTerrain terrain;
         int heightmapResolution;
+        int textureResolution;
+        int cantidadFilasColumnas = 4;
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        private List<BoundingTerrain> terrenos;
         public int vegetacionVisible = 0;
         TgcSprite cross;
         Quadtree quadTree;
@@ -118,12 +123,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4.3.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4_3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
-            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "splatting1.png";
+            textureResolution = 1600;
+
+            Vector3 posInicial = new Vector3(0, 0, 0);
+            Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas) + cantidadFilasColumnas, (heightmapResolution / cantidadFilasColumnas) + cantidadFilasColumnas);
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
+            Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) + cantidadFilasColumnas, (textureResolution / cantidadFilasColumnas) + cantidadFilasColumnas);
+            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
-            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, new Vector3(0, 0, 0));
+            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
 
             this.vegetation = new List<TgcMesh>();
@@ -614,5 +625,141 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
            
         }
+
+
+        public void Cropping(string inputImgPath, int cropWidth, int cropHeight)
+       {
+           string _fileNameWithoutExtension;
+           string _fileExtension;
+           string _fileDirectory;
+
+            _fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(inputImgPath);
+            _fileExtension = System.IO.Path.GetExtension(inputImgPath);
+            _fileDirectory = System.IO.Path.GetDirectoryName(inputImgPath);
+            
+            //Load the image divided
+             Image inputImg = Image.FromFile(inputImgPath);
+            int imgWidth = inputImg.Width;
+            int imgHeight = inputImg.Height;
+            
+            //Divide how many small blocks
+            int widthCount = (int)Math.Ceiling((imgWidth * 1.00) / (cropWidth * 1.00));
+            int heightCount = (int)Math.Ceiling((imgHeight * 1.00) / (cropHeight * 1.00));
+            ArrayList areaList = new ArrayList();
+     
+            int i = 0;
+            for (int iHeight = 0; iHeight < heightCount ; iHeight ++)
+            {
+                for (int iWidth = 0; iWidth < widthCount ; iWidth ++)
+                {
+                    int pointX = iWidth * cropWidth;
+                    int pointY = iHeight * cropHeight;
+                    int areaWidth = ((pointX + cropWidth) > imgWidth) ? (imgWidth - pointX) : cropWidth;
+                    int areaHeight = ((pointY + cropHeight) > imgHeight) ? (imgHeight - pointY) : cropHeight;
+                    string s = string.Format("{0};{1};{2};{3}",pointX,pointY,areaWidth,areaHeight);
+                    
+                     Rectangle rect = new Rectangle(pointX,pointY,areaWidth,areaHeight);
+                     areaList.Add(rect);
+                     i ++;
+                 }
+             }
+         
+            for (int iLoop = 0 ; iLoop < areaList.Count ; iLoop ++)
+            {
+                 Rectangle rect = (Rectangle)areaList[iLoop];
+                string fileName = _fileDirectory + "\\" + _fileNameWithoutExtension + "_" + iLoop.ToString() + _fileExtension;
+                 Bitmap newBmp = new Bitmap(rect.Width,rect.Height,PixelFormat.Format24bppRgb);
+                 Graphics newBmpGraphics = Graphics.FromImage(newBmp);
+                 newBmpGraphics.DrawImage(inputImg,new Rectangle(0,0,rect.Width,rect.Height),rect,GraphicsUnit.Pixel);
+                 newBmpGraphics.Save();
+                switch (_fileExtension.ToLower())
+                {
+                    case ".jpg":
+                    case ".jpeg":
+                         newBmp.Save(fileName,ImageFormat.Jpeg);
+                        break;
+                    case "gif":
+                         newBmp.Save(fileName,ImageFormat.Gif);
+                        break;
+                 }
+                
+             }
+             inputImg.Dispose();
+         }
+
+        public class BoundingTerrain
+        {
+            public TgcSimpleTerrain terrain;
+            public TgcBoundingBox boundingBox;
+
+            public BoundingTerrain(TgcSimpleTerrain myTerrain, TgcBoundingBox myBoundingBox)
+            {
+                terrain = myTerrain;
+                boundingBox = myBoundingBox;
+            }
+        }
+
+        
+        private List<BoundingTerrain> cargarBoundingTerrain(string heightmap, string texture, Vector3 posInicial) 
+        {
+            int i;
+            int j;
+            string currentHeightmap;
+            string currentTexture;
+            Vector3 esquinaSuperior;
+            Vector3 posActual;
+            float mediaDistNodo;
+            terrenos = new List<BoundingTerrain>();
+
+            esquinaSuperior = posInicial;
+            float mediaDistTotal  = (heightmapResolution*currentScaleXZ)/2;
+            esquinaSuperior.X += mediaDistTotal;
+            esquinaSuperior.Z -= mediaDistTotal;
+
+            mediaDistNodo = (heightmapResolution*currentScaleXZ)/(2 * (float)Math.Pow(cantidadFilasColumnas,2));
+
+            posActual = esquinaSuperior;
+            posActual.X -= mediaDistNodo;
+            posActual.Z += mediaDistNodo;
+
+            for(i=1; i<= cantidadFilasColumnas; i++)
+            {
+
+                for (j=1; j <= cantidadFilasColumnas; j++)
+                {
+                    currentHeightmap = heightmap.Remove(heightmap.IndexOf('.'));
+                    currentHeightmap = currentHeightmap +'_' + ((i * j)-1).ToString() + ".jpg";
+
+                    currentTexture = texture.Remove(texture.IndexOf('.'));
+                    currentTexture = currentTexture + '_' + ((i * j)-1).ToString() + ".jpg";
+
+                    TgcSimpleTerrain terreno;
+                    terreno = new TgcSimpleTerrain();
+                    terreno.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posActual);
+                    terreno.loadTexture(currentTexture);
+
+                    TgcBoundingBox box;
+                    Vector3 pMin = posActual;
+                    Vector3 pMax = posActual;
+                    pMin.X -= mediaDistNodo;
+                    pMin.Y = 0;
+                    pMin.Z -= mediaDistNodo;
+                    pMax.X += mediaDistNodo;
+                    pMax.Y = 1000;
+                    pMax.Z += mediaDistNodo;
+                    box = new TgcBoundingBox(pMin, pMax);
+
+                    BoundingTerrain bt = new BoundingTerrain(terreno, box);
+                    terrenos.Add(bt);
+
+                    posActual.Z += mediaDistNodo * 2;
+                }
+                posActual.Z = 0;
+                posActual.X = mediaDistNodo * 2;
+            }
+
+            return terrenos;
+        }
+        
     }
 }
