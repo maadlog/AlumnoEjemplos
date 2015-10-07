@@ -43,6 +43,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
 
+        public TgcMesh meshAuxiliarParaSonido;
+
         public override void Init()
         {
             vida = 100;
@@ -50,13 +52,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             tiredTime = 0;
             running = false;
 
+
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
             mesh = scene.Meshes[0];
 
+            //Mesh auxiliar para el sonido
+            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
+            meshAuxiliarParaSonido = scene2.Meshes[0];
+
             //hago que los 3dSound sigan al arma
-            GuiController.Instance.DirectSound.ListenerTracking = mesh;
+            GuiController.Instance.DirectSound.ListenerTracking = meshAuxiliarParaSonido;
             ///////////////CONFIGURAR CAMARA PRIMERA PERSONA CUSTOM//////////////////
             //Camara en primera persona, tipo videojuego FPS
             //Solo puede haber una camara habilitada a la vez. Al habilitar la camara FPS se deshabilita la camara rotacional
@@ -80,7 +87,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
             WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
-
+            //update de la pos del mesh auxiliar
+            meshAuxiliarParaSonido.Position = CustomFpsCamera.Instance.eye;
             //Procesamos input de teclado
             TgcD3dInput input = GuiController.Instance.D3dInput;
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && FIRE_DELAY <= 0)
