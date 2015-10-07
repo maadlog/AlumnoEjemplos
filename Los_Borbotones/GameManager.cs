@@ -142,8 +142,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
-            Matrix sceneScale = Matrix.Scaling(new Vector3(1f, 0.4f, 1f));
-            Vegetation.BoundingBox.transform(sceneScale);
 
             player1.Init();
 

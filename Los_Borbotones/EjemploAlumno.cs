@@ -69,7 +69,7 @@ Presionar L para capturar el mouse.";
 
             ///////////////MODIFIERS//////////////////
 
-            GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", true);
+            GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
             GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);
 
