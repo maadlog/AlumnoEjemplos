@@ -64,7 +64,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         //Banderas de Input
         bool moveForwardsPressed = false;
-        bool moveBackwardsPressed = false;
+        public bool moveBackwardsPressed = false;
         bool moveRightPressed = false;
         bool moveLeftPressed = false;
         bool moveUpPressed = false;
