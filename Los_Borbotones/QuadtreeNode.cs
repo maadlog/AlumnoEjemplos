@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TgcViewer.Utils.TgcSceneLoader;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     /// <summary>
     /// Nodo del árbol Quadtree

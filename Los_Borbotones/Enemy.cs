@@ -11,7 +11,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
 
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     public abstract class Enemy : GameObject
     {
@@ -298,7 +298,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         
         public virtual void setBaseEffect()
         {
-            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "\\Shaders\\enemyBasic.fx");
+            mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\enemyBasic.fx");
             mesh.Technique = "HealthDependentShading";
         }
 

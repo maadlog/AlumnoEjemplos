@@ -5,7 +5,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     /// <summary>
     /// Herramienta para crear y utilizar un Quadtree para renderizar por Frustum Culling
@@ -183,14 +183,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcMesh[] models = node.models;
             foreach (TgcMesh m in models)
             {
-                m.Enabled = true;
+                //Me fijo si el mesh esta fuera de la skybox (La misma se construye con el farplane, por eso se usa aca)
+                if ((CustomFpsCamera.Instance.eye - m.Position).Length() < CustomFpsCamera.FAR_PLANE / 2)
+                {
+                    m.Enabled = true;
+                }
             }
         }
-
-
-
-
-
-
     }
 }

@@ -14,7 +14,7 @@ using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     public class Player1:GameObject
     {
@@ -28,11 +28,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcStaticSound walkSound;
         TgcStaticSound runSound;
         bool running;
-        string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
-        string breathingSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Breathing.wav";
-        string hitSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Hit.wav";
-        string walkSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Walk.wav";
-        string runSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Run.wav";
+        string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Sniper.wav";
+        string breathingSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Breathing.wav";
+        string hitSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Hit.wav";
+        string walkSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Walk.wav";
+        string runSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Run.wav";
         Vector3 prevEye;
         public int vida;
         double intensidadMaximaEscalable = Math.Pow(0.7, 2);
@@ -63,11 +63,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
+            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\svd\\svd-TgcScene.xml");
             mesh = scene.Meshes[0];
 
             //Mesh auxiliar para el sonido
-            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Meshes\\svd\\svd-TgcScene.xml");
+            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\svd\\svd-TgcScene.xml");
             meshAuxiliarParaSonido = scene2.Meshes[0];
 
             //hago que los 3dSound sigan al arma
@@ -97,6 +97,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
+
+            CustomFpsCamera.Instance.JumpSpeed = (float)GuiController.Instance.Modifiers["FlySpeed"];
+
             WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
             WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
             //update de la pos del mesh auxiliar

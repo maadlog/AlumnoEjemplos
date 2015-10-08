@@ -17,7 +17,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     public class GameManager
     {
@@ -90,15 +90,15 @@ namespace AlumnoEjemplos.Los_Borbotones
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
         TgcStaticSound sound;
         TgcStaticSound ambient;
-        string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
-        string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headhunter.wav";
-        string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/doublekill.wav";
-        string multiSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/multikill.wav";
-        string ultraSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/ultrakill.wav";
-        string megaSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/megakill.wav";
-        string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/monsterkill.wav";
-        string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/massacre.wav";
-        string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/denied.wav";
+        string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/headshot.wav";
+        string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/headhunter.wav";
+        string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/doublekill.wav";
+        string multiSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/multikill.wav";
+        string ultraSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/ultrakill.wav";
+        string megaSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/megakill.wav";
+        string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/monsterkill.wav";
+        string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/massacre.wav";
+        string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/denied.wav";
 
         public bool drawBoundingBoxes;
         public bool invincibility;
@@ -145,14 +145,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4_3.jpg";
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "experimento-editando4_3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
             textureResolution = 1600;
 
             Vector3 posInicial = new Vector3(0, 0, 0);
             //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
-            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "grunge.jpg";
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "grunge.jpg";
             //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
             //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
@@ -161,7 +161,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
-            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\100x8 v4-TgcScene.xml");
+            Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\100x8 v4-TgcScene.xml");
             
             vegetation = Vegetation.Meshes;
             int i;
@@ -211,8 +211,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             //cargamos la mira
             cross = new TgcSprite();
-            normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\normalScope.png");
-            zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\zoomedScope.png");
+            normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\normalScope.png");
+            zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\zoomedScope.png");
             cross.Texture = normalScope;
 
             refreshScopeTexture();
@@ -234,7 +234,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             sound = new TgcStaticSound();
             ambient = new TgcStaticSound();
-            string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Ambiente/Deep_space.wav";
+            string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Ambiente/Deep_space.wav";
             ambient.loadSound(dir, -1700);
             ambient.play(true);
         }
