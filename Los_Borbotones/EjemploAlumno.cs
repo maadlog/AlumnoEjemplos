@@ -39,8 +39,8 @@ namespace Los_Borbotones
         /// </summary>
         public override string getDescription()
         {
-            return @"Sniper - Descripcion de la idea
-Presionar L para capturar el mouse.";
+            return @"Sniper - El objetivo del juego es sobrevivir la mayor cantidad de tiempo posible y sumar puntos, el juego termina cuando el jugador es alcanzado por los enemigos y pierde toda su vida.
+                Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom";
         }
 
         /// <summary>
