@@ -133,9 +133,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Vector3 posInicial = new Vector3(0, 0, 0);
             //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
-            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "grunge.jpg";
             //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
-            cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
+            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
@@ -149,6 +149,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
+                vegetation[i].setColor(Color.SkyBlue);
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
@@ -286,9 +287,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
-            //terrain.render();
-            TgcFrustum frustum = GuiController.Instance.Frustum;
-                        
+            terrain.render();
+            
+            TgcFrustum frustum = GuiController.Instance.Frustum;      
+            /*
             foreach (BoundingTerrain terreno in terrenos)
             {
                 TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, terreno.boundingBox);
@@ -304,6 +306,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     terreno.boundingBox.render();
                 }
             }
+             */
           
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
