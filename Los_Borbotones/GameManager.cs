@@ -275,7 +275,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Render(float elapsedTime)
         {
             //terrain.render();
-            
+                        
             foreach (BoundingTerrain terreno in terrenos)
             {
                 terreno.terrain.render();
@@ -722,7 +722,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             esquinaSuperior = posInicial;
             //float mediaDistTotal  = (heightmapResolution*currentScaleXZ)/2;
             float mediaDistTotal = (heightmapResolution / 2);
-            esquinaSuperior.X += mediaDistTotal;
+            esquinaSuperior.X -= mediaDistTotal;
             esquinaSuperior.Z -= mediaDistTotal;
 
             //mediaDistNodo = (heightmapResolution * currentScaleXZ) / cantidadFilasColumnas;
@@ -730,7 +730,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             mediaDistNodo = mediaDistNodo / 2;
 
             posActual = esquinaSuperior;
-            posActual.X -= mediaDistNodo;
+            posActual.X += mediaDistNodo;
             posActual.Z += mediaDistNodo;
 
             for(i=1; i <= cantidadFilasColumnas; i++)
@@ -744,7 +744,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     texturaActual = texture.Remove(texture.IndexOf('.'));
                     texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
 
-                    MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
+                    //MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
 
                     TgcSimpleTerrain terreno;
                     terreno = new TgcSimpleTerrain();
@@ -768,8 +768,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                     posActual.Z += mediaDistNodo * 2;
                     total++;
                 }
-                posActual.Z = -mediaDistTotal + mediaDistNodo;
-                posActual.X -= mediaDistNodo * 2;
+                posActual.Z = posInicial.Z - mediaDistTotal + mediaDistNodo;
+                posActual.X += mediaDistNodo * 2;
             }
 
             return terrenos;
