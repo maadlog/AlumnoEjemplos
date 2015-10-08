@@ -87,14 +87,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             //realizamos el movimiento del enemigo
             updateMovementMatrix(elapsedTime, vectorDireccion);
-
-            //Colision con Player1
-            TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
-            if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
-            {
-                //si hay colision el enemigo ataca
-                attack(elapsedTime);
-            }
             
             //Colision con otros enemigos
             foreach (Enemy enemy in GameManager.Instance.enemies)
@@ -180,7 +172,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             vectorDireccionRotacionAnterior = vectorDireccionRotacion;
             vectorDireccionAnterior = vectorDireccion;
             this.SonidoMovimiento.Position = getPosicionActual();
-            
+
+            //Colision con Player1
+            TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
+            if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
+            {
+                //si hay colision el enemigo ataca
+                attack(elapsedTime);
+            }
+
         }
 
         public Matrix calcularMatrizOrientacion(Vector3 v)

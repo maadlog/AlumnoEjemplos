@@ -39,6 +39,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float tiredTime;
         float MAX_SPRINT_TIME = 5;
         float TIRED_TIME = 4.5f;
+        float weaponOscilation = 0;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -51,6 +52,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             sprintTime = 0;
             tiredTime = 0;
             running = false;
+            weaponOscilation = 0;
 
 
             //Carga del mesh del arma
@@ -190,6 +192,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             { footstepSound.play(true); }
             else { footstepSound.stop(); }
 
+            float length = ((CustomFpsCamera.Instance.eye - prevEye).Length());
+            if (Vector3.Dot(CustomFpsCamera.Instance.LookAt, CustomFpsCamera.Instance.eye - prevEye) > 0)
+            {
+                length *= -1;
+            }
+            weaponOscilation += length/37;
+
             prevEye = CustomFpsCamera.Instance.eye;
         }
 
@@ -205,7 +214,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             float weaponRecoil = FIRE_DELAY/MAX_DELAY;
 
-            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET + new Vector3(0,0, 4* -weaponRecoil));
+            double z = Math.Cos((double)weaponOscilation)/2;
+            double y = Math.Sin(2 * (double)weaponOscilation) / 16;
+
+            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET + new Vector3(0, 0, 4 * -weaponRecoil) + new Vector3(0, (float)y, (float)z));
             Matrix weaponScale = Matrix.Scaling(0.5f, 0.5f, 0.5f);
             Matrix weaponRotationY = Matrix.RotationY(WEAPON_ORIENTATION_Y);
 
