@@ -25,9 +25,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             MOVEMENT_SPEED = 170f;
             //cargamos el mesh
             //las naves no tienen skeletalMesh
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
-            this.mesh = scene.Meshes[0];
+            this.mesh = GameManager.Instance.ModeloNave.clone("Nave");
+
+
             SPAWN_HEIGHT = 1000f;
             giroInicial = Matrix.RotationY(0);
 

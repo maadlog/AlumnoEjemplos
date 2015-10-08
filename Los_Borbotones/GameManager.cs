@@ -15,6 +15,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Collections;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using TgcViewer.Utils.TgcSkeletalAnimation;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -79,6 +80,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public bool GAME_OVER;
         public TgcText2d healthText;
         public int MAX_ENEMIES = 10;
+        public TgcMesh ModeloRobot;
+        public TgcMesh ModeloNave;
+     
+      
+       
 
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
@@ -112,6 +118,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f; 
             
+            // creo meshes de modelo para clonar y asi optimizar
+            TgcSceneLoader loader2 = new TgcSceneLoader();
+            TgcScene scene = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
+            this.ModeloRobot = scene.Meshes[0];
+
+           
+           
+            
+            TgcScene scene2 = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
+            this.ModeloNave = scene2.Meshes[0];
+
             //Creo skybox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);

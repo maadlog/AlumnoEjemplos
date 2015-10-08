@@ -31,20 +31,21 @@ namespace AlumnoEjemplos.Los_Borbotones
              attackDamage = 25;
             //cargamos el mesh
             //Despues de agregar el skeletalMesh dejamos de renderizar este mesh, pero igual lo utilizamos para calcular muchas cosas
-             TgcSceneLoader loader = new TgcSceneLoader();
-             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
-             this.mesh = scene.Meshes[0];
+             this.mesh = GameManager.Instance.ModeloRobot.clone("robot");
+
              giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
 
             
             //carga de animaciones
              TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
+
              skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(
                  GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
                  new string[] { 
                     GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Caminando-TgcSkeletalAnim.xml",
                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Patear-TgcSkeletalAnim.xml",
                 });
+            
              skeletalMesh.playAnimation("Caminando", true);
              skeletalMesh.AnimationEnds += this.onAnimationEnds;
             //realizamos el init() comun a todos los enemigos
