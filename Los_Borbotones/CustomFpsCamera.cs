@@ -743,6 +743,7 @@ namespace Los_Borbotones
             //Solo rotar si se esta aprentando el boton del mouse configurado
             if (lockCam || GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
+                //Bajar la sensibilidad si se esta haciendo zoom, para dar mas precision al apuntar
                 rotate(heading*(1-zoom), pitch*(1-zoom), 0.0f);
             }
 

@@ -76,7 +76,7 @@ namespace Los_Borbotones
             SonidoMovimiento.play(true);
             
             
-            setBaseEffect();
+            //setBaseEffect();
 
         }
         override

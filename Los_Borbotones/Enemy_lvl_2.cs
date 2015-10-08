@@ -34,7 +34,7 @@ namespace Los_Borbotones
             //realizamos el init() comun a todos los enemigos
             base.Init();
 
-            setBaseEffect();
+            //setBaseEffect();
 
             //creamos las boundingbox
             //a pesar de que las naves no tienen legs ni head, le seteamos boxes "vacias" para no tener problemas con Excepciones de null

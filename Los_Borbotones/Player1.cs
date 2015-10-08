@@ -207,6 +207,7 @@ namespace Los_Borbotones
                 walkSound.stop();
                 runSound.stop();
             }
+            else if(!running) { walkSound.play(true); }
 
             float length = ((CustomFpsCamera.Instance.eye - prevEye).Length());
             if (CustomFpsCamera.Instance.moveBackwardsPressed)

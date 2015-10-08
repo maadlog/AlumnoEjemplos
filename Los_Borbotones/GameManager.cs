@@ -62,7 +62,7 @@ namespace Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
-        private List<BoundingTerrain> terrenos;
+        //private List<BoundingTerrain> terrenos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
         TgcSprite cross;
@@ -145,6 +145,7 @@ namespace Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
+            //Creacion del terreno
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "experimento-editando4_3.jpg";
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
@@ -159,6 +160,7 @@ namespace Los_Borbotones
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
 
+            //Creacion de la Vegetacion
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
             Vegetation = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\100x8 v4-TgcScene.xml");
@@ -176,6 +178,7 @@ namespace Los_Borbotones
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
+
             //inicializamos al player
             player1.Init();
 
@@ -232,10 +235,11 @@ namespace Los_Borbotones
             d3dDevice.RenderState.FogDensity = 0.00006f;
             d3dDevice.RenderState.FogEnable = true;
 
+            //inicializo audio
             sound = new TgcStaticSound();
             ambient = new TgcStaticSound();
             string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Ambiente/Deep_space.wav";
-            ambient.loadSound(dir, -1700);
+            ambient.loadSound(dir, -1500);
             ambient.play(true);
         }
 
@@ -316,6 +320,7 @@ namespace Los_Borbotones
             terrain.render();
             
             TgcFrustum frustum = GuiController.Instance.Frustum;      
+            
             /*
             foreach (BoundingTerrain terreno in terrenos)
             {
@@ -710,7 +715,7 @@ namespace Los_Borbotones
            
         }
 
-
+        /* Metodos para hacer frustumm culling de terreno, tienen un problema por lo que por ahora renderizamos el terreno completo
         public void Cropping(string inputImgPath, int cropWidth, int cropHeight)
        {
            string _fileNameWithoutExtension;
@@ -855,6 +860,6 @@ namespace Los_Borbotones
 
             return terrenos;
         }
-        
+        */
     }
 }
