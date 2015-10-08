@@ -193,7 +193,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             else { footstepSound.stop(); }
 
             float length = ((CustomFpsCamera.Instance.eye - prevEye).Length());
-            if (Vector3.Dot(CustomFpsCamera.Instance.LookAt, CustomFpsCamera.Instance.eye - prevEye) > 0)
+            if (CustomFpsCamera.Instance.moveBackwardsPressed)
             {
                 length *= -1;
             }
