@@ -80,6 +80,7 @@ Presionar L para capturar el mouse.";
 
             //Crear un modifier para un valor FLOAT
             GuiController.Instance.Modifiers.addFloat("weaponRotation", 0, 2f * (float)Math.PI, 0.1f);
+            GuiController.Instance.Modifiers.addFloat("FlySpeed", 0, 1000, 0);
 
             //Crear un modifier para un ComboBox con opciones
             //string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};

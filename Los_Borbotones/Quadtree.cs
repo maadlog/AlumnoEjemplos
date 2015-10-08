@@ -183,14 +183,12 @@ namespace Los_Borbotones
             TgcMesh[] models = node.models;
             foreach (TgcMesh m in models)
             {
-                m.Enabled = true;
+                //Me fijo si el mesh esta fuera de la skybox (La misma se construye con el farplane, por eso se usa aca)
+                if ((CustomFpsCamera.Instance.eye - m.Position).Length() < CustomFpsCamera.FAR_PLANE / 2)
+                {
+                    m.Enabled = true;
+                }
             }
         }
-
-
-
-
-
-
     }
 }

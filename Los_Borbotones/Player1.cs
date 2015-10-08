@@ -97,6 +97,9 @@ namespace Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
+
+            CustomFpsCamera.Instance.JumpSpeed = (float)GuiController.Instance.Modifiers["FlySpeed"];
+
             WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
             WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
             //update de la pos del mesh auxiliar
