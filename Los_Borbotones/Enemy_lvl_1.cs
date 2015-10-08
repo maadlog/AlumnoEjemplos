@@ -22,12 +22,15 @@ namespace AlumnoEjemplos.Los_Borbotones
         public event TgcViewer.Utils.TgcSkeletalAnimation.TgcSkeletalMesh.AnimationEndsHandler AnimationEnd;
         override
             public void Init(){
+            //seteamos atributos particulares del robot
                 health = 100;
                 score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
              
              attackDamage = 25;
+            //cargamos el mesh
+            //Despues de agregar el skeletalMesh dejamos de renderizar este mesh, pero igual lo utilizamos para calcular muchas cosas
              TgcSceneLoader loader = new TgcSceneLoader();
              TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
              this.mesh = scene.Meshes[0];
@@ -44,7 +47,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                 });
              skeletalMesh.playAnimation("Caminando", true);
              skeletalMesh.AnimationEnds += this.onAnimationEnds;
+            //realizamos el init() comun a todos los enemigos
              base.Init();
+            //Creamos boundingBox nuevas para la cabeza, pecho y piernas del robot
              HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
              CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
              LEGS_BOUNDINGBOX = this.mesh.BoundingBox.clone();
@@ -60,6 +65,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix traslationbox3 = Matrix.Translation(new Vector3(0, 0f, 0));
             LEGS_BOUNDINGBOX.transform(escalabox3 * traslationbox3);
             posicionActualLegs = escalabox3 * traslationbox3 * posicionActual;
+
+
             skeletalMesh.AutoTransformEnable = false;
 
             //carga de sonido
@@ -74,14 +81,17 @@ namespace AlumnoEjemplos.Los_Borbotones
         override
         public void Update(float elapsedTime)
         {
+            //realizamos los update comunes a todos los enemigos
             base.Update(elapsedTime);
+            //actualizamos el skeletalmesh
             this.skeletalMesh.Transform = MatOrientarObjeto * posicionActual * Traslacion;
         }
         public override void Render(float elapsedTime)
         {
             setBaseEffectValues(elapsedTime);
-
+            //renderizamos el skeletalmesh
             skeletalMesh.animateAndRender();
+            //se puede habilitar el renderizado de los boundingbox
             if (GameManager.Instance.drawBoundingBoxes)
             {
                 this.mesh.BoundingBox.render();
@@ -112,6 +122,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void attack(float elapsedTime)
         {
+            //Ataque de los robots
             if (attacking && !attacked) 
             {
                 GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);

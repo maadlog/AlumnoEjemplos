@@ -78,6 +78,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public bool GAME_OVER;
         public TgcText2d healthText;
 
+        //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
         TgcStaticSound sound = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
@@ -102,11 +103,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Init()
         {
             GAME_OVER = false;
-            score = 0;
+            score = 0; //lleva el score del jugador
             TEXT_DELAY = 0;
             killMultiTracker = 0;
             KILL_DELAY = 0;
-            SPAWN_TIME_COUNTER = 0f;
+            SPAWN_TIME_COUNTER = 0f; 
             
             //Creo skybox
             skyBox = new TgcSkyBox();
@@ -124,7 +125,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
+<<<<<<< HEAD
+            //seteamos el mapa
+            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4.3.jpg";
+=======
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4_3.jpg";
+>>>>>>> 0b481fc4261804c52cbb74e25d12e0c8e684aaf9
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
             textureResolution = 1600;
@@ -155,7 +161,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
-
+            //inicializamos al player
             player1.Init();
 
             enemies = new List<Enemy>();
@@ -165,18 +171,22 @@ namespace AlumnoEjemplos.Los_Borbotones
 
 
             //-------------User Interface------------
-            //Crear texto 1, básico
+            //Textos para los Kills
             specialKillText = new TgcText2d();
             specialKillText.Color = Color.Crimson;
             specialKillText.Align = TgcText2d.TextAlign.CENTER;
             specialKillText.Position = new Point(0, 100);
             specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
             
+            //texto para el score
+            //cambia de color segun el score
             scoreText = new TgcText2d();
             scoreText.Text = "SCORE: " + score;
                 scoreText.Color = Color.LightBlue;
                 scoreText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
 
+            //texto para la vida
+            //tambien cambia de color segun la vida
                 healthText = new TgcText2d();
                 healthText.Text = "HEALTH: " + player1.vida;
                 healthText.Color = Color.Green;
@@ -184,7 +194,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthText.Position = new Point(0, 250);
             healthText.Align = TgcText2d.TextAlign.LEFT;
             
-              
+              //cargamos la mira
             cross = new TgcSprite();
             normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\normalScope.png");
             zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\zoomedScope.png");
@@ -196,6 +206,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             quadTree.create(vegetation, Vegetation.BoundingBox);
             quadTree.createDebugQuadtreeMeshes();
 
+            //seteamos niebla
             Device d3dDevice = GuiController.Instance.D3dDevice;
             d3dDevice.RenderState.FogTableMode = FogMode.Linear;
             d3dDevice.RenderState.FogVertexMode = FogMode.None;
@@ -211,9 +222,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
             invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];
 
-            SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;
+            SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;//contamos el tiempo que paso desde el ultimo spawn de enemigos
+
             player1.Update(elapsedTime);
             if (SPAWN_TIME_COUNTER > SPAWN_TIME) {
+                //si paso un tiempo = SPAWN_TIME agregamos un nuevo enemigo seleccionado al azar
                 rand = random.Next(1, 3);
                 if (rand == 1){
                 Enemy enemigo = new Enemy_lvl_1();
@@ -229,10 +242,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                 SPAWN_TIME_COUNTER = 0;
             }
 
+            //update de los enemigos
             enemies.ForEach(enemy => enemy.Update(elapsedTime));
 
-            scoreText.Text = "Score: " + score;
-            ChangeTextColor();
+           
+
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
             if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
             if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
@@ -245,12 +259,14 @@ namespace AlumnoEjemplos.Los_Borbotones
                 close();
                 Init();
             }
+            //hacemos que el skybox siga al player para no tener problemas con el farplane
             skyBox.Center = CustomFpsCamera.Instance.Position;
             skyBox.updateValues();
         }
 
         private void ChangeTextColor()
         {
+            //cambiamos el color del score segun el puntaje
             if (score >= 0)
             {
                 scoreText.Color = Color.White;
@@ -288,6 +304,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
+            //dibujamos todos los enemigos
             foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
@@ -341,6 +358,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void fireWeapon()
         {
+            //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
             Vector3 newPosition = new Vector3(0, 0, 0);
             List<Vector3> posicionObstaculos = new List<Vector3>();
@@ -378,6 +396,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                         killMultiTracker++;
                         awardKill();
                         KILL_DELAY = KILL_DELAY_MAX;
+                        //Hacemos refresh del score
+                        scoreText.Text = "SCORE: " + score;
+                        ChangeTextColor();
                     }
                     vegetacionFrenoDisparo = false;
                 }
@@ -402,6 +423,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                             killMultiTracker++;
                             awardKill();
                             KILL_DELAY = KILL_DELAY_MAX;
+                            //Hacemos refresh del score
+                            scoreText.Text = "SCORE: " + score;
+                            ChangeTextColor();
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -425,6 +449,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                             killMultiTracker++;
                             awardKill();
                             KILL_DELAY = KILL_DELAY_MAX;
+                            //Hacemos refresh del score
+                            scoreText.Text = "SCORE: " + score;
+                            ChangeTextColor();
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -458,6 +485,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         private void awardKill()
         {
+            //chequeamos los combos de kills
             if (killMultiTracker >= 2)
             {
                 score += 2;
@@ -501,6 +529,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         private void playSound(string dir)
         {
+            //reproducir un sonido
             sound.dispose();
             sound.loadSound(dir);
             sound.play();
@@ -515,6 +544,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// <returns></returns>
         public bool interpoledHeight(float x, float z, out float y)
         {
+            //te devuelve la altura del terreno en el punto
             Vector2 coords;
             float i;
             y = 0;
@@ -599,6 +629,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void zoomCamera()
         {
+            //hacer zoom
+
             if (zoomEnabled)
             {
                 cross.Texture = normalScope;
@@ -620,6 +652,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void ChangeColorHealth()
         {
+            //cambiar color de la vida segun el atributo vida
             if (player1.vida >=51)
             {
                 healthText.Color = Color.Green;
