@@ -78,8 +78,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh.AutoTransformEnable = false;
 
             prevEye = CustomFpsCamera.Instance.eye;
-
+            //cargar sonido
             playerSound.loadSound(breathingSoundDir);
+            //reproducir sonido de respawn
             playSound(footstepSound, walkSoundDir, true);
         }
 
@@ -91,6 +92,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             meshAuxiliarParaSonido.Position = CustomFpsCamera.Instance.eye;
             //Procesamos input de teclado
             TgcD3dInput input = GuiController.Instance.D3dInput;
+            //Seteamos las teclas
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && FIRE_DELAY <= 0)
             {
                 FIRE_DELAY = MAX_DELAY;
@@ -212,6 +214,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void recibirAtaque(int damage, float elapsedTime)
         {
+            
             playSound(playerSound, hitSoundDir, false);
             FIRE_DELAY = 0.5f;
             vida -= damage;
@@ -225,6 +228,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         private void playSound(TgcStaticSound sound, string dir, bool loop)
         {
+            //reproducir un sonido
             sound.dispose();
             sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
             sound.play(loop);

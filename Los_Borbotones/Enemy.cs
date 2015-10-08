@@ -52,9 +52,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Init()   
         {
             mesh.AutoTransformEnable = false;
-
+            //seteamos la posicion inicial del enemigo
             mesh.Transform = CreatorMatrixPosition();
-
+            
             mesh.BoundingBox.transform(CreatorMatrixPosition());
 
             Matrix matt = Matrix.Translation(new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43));
@@ -70,7 +70,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Update(float elapsedTime)
         {
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
-
+            //Realizamos ataque de enemigos
             if (!attacking)
             {
                 vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
@@ -85,13 +85,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 
                 attackDelay -= elapsedTime;
             }
-            
+            //realizamos el movimiento del enemigo
             updateMovementMatrix(elapsedTime, vectorDireccion);
 
             //Colision con Player1
             TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
             if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
             {
+                //si hay colision el enemigo ataca
                 attack(elapsedTime);
             }
             
@@ -184,6 +185,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public Matrix calcularMatrizOrientacion(Vector3 v)
         {
+            //hacemos que los robots giren mirando al player
             Matrix m_mWorld = new Matrix();
             Vector3 n = new Vector3(0, -1, 0);
             Vector3 w = Vector3.Cross(n, v);
@@ -212,6 +214,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public Matrix CreatorMatrixPosition()
         {
+            //el Spawn es random, siempre a una distancia = SPAWN_RADIUS
             Random random = new Random();
             float ANGLE = random.Next(0, 360) / (int)Math.PI;
 
@@ -228,7 +231,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix Resultado = escala * radio * giro * fpsPos;
 
             Normal = (CustomFpsCamera.Instance.Position - (new Vector3(Resultado.M41, 0, Resultado.M43)));
-            // Normal = new Vector3(1, 0, 0);
+           
             Normal.Normalize();
             return Resultado;
 
@@ -241,6 +244,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.mesh.render();
 
+            //se puede habilitar el render de los boundingbox para testear
             if (GameManager.Instance.drawBoundingBoxes)
             {
                 this.mesh.BoundingBox.render();
@@ -253,6 +257,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         virtual public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
         {
+            //nivelamos al enemigo con el terreno
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             
             float y;
@@ -266,13 +271,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             posicionActualChest.M42 = chestOffsetY + y;
             posicionActualLegs.M42 = legsOffsetY + y;
 
+            //hacemos que los robots giren mirando al player
             MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
-
+            //hacemos que sigan al player
             Traslacion = Matrix.Translation(Direccion * MOVEMENT_SPEED * elapsedTime);
 
             Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
+            //aplicamos las transformaciones
             this.mesh.Transform = transform;
 
+            //actualizamos los boundingbox
             this.mesh.BoundingBox.transform(transform);
 
             posicionActual = posicionActual * Traslacion;
@@ -324,6 +332,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public Vector3 getPosicionActual()
         {
+            //devuelve la posicion actual en un vector3
             Vector3 vec = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             return vec;
         }
