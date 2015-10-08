@@ -22,9 +22,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         Vector3 WEAPON_OFFSET;
         float FIRE_DELAY = 0;
         float MAX_DELAY = 2;
-        TgcStaticSound weaponSound = new TgcStaticSound();
-        TgcStaticSound playerSound = new TgcStaticSound();
-        TgcStaticSound footstepSound = new TgcStaticSound();
+        TgcStaticSound weaponSound;
+        TgcStaticSound hitSound;
+        TgcStaticSound breathSound;
+        TgcStaticSound walkSound;
+        TgcStaticSound runSound;
         bool running;
         string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Armas/Sniper.wav";
         string breathingSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Player/Breathing.wav";
@@ -53,6 +55,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             running = false;
             weaponOscilation = 0;
 
+            weaponSound = new TgcStaticSound();
+            hitSound = new TgcStaticSound();
+            breathSound = new TgcStaticSound();
+            walkSound = new TgcStaticSound();
+            runSound = new TgcStaticSound();
 
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -80,9 +87,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             prevEye = CustomFpsCamera.Instance.eye;
             //cargar sonido
-            playerSound.loadSound(breathingSoundDir);
+            breathSound.loadSound(breathingSoundDir, GameManager.Instance.PLAYER_VOLUME);
+            hitSound.loadSound(hitSoundDir, GameManager.Instance.PLAYER_VOLUME);
             //reproducir sonido de respawn
-            playSound(footstepSound, walkSoundDir, true);
+            playSound(walkSound, walkSoundDir, true);
+            playSound(runSound, runSoundDir, true);
+            runSound.stop();
         }
 
         public override void Update(float elapsedTime)
@@ -117,12 +127,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                 sprintTime += elapsedTime;
                 if (!running)
                 {
-                    playSound(footstepSound, runSoundDir, true);
+                    runSound.play(true);
+                    walkSound.stop();
                     running = true;
                 }
                 if (sprintTime > MAX_SPRINT_TIME) 
                 {
-                    playSound(playerSound, breathingSoundDir, false);
+                    playSound(breathSound, breathingSoundDir, false);
                     tiredTime = 0; 
                 }
             }
@@ -131,12 +142,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                 tiredTime += elapsedTime;
                 if (running)
                 {
-                    playSound(footstepSound, walkSoundDir, true);
+                    runSound.stop();
+                    walkSound.play(true);
                     running = false;
                 }
                 if (tiredTime > TIRED_TIME && sprintTime != 0) 
                 {
-                    playerSound.stop();
+                    breathSound.stop();
                     sprintTime = 0; 
                 }
             }
@@ -187,9 +199,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
             }
 
-            if (prevEye != CustomFpsCamera.Instance.eye)
-            { footstepSound.play(true); }
-            else { footstepSound.stop(); }
+            if (prevEye == CustomFpsCamera.Instance.eye)
+            {
+                walkSound.stop();
+                runSound.stop();
+            }
 
             float length = ((CustomFpsCamera.Instance.eye - prevEye).Length());
             if (CustomFpsCamera.Instance.moveBackwardsPressed)
@@ -210,8 +224,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void dispose()
         {
             meshAuxiliarParaSonido.dispose();
-            footstepSound.dispose();
-            playerSound.dispose();
+            walkSound.dispose();
+            runSound.dispose();
+            breathSound.dispose();
+            hitSound.dispose();
             base.dispose();
         }
 
@@ -234,7 +250,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void recibirAtaque(int damage, float elapsedTime)
         {
             
-            playSound(playerSound, hitSoundDir, false);
+            hitSound.play(false);
             FIRE_DELAY = 0.5f;
             vida -= damage;
             GameManager.Instance.healthText.Text = "HEALTH: " + vida;
