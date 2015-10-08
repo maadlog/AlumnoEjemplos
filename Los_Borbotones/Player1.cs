@@ -133,7 +133,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
                 if (sprintTime > MAX_SPRINT_TIME) 
                 {
-                    playSound(breathSound, breathingSoundDir, false);
+                    breathSound.play(true);
                     tiredTime = 0; 
                 }
             }
