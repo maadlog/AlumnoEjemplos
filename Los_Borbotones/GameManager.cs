@@ -78,6 +78,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
         public TgcText2d healthText;
+        public int MAX_ENEMIES = 10;
 
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
@@ -221,7 +222,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;//contamos el tiempo que paso desde el ultimo spawn de enemigos
 
             player1.Update(elapsedTime);
-            if (SPAWN_TIME_COUNTER > SPAWN_TIME) {
+            if (SPAWN_TIME_COUNTER > SPAWN_TIME && enemies.Count < MAX_ENEMIES) {
                 //si paso un tiempo = SPAWN_TIME agregamos un nuevo enemigo seleccionado al azar
                 rand = random.Next(1, 3);
                 if (rand == 1){
