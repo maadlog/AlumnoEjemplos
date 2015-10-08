@@ -82,8 +82,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
-        TgcStaticSound sound = new TgcStaticSound();
-        TgcStaticSound ambient = new TgcStaticSound();
+        TgcStaticSound sound;
+        TgcStaticSound ambient;
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
         string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headhunter.wav";
         string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/doublekill.wav";
@@ -215,6 +215,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.FogDensity = 0.00006f;
             d3dDevice.RenderState.FogEnable = true;
 
+            sound = new TgcStaticSound();
+            ambient = new TgcStaticSound();
             string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Ambiente/Deep_space.wav";
             ambient.loadSound(dir, -1700);
             ambient.play(true);
@@ -362,10 +364,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             normalScope.dispose();
             zoomedScope.dispose();
             skyBox.dispose();
+            ambient.dispose();
             foreach (Enemy enemy in enemies)
             {
                 enemy.dispose();
             }
+            enemies.Clear();
         }
 
         public void gameOver(float elapsedTime)

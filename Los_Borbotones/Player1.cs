@@ -20,7 +20,6 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         float WEAPON_ORIENTATION_Y;
         Vector3 WEAPON_OFFSET;
-        float HITSCAN_DELAY;
         float FIRE_DELAY = 0;
         float MAX_DELAY = 2;
         TgcStaticSound weaponSound = new TgcStaticSound();
@@ -206,6 +205,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             mesh.render();
            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
+        }
+
+        public override void dispose()
+        {
+            meshAuxiliarParaSonido.dispose();
+            footstepSound.dispose();
+            playerSound.dispose();
+            base.dispose();
         }
 
         public Matrix getWeaponTransform()

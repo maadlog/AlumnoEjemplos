@@ -116,8 +116,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         */
         public override void dispose()
         {
-            base.dispose();
             skeletalMesh.dispose();
+            base.dispose();
         }
 
         public override void attack(float elapsedTime)
