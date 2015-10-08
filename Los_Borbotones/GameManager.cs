@@ -113,7 +113,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Creo skybox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
-            float farplane = CustomFpsCamera.Instance.FAR_PLANE;
+            float farplane = CustomFpsCamera.FAR_PLANE;
             skyBox.Size = new Vector3(farplane, farplane, farplane);
 
             string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
@@ -133,8 +133,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             Vector3 posInicial = new Vector3(0, 0, 0);
             //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
-            //currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
-            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "images (4).jpg";
+            currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
             //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
             cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
@@ -788,9 +787,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                     heightmapActual = heightmap.Remove(heightmap.IndexOf('.'));
                     heightmapActual = heightmapActual + '_' + total.ToString() + ".jpg";
 
-                    texturaActual = texture;
-                    //texturaActual = texture.Remove(texture.IndexOf('.'));
-                    //texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
+                    texturaActual = texture.Remove(texture.IndexOf('.'));
+                    texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
 
                     //MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
 
