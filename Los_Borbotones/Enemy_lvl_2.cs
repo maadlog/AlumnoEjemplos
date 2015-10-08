@@ -9,7 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Sound;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     class Enemy_lvl_2:Enemy
     {
@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
             LEGS_BOUNDINGBOX = new TgcBoundingBox();
             //carga de sonido
-            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\ufoHum.wav", getPosicionActual());
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio\\Robot\\ufoHum.wav", getPosicionActual());
             SonidoMovimiento.MinDistance = 130f;
             SonidoMovimiento.play(true);
             

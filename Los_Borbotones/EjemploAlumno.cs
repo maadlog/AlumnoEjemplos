@@ -8,7 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 
-namespace AlumnoEjemplos.Los_Borbotones
+namespace Los_Borbotones
 {
     /// <summary>
     /// Ejemplo del alumno

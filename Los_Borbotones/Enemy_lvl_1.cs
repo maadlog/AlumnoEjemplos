@@ -12,7 +12,7 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.Sound;
 
 
-namespace AlumnoEjemplos.Los_Borbotones 
+namespace Los_Borbotones 
 {
 
     class Enemy_lvl_1:Enemy
@@ -70,7 +70,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.AutoTransformEnable = false;
 
             //carga de sonido
-            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", getPosicionActual());
+            SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio\\Robot\\servomotor.wav", getPosicionActual());
             SonidoMovimiento.MinDistance = 70f;
             SonidoMovimiento.play(true);
             
