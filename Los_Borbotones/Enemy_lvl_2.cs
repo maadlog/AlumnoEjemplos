@@ -43,7 +43,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             LEGS_BOUNDINGBOX = new TgcBoundingBox();
             //carga de sonido
             SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\ufoHum.wav", getPosicionActual());
-            SonidoMovimiento.MinDistance = 75f;
+            SonidoMovimiento.MinDistance = 130f;
             SonidoMovimiento.play(true);
             
         }

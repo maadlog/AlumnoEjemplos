@@ -71,7 +71,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //carga de sonido
             SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Audio\\Robot\\servomotor.wav", getPosicionActual());
-            SonidoMovimiento.MinDistance = 25f;
+            SonidoMovimiento.MinDistance = 70f;
             SonidoMovimiento.play(true);
             
             

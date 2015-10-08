@@ -82,6 +82,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
         TgcStaticSound sound = new TgcStaticSound();
+        TgcStaticSound ambient = new TgcStaticSound();
         string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headshot.wav";
         string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/headhunter.wav";
         string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Anunciador/doublekill.wav";
@@ -190,7 +191,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthText.Position = new Point(0, 250);
             healthText.Align = TgcText2d.TextAlign.LEFT;
             
-              //cargamos la mira
+            //cargamos la mira
             cross = new TgcSprite();
             normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\normalScope.png");
             zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Sprites\\zoomedScope.png");
@@ -204,13 +205,18 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //seteamos niebla
             Device d3dDevice = GuiController.Instance.D3dDevice;
-            d3dDevice.RenderState.FogTableMode = FogMode.Linear;
+            //d3dDevice.RenderState.FogTableMode = FogMode.Linear;
+            d3dDevice.RenderState.FogTableMode = FogMode.Exp2;
             d3dDevice.RenderState.FogVertexMode = FogMode.None;
             d3dDevice.RenderState.FogColor = Color.LightBlue;
-            d3dDevice.RenderState.FogStart = 3000f;
-            d3dDevice.RenderState.FogEnd = farplane;
+            //d3dDevice.RenderState.FogStart = 3000f;
+            //d3dDevice.RenderState.FogEnd = farplane;
+            d3dDevice.RenderState.FogDensity = 0.00006f;
             d3dDevice.RenderState.FogEnable = true;
-           // GuiController.Instance.DirectSound.ListenerTracking = 
+
+            string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Audio/Ambiente/Deep_space.wav";
+            ambient.loadSound(dir, -1700);
+            ambient.play(true);
         }
 
         internal void Update(float elapsedTime)
