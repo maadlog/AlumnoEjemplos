@@ -63,6 +63,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         private List<TgcMesh> vegetation;
         private List<BoundingTerrain> terrenos;
         public int vegetacionVisible = 0;
+        public int terrenosVisibles = 0;
         TgcSprite cross;
         Quadtree quadTree;
         TgcSkyBox skyBox;
@@ -287,15 +288,26 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Render(float elapsedTime)
         {
             //terrain.render();
+            TgcFrustum frustum = GuiController.Instance.Frustum;
                         
             foreach (BoundingTerrain terreno in terrenos)
             {
-                terreno.terrain.render();
-                terreno.boundingBox.render();
+                TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, terreno.boundingBox);
+
+                //complementamente adentro: cargar todos los hijos directamente, sin testeos
+                if (c == TgcCollisionUtils.FrustumResult.INSIDE || c == TgcCollisionUtils.FrustumResult.INTERSECT)
+                {
+                    terreno.terrain.render();
+                    terrenosVisibles++;
+                }
+                if (drawBoundingBoxes)
+                {
+                    terreno.boundingBox.render();
+                }
             }
           
             skyBox.render();
-            quadTree.render(GuiController.Instance.Frustum, drawBoundingBoxes);
+            quadTree.render(frustum, drawBoundingBoxes);
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
@@ -323,6 +335,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
             int valor = (int)GuiController.Instance.UserVars.getValue("N Vegetacion Visible");
             vegetacionVisible = 0;
+            GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", terrenosVisibles);
+            int valor2 = (int)GuiController.Instance.UserVars.getValue("N Sub-terrenos Visibles");
+            terrenosVisibles = 0;
+
 
         }
 

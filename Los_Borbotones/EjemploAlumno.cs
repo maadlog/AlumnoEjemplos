@@ -65,7 +65,12 @@ Presionar L para capturar el mouse.";
 
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", 0);
-            
+
+            //Crear una UserVar
+            GuiController.Instance.UserVars.addVar("N Sub-terrenos Visibles", 0);
+
+            //Cargar valor en UserVar
+            GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", 0);
 
             ///////////////MODIFIERS//////////////////
 
