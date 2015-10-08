@@ -130,9 +130,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             textureResolution = 1600;
 
             Vector3 posInicial = new Vector3(0, 0, 0);
-            Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
+            //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "Grass 02 seamless.jpg";
-            Cropping(currentTexture, (textureResolution / cantidadFilasColumnas), (textureResolution / cantidadFilasColumnas));
+            //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
             cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
@@ -279,6 +279,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             foreach (BoundingTerrain terreno in terrenos)
             {
                 terreno.terrain.render();
+                terreno.boundingBox.render();
             }
           
             skyBox.render();
@@ -757,9 +758,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                     pMin.X -= mediaDistNodo;
                     pMin.Y = 0;
                     pMin.Z -= mediaDistNodo;
+                    pMin.X *= currentScaleXZ;
+                    pMin.Z *= currentScaleXZ;
                     pMax.X += mediaDistNodo;
-                    pMax.Y = 1000;
+                    pMax.Y = 2000;
                     pMax.Z += mediaDistNodo;
+                    pMax.X *= currentScaleXZ;
+                    pMax.Z *= currentScaleXZ;
                     box = new TgcBoundingBox(pMin, pMax);
 
                     BoundingTerrain bt = new BoundingTerrain(terreno, box);
