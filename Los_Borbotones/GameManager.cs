@@ -113,7 +113,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Creo skybox
             skyBox = new TgcSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
-            float farplane = CustomFpsCamera.FAR_PLANE;
+            float farplane = CustomFpsCamera.Instance.FAR_PLANE;
             skyBox.Size = new Vector3(farplane, farplane, farplane);
 
             string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
@@ -397,6 +397,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     {
                         hit = true;
                         score += 1;
+                        score += enemies[i].score;
                         killHeadTracker++;
                         specialKillText.Text = "HEADSHOT!!";
                         TEXT_DELAY = TEXT_DELAY_MAX;
