@@ -125,12 +125,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
-<<<<<<< HEAD
-            //seteamos el mapa
-            currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4.3.jpg";
-=======
             currentHeightmap = GuiController.Instance.AlumnoEjemplosMediaDir + "Mapas\\" + "experimento-editando4_3.jpg";
->>>>>>> 0b481fc4261804c52cbb74e25d12e0c8e684aaf9
             //Seteo de la resolucion del jpg de heightmap para la interpolacion de altura, como es cuadrado se usa una sola variable
             heightmapResolution = 800;
             textureResolution = 1600;
