@@ -8,7 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 
-namespace Los_Borbotones
+namespace AlumnoEjemplo.Los_Borbotones
 {
     /// <summary>
     /// Ejemplo del alumno
@@ -40,7 +40,7 @@ namespace Los_Borbotones
         public override string getDescription()
         {
             return @"Sniper - El objetivo del juego es sobrevivir la mayor cantidad de tiempo posible y sumar puntos, el juego termina cuando el jugador es alcanzado por los enemigos y pierde toda su vida.
-                Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom";
+Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom";
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace Los_Borbotones
             GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);
 
             //Crear un modifier para un valor FLOAT
-            GuiController.Instance.Modifiers.addFloat("weaponRotation", 0, 2f * (float)Math.PI, 0.1f);
             GuiController.Instance.Modifiers.addFloat("FlySpeed", 0, 1000, 0);
+            GuiController.Instance.Modifiers.addFloat("weaponRotation", 0, 2f * (float)Math.PI, 0.1f);
 
             //Crear un modifier para un ComboBox con opciones
             //string[] opciones = new string[]{"opcion1", "opcion2", "opcion3"};

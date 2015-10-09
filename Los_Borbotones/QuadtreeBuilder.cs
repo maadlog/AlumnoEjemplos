@@ -6,7 +6,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using System.Drawing;
 
-namespace Los_Borbotones
+namespace AlumnoEjemplo.Los_Borbotones
 {
     /// <summary>
     /// Herramienta para construir un Quadtree

@@ -11,7 +11,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
 
 
-namespace Los_Borbotones
+namespace AlumnoEjemplo.Los_Borbotones
 {
     public abstract class Enemy : GameObject
     {

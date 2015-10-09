@@ -12,7 +12,7 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.Sound;
 
 
-namespace Los_Borbotones 
+namespace AlumnoEjemplo.Los_Borbotones 
 {
 
     class Enemy_lvl_1:Enemy

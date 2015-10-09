@@ -7,7 +7,7 @@ using System.Text;
 using TgcViewer;
 using TgcViewer.Utils.TgcSceneLoader;
 
-namespace Los_Borbotones
+namespace AlumnoEjemplo.Los_Borbotones
 {
     public abstract class GameObject
     {

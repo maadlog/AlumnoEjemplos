@@ -17,7 +17,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 
-namespace Los_Borbotones
+namespace AlumnoEjemplo.Los_Borbotones
 {
     public class GameManager
     {
@@ -62,7 +62,7 @@ namespace Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
-        //private List<BoundingTerrain> terrenos;
+        private List<BoundingTerrain> terrenos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
         TgcSprite cross;
@@ -155,7 +155,7 @@ namespace Los_Borbotones
             //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "grunge.jpg";
             //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
-            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
+            cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new TgcSimpleTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
@@ -317,16 +317,15 @@ namespace Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
-            terrain.render();
+            //terrain.render();
             
             TgcFrustum frustum = GuiController.Instance.Frustum;      
-            
-            /*
+             
+            //frustum culling de los terrenos
             foreach (BoundingTerrain terreno in terrenos)
             {
                 TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, terreno.boundingBox);
 
-                //complementamente adentro: cargar todos los hijos directamente, sin testeos
                 if (c == TgcCollisionUtils.FrustumResult.INSIDE || c == TgcCollisionUtils.FrustumResult.INTERSECT)
                 {
                     terreno.terrain.render();
@@ -337,7 +336,7 @@ namespace Los_Borbotones
                     terreno.boundingBox.render();
                 }
             }
-             */
+            
           
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
@@ -715,7 +714,9 @@ namespace Los_Borbotones
            
         }
 
-        /* Metodos para hacer frustumm culling de terreno, tienen un problema por lo que por ahora renderizamos el terreno completo
+        //Comienzo de metodos para hacer frustumm culling de terreno, con el problema mencionado de la division.
+
+        //Divide una imagen por las resoluciones especificadas, anda el metodo pero las imagenes que devuelve son de mala calidad por lo que por ahora no se usa (se hacen manuales los distintos heightmaps)
         public void Cropping(string inputImgPath, int cropWidth, int cropHeight)
        {
            string _fileNameWithoutExtension;
@@ -776,6 +777,7 @@ namespace Los_Borbotones
              inputImg.Dispose();
          }
 
+        //Definicion de la clase que guarda el terreno y su boundingbox para luego hacer frustum culling
         public class BoundingTerrain
         {
             public TgcSimpleTerrain terrain;
@@ -788,7 +790,7 @@ namespace Los_Borbotones
             }
         }
 
-        
+        //Carga los distintos terrenos en base al original, aca se produce el artifact del hueco entre terrenos
         private List<BoundingTerrain> cargarBoundingTerrain(string heightmap, string texture, Vector3 posInicial) 
         {
             int i;
@@ -823,8 +825,9 @@ namespace Los_Borbotones
                     heightmapActual = heightmap.Remove(heightmap.IndexOf('.'));
                     heightmapActual = heightmapActual + '_' + total.ToString() + ".jpg";
 
-                    texturaActual = texture.Remove(texture.IndexOf('.'));
-                    texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
+                    texturaActual = texture;
+                    //texturaActual = texture.Remove(texture.IndexOf('.'));
+                    //texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
 
                     //MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
 
@@ -847,6 +850,7 @@ namespace Los_Borbotones
                     pMax.X *= currentScaleXZ;
                     pMax.Z *= currentScaleXZ;
                     box = new TgcBoundingBox(pMin, pMax);
+                    box.setRenderColor(Color.Red);
 
                     BoundingTerrain bt = new BoundingTerrain(terreno, box);
                     terrenos.Add(bt);
@@ -860,6 +864,5 @@ namespace Los_Borbotones
 
             return terrenos;
         }
-        */
     }
 }
