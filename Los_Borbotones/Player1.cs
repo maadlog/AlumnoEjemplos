@@ -126,7 +126,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             if (GuiController.Instance.D3dInput.keyDown(Key.LeftShift) && sprintTime < MAX_SPRINT_TIME)
             {
-                CustomFpsCamera.Instance.MovementSpeed = 300f;
+                CustomFpsCamera.Instance.MovementSpeed = 3 * CustomFpsCamera.DEFAULT_MOVEMENT_SPEED;
                 sprintTime += elapsedTime;
                 if (!running)
                 {
