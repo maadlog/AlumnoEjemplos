@@ -16,6 +16,7 @@ using System.Collections;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TgcViewer.Utils.TgcSkeletalAnimation;
+using TgcViewer.Utils.Shaders;
 
 namespace AlumnoEjemplo.Los_Borbotones
 {
@@ -53,7 +54,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         int rand;
 
         public TgcScene Vegetation;
-        TgcSimpleTerrain terrain;
+        CustomTerrain terrain;
         int heightmapResolution;
         int textureResolution;
         int cantidadFilasColumnas = 4;
@@ -155,10 +156,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "grunge.jpg";
             //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
-            cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
-            terrain = new TgcSimpleTerrain();
+            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
+            terrain = new CustomTerrain();
             terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
             terrain.loadTexture(currentTexture);
+            //terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\RenderTerrain.fx");
+            //terrain.Technique = "RenderTerrain";
 
             //Creacion de la Vegetacion
             this.vegetation = new List<TgcMesh>();
@@ -317,11 +320,12 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
-            //terrain.render();
-            
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            terrain.render();
             TgcFrustum frustum = GuiController.Instance.Frustum;      
-             
             //frustum culling de los terrenos
+            
+            /*
             foreach (BoundingTerrain terreno in terrenos)
             {
                 TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, terreno.boundingBox);
@@ -336,7 +340,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                     terreno.boundingBox.render();
                 }
             }
-            
+            */
           
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
@@ -738,9 +742,9 @@ namespace AlumnoEjemplo.Los_Borbotones
             ArrayList areaList = new ArrayList();
      
             int i = 0;
-            for (int iHeight = 0; iHeight < heightCount ; iHeight ++)
+            for (int iHeight = 0; iHeight+2 < heightCount ; iHeight ++)
             {
-                for (int iWidth = 0; iWidth < widthCount ; iWidth ++)
+                for (int iWidth = 0; iWidth+2 < widthCount ; iWidth ++)
                 {
                     int pointX = iWidth * cropWidth;
                     int pointY = iHeight * cropHeight;
@@ -758,9 +762,9 @@ namespace AlumnoEjemplo.Los_Borbotones
             {
                  Rectangle rect = (Rectangle)areaList[iLoop];
                 string fileName = _fileDirectory + "\\" + _fileNameWithoutExtension + "_" + iLoop.ToString() + _fileExtension;
-                 Bitmap newBmp = new Bitmap(rect.Width,rect.Height,PixelFormat.Format24bppRgb);
+                 Bitmap newBmp = new Bitmap(rect.Width +2,rect.Height+2,PixelFormat.Format32bppRgb);
                  Graphics newBmpGraphics = Graphics.FromImage(newBmp);
-                 newBmpGraphics.DrawImage(inputImg,new Rectangle(0,0,rect.Width,rect.Height),rect,GraphicsUnit.Pixel);
+                 newBmpGraphics.DrawImage(inputImg,new Rectangle(0,0,rect.Width +2,rect.Height+2),rect,GraphicsUnit.Pixel);
                  newBmpGraphics.Save();
                 switch (_fileExtension.ToLower())
                 {
