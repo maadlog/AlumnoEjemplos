@@ -63,7 +63,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             this.posicionActual = matScale * giroInicial * matt;
             posicionAnterior = posicionActual;
 
-            setBaseEffect();
+            //setBaseEffect();
 
         }
 
@@ -240,7 +240,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         public override void Render(float elapsedTime)
         {
 
-            setBaseEffectValues(elapsedTime);
+            //setBaseEffectValues(elapsedTime);
 
             this.mesh.render();
 

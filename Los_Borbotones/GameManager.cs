@@ -57,13 +57,12 @@ namespace AlumnoEjemplo.Los_Borbotones
         CustomTerrain terrain;
         int heightmapResolution;
         int textureResolution;
-        int cantidadFilasColumnas = 4;
+        int cantidadFilasColumnas = 8;
         string currentHeightmap;
         string currentTexture;
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
-        private List<BoundingTerrain> terrenos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
         TgcSprite cross;
@@ -83,9 +82,6 @@ namespace AlumnoEjemplo.Los_Borbotones
         public int MAX_ENEMIES = 10;
         public TgcMesh ModeloRobot;
         public TgcMesh ModeloNave;
-     
-      
-       
 
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
@@ -153,15 +149,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             textureResolution = 1600;
 
             Vector3 posInicial = new Vector3(0, 0, 0);
-            //Cropping(currentHeightmap, (heightmapResolution / cantidadFilasColumnas), (heightmapResolution / cantidadFilasColumnas));
             currentTexture = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\" + "grunge.jpg";
-            //Cropping(currentTexture, (textureResolution / cantidadFilasColumnas) , (textureResolution / cantidadFilasColumnas));
-            //cargarBoundingTerrain(currentHeightmap, currentTexture, posInicial);
             terrain = new CustomTerrain();
-            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial);
+            terrain.loadHeightmap(currentHeightmap, currentScaleXZ, currentScaleY, posInicial, cantidadFilasColumnas);
             terrain.loadTexture(currentTexture);
-            //terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\RenderTerrain.fx");
-            //terrain.Technique = "RenderTerrain";
+            terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\RenderTerrain.fx");
+            terrain.Technique = "RenderTerrain";
 
             //Creacion de la Vegetacion
             this.vegetation = new List<TgcMesh>();
@@ -208,10 +201,10 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             //texto para la vida
             //tambien cambia de color segun la vida
-                healthText = new TgcText2d();
-                healthText.Text = "HEALTH: " + player1.vida;
-                healthText.Color = Color.Green;
-                healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
+            healthText = new TgcText2d();
+            healthText.Text = "HEALTH: " + player1.vida;
+            healthText.Color = Color.Green;
+            healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
             healthText.Position = new Point(0, 250);
             healthText.Align = TgcText2d.TextAlign.LEFT;
             
@@ -716,157 +709,6 @@ namespace AlumnoEjemplo.Los_Borbotones
                 healthText.Color = Color.Red;
             }
            
-        }
-
-        //Comienzo de metodos para hacer frustumm culling de terreno, con el problema mencionado de la division.
-
-        //Divide una imagen por las resoluciones especificadas, anda el metodo pero las imagenes que devuelve son de mala calidad por lo que por ahora no se usa (se hacen manuales los distintos heightmaps)
-        public void Cropping(string inputImgPath, int cropWidth, int cropHeight)
-       {
-           string _fileNameWithoutExtension;
-           string _fileExtension;
-           string _fileDirectory;
-
-            _fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(inputImgPath);
-            _fileExtension = System.IO.Path.GetExtension(inputImgPath);
-            _fileDirectory = System.IO.Path.GetDirectoryName(inputImgPath);
-            
-            //Load the image divided
-             Image inputImg = Image.FromFile(inputImgPath);
-            int imgWidth = inputImg.Width;
-            int imgHeight = inputImg.Height;
-            
-            //Divide how many small blocks
-            int widthCount = (int)Math.Ceiling((imgWidth * 1.00) / (cropWidth * 1.00));
-            int heightCount = (int)Math.Ceiling((imgHeight * 1.00) / (cropHeight * 1.00));
-            ArrayList areaList = new ArrayList();
-     
-            int i = 0;
-            for (int iHeight = 0; iHeight+2 < heightCount ; iHeight ++)
-            {
-                for (int iWidth = 0; iWidth+2 < widthCount ; iWidth ++)
-                {
-                    int pointX = iWidth * cropWidth;
-                    int pointY = iHeight * cropHeight;
-                    int areaWidth = ((pointX + cropWidth) > imgWidth) ? (imgWidth - pointX) : cropWidth;
-                    int areaHeight = ((pointY + cropHeight) > imgHeight) ? (imgHeight - pointY) : cropHeight;
-                    string s = string.Format("{0};{1};{2};{3}",pointX,pointY,areaWidth,areaHeight);
-                    
-                     Rectangle rect = new Rectangle(pointX,pointY,areaWidth,areaHeight);
-                     areaList.Add(rect);
-                     i ++;
-                 }
-             }
-         
-            for (int iLoop = 0 ; iLoop < areaList.Count ; iLoop ++)
-            {
-                 Rectangle rect = (Rectangle)areaList[iLoop];
-                string fileName = _fileDirectory + "\\" + _fileNameWithoutExtension + "_" + iLoop.ToString() + _fileExtension;
-                 Bitmap newBmp = new Bitmap(rect.Width +2,rect.Height+2,PixelFormat.Format32bppRgb);
-                 Graphics newBmpGraphics = Graphics.FromImage(newBmp);
-                 newBmpGraphics.DrawImage(inputImg,new Rectangle(0,0,rect.Width +2,rect.Height+2),rect,GraphicsUnit.Pixel);
-                 newBmpGraphics.Save();
-                switch (_fileExtension.ToLower())
-                {
-                    case ".jpg":
-                    case ".jpeg":
-                         newBmp.Save(fileName,ImageFormat.Jpeg);
-                        break;
-                    case "gif":
-                         newBmp.Save(fileName,ImageFormat.Gif);
-                        break;
-                 }
-                
-             }
-             inputImg.Dispose();
-         }
-
-        //Definicion de la clase que guarda el terreno y su boundingbox para luego hacer frustum culling
-        public class BoundingTerrain
-        {
-            public TgcSimpleTerrain terrain;
-            public TgcBoundingBox boundingBox;
-
-            public BoundingTerrain(TgcSimpleTerrain myTerrain, TgcBoundingBox myBoundingBox)
-            {
-                terrain = myTerrain;
-                boundingBox = myBoundingBox;
-            }
-        }
-
-        //Carga los distintos terrenos en base al original, aca se produce el artifact del hueco entre terrenos
-        private List<BoundingTerrain> cargarBoundingTerrain(string heightmap, string texture, Vector3 posInicial) 
-        {
-            int i;
-            int j;
-            int total = 0;
-            string heightmapActual;
-            string texturaActual;
-            Vector3 esquinaSuperior;
-            Vector3 posActual;
-            float mediaDistNodo;
-            terrenos = new List<BoundingTerrain>();
-
-            esquinaSuperior = posInicial;
-            //float mediaDistTotal  = (heightmapResolution*currentScaleXZ)/2;
-            float mediaDistTotal = (heightmapResolution / 2);
-            esquinaSuperior.X -= mediaDistTotal;
-            esquinaSuperior.Z -= mediaDistTotal;
-
-            //mediaDistNodo = (heightmapResolution * currentScaleXZ) / cantidadFilasColumnas;
-            mediaDistNodo = (heightmapResolution / cantidadFilasColumnas);
-            mediaDistNodo = mediaDistNodo / 2;
-
-            posActual = esquinaSuperior;
-            posActual.X += mediaDistNodo;
-            posActual.Z += mediaDistNodo;
-
-            for(i=1; i <= cantidadFilasColumnas; i++)
-            {
-
-                for (j=1; j <= cantidadFilasColumnas; j++)
-                {
-                    heightmapActual = heightmap.Remove(heightmap.IndexOf('.'));
-                    heightmapActual = heightmapActual + '_' + total.ToString() + ".jpg";
-
-                    texturaActual = texture;
-                    //texturaActual = texture.Remove(texture.IndexOf('.'));
-                    //texturaActual = texturaActual + '_' + total.ToString() + ".jpg";
-
-                    //MessageBox.Show("Se cargo la Textura:" + total.ToString() + " pos X:" + posActual.X.ToString() + " Z:" + posActual.Z.ToString());
-
-                    TgcSimpleTerrain terreno;
-                    terreno = new TgcSimpleTerrain();
-                    terreno.loadHeightmap(heightmapActual, currentScaleXZ, currentScaleY, posActual);
-                    terreno.loadTexture(texturaActual);
-
-                    TgcBoundingBox box;
-                    Vector3 pMin = posActual;
-                    Vector3 pMax = posActual;
-                    pMin.X -= mediaDistNodo;
-                    pMin.Y = 0;
-                    pMin.Z -= mediaDistNodo;
-                    pMin.X *= currentScaleXZ;
-                    pMin.Z *= currentScaleXZ;
-                    pMax.X += mediaDistNodo;
-                    pMax.Y = 2000;
-                    pMax.Z += mediaDistNodo;
-                    pMax.X *= currentScaleXZ;
-                    pMax.Z *= currentScaleXZ;
-                    box = new TgcBoundingBox(pMin, pMax);
-                    box.setRenderColor(Color.Red);
-
-                    BoundingTerrain bt = new BoundingTerrain(terreno, box);
-                    terrenos.Add(bt);
-
-                    posActual.Z += mediaDistNodo * 2;
-                    total++;
-                }
-                posActual.Z = posInicial.Z - mediaDistTotal + mediaDistNodo;
-                posActual.X += mediaDistNodo * 2;
-            }
-
-            return terrenos;
         }
     }
 }

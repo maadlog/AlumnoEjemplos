@@ -101,7 +101,8 @@ namespace AlumnoEjemplo.Los_Borbotones
         /// <param name="scaleXZ">Escala para los ejes X y Z</param>
         /// <param name="scaleY">Escala para el eje Y</param>
         /// <param name="center">Centro de la malla del terreno</param>
-        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center)
+        /// <param name="divisiones">Cantidad de filas y columnas en las que se va a dividir el terreno</param>
+        public void loadHeightmap(string heightmapPath, float scaleXZ, float scaleY, Vector3 center, int divisiones)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             this.center = center;
@@ -126,12 +127,12 @@ namespace AlumnoEjemplo.Los_Borbotones
 
 
             //Crear vertexBuffer
-            float nodeWidth = (width / 4);
-            float nodeLength = (length / 4);
+            float nodeWidth = (width / divisiones);
+            float nodeLength = (length / divisiones);
 
-            for(int x=0; x < 4; x++)
+            for(int x=0; x < divisiones; x++)
             {
-                for (int z = 0; z < 4; z++)
+                for (int z = 0; z < divisiones; z++)
                 {
                     VertexBuffer vbTerrain;
 
@@ -261,8 +262,14 @@ namespace AlumnoEjemplo.Los_Borbotones
 
                 if (c == TgcCollisionUtils.FrustumResult.INSIDE || c == TgcCollisionUtils.FrustumResult.INTERSECT)
                 {
-                    renderTerrain(vbTerrains[i]);
-                    GameManager.Instance.terrenosVisibles++;
+                    Vector3 centroBB = (boundingBoxes[i].PMax + boundingBoxes[i].PMin);
+                    centroBB.Multiply(0.5f);
+                    if (((CustomFpsCamera.Instance.eye - centroBB).Length() < CustomFpsCamera.FAR_PLANE / 1.5f))
+                    {
+                        renderTerrain(vbTerrains[i]);
+                        GameManager.Instance.terrenosVisibles++;
+
+                    }
                 }
                 bool drawBoundingBoxes = GameManager.Instance.drawBoundingBoxes;
                 

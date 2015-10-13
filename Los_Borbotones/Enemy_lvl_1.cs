@@ -89,7 +89,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         }
         public override void Render(float elapsedTime)
         {
-            setBaseEffectValues(elapsedTime);
+            //setBaseEffectValues(elapsedTime);
             //renderizamos el skeletalmesh
             skeletalMesh.animateAndRender();
             //se puede habilitar el renderizado de los boundingbox
