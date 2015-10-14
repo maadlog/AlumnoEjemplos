@@ -87,6 +87,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Los_Borbotones\Barril.cs" />
+    <Compile Include="Los_Borbotones\Activo.cs" />
     <Compile Include="Los_Borbotones\CustomTerrain.cs" />
     <Compile Include="Los_Borbotones\Enemy_lvl_2.cs" />
     <Compile Include="Los_Borbotones\CustomFpsCamera.cs" />
@@ -95,10 +97,12 @@
     <Compile Include="Los_Borbotones\Enemy.cs" />
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
+    <Compile Include="Los_Borbotones\Inactivo.cs" />
     <Compile Include="Los_Borbotones\Player1.cs" />
     <Compile Include="Los_Borbotones\Quadtree.cs" />
     <Compile Include="Los_Borbotones\QuadtreeBuilder.cs" />
     <Compile Include="Los_Borbotones\QuadtreeNode.cs" />
+    <Compile Include="Los_Borbotones\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

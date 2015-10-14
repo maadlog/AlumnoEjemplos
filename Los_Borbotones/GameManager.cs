@@ -17,6 +17,7 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
+using AlumnoEjemplos.Los_Borbotones;
 
 namespace AlumnoEjemplo.Los_Borbotones
 {
@@ -105,6 +106,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         TgcTexture normalScope;
         TgcTexture zoomedScope;
         float screenCovered = 0.12f;
+        List<Barril> barriles = new List<Barril>();
 
         internal void Init()
         {
@@ -173,6 +175,27 @@ namespace AlumnoEjemplo.Los_Borbotones
                 center.Y = y;
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
+            }
+            //Creacion de barriles
+            List<TgcMesh> meshesBarril = new List<TgcMesh>();
+            TgcSceneLoader loader3 = new TgcSceneLoader();
+            TgcScene Barriles = loader3.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Barriles-TgcScene.xml");
+
+            meshesBarril = Barriles.Meshes;
+            int j;
+            //Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
+            for (j = 1; j < meshesBarril.Count; j++)
+            {
+                Barril barril = new Barril();
+                barril.mesh = meshesBarril[j];
+                barriles.Add(barril);
+                //vegetation[i].setColor(Color.SkyBlue);
+                //Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
+                //float y;
+                //interpoledHeight(center.X, center.Z, out y);
+                //center.Y = y;
+                //Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
+                //vegetation[i].BoundingBox.transform(scale * trans);
             }
 
             //inicializamos al player
@@ -344,7 +367,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
-
+            foreach (Barril barril in barriles)
+            {
+                
+                barril.Render(elapsedTime);
+                    
+            }
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
 
