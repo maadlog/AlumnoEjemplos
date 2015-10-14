@@ -68,6 +68,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         public int terrenosVisibles = 0;
         TgcSprite cross;
         Quadtree quadTree;
+        Quadtree quadTreeBarriles;
         TgcSkyBox skyBox;
 
         TgcText2d scoreText;
@@ -107,6 +108,8 @@ namespace AlumnoEjemplo.Los_Borbotones
         TgcTexture zoomedScope;
         float screenCovered = 0.12f;
         List<Barril> barriles = new List<Barril>();
+        List<TgcMesh> meshesBarril;
+        TgcScene Barriles;
 
         internal void Init()
         {
@@ -121,6 +124,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             TgcSceneLoader loader2 = new TgcSceneLoader();
             TgcScene scene = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
             this.ModeloRobot = scene.Meshes[0];
+            
 
            
            
@@ -168,7 +172,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
-                vegetation[i].setColor(Color.SkyBlue);
+                vegetation[i].setColor(Color.DarkViolet);
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
@@ -176,11 +180,11 @@ namespace AlumnoEjemplo.Los_Borbotones
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
-            //Creacion de barriles
-            List<TgcMesh> meshesBarril = new List<TgcMesh>();
-            TgcSceneLoader loader3 = new TgcSceneLoader();
-            TgcScene Barriles = loader3.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Barriles-TgcScene.xml");
-
+            //Creacion de barriles 
+                meshesBarril = new List<TgcMesh>();
+            TgcSceneLoader loader4 = new TgcSceneLoader();
+            Barriles = loader4.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Barriles2-TgcScene.xml");
+            Barriles.setMeshesEnabled(true);
             meshesBarril = Barriles.Meshes;
             int j;
             //Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
@@ -243,12 +247,15 @@ namespace AlumnoEjemplo.Los_Borbotones
             quadTree.create(vegetation, Vegetation.BoundingBox);
             quadTree.createDebugQuadtreeMeshes();
 
+            quadTreeBarriles = new Quadtree();
+            quadTreeBarriles.create(meshesBarril, Barriles.BoundingBox);
+            quadTreeBarriles.createDebugQuadtreeMeshes();
             //seteamos niebla
             Device d3dDevice = GuiController.Instance.D3dDevice;
             //d3dDevice.RenderState.FogTableMode = FogMode.Linear;
             d3dDevice.RenderState.FogTableMode = FogMode.Exp2;
             d3dDevice.RenderState.FogVertexMode = FogMode.None;
-            d3dDevice.RenderState.FogColor = Color.LightBlue;
+            d3dDevice.RenderState.FogColor = Color.MediumPurple;
             //d3dDevice.RenderState.FogStart = 3000f;
             //d3dDevice.RenderState.FogEnd = farplane;
             d3dDevice.RenderState.FogDensity = 0.00006f;
@@ -306,7 +313,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
             //hacemos que el skybox siga al player para no tener problemas con el farplane
             skyBox.Center = CustomFpsCamera.Instance.Position;
-            skyBox.updateValues();
+            //skyBox.updateValues();
         }
 
         private void ChangeTextColor()
@@ -361,6 +368,8 @@ namespace AlumnoEjemplo.Los_Borbotones
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
 
+            //quadTreeBarriles.render(frustum, drawBoundingBoxes);
+
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
             //dibujamos todos los enemigos
@@ -373,6 +382,9 @@ namespace AlumnoEjemplo.Los_Borbotones
                 barril.Render(elapsedTime);
                     
             }
+
+            
+
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
 
