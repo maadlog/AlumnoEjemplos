@@ -108,8 +108,8 @@ namespace AlumnoEjemplo.Los_Borbotones
         TgcTexture zoomedScope;
         float screenCovered = 0.12f;
         List<Barril> barriles = new List<Barril>();
-        List<TgcMesh> meshesBarril;
-        TgcScene Barriles;
+        private List<TgcMesh> meshesBarril;
+        public TgcScene Barriles;
 
         internal void Init()
         {
@@ -181,7 +181,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
             //Creacion de barriles 
-                meshesBarril = new List<TgcMesh>();
+            this.meshesBarril = new List<TgcMesh>();
             TgcSceneLoader loader4 = new TgcSceneLoader();
             Barriles = loader4.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Barriles2-TgcScene.xml");
             Barriles.setMeshesEnabled(true);
@@ -191,6 +191,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             for (j = 1; j < meshesBarril.Count; j++)
             {
                 Barril barril = new Barril();
+                meshesBarril[j].Scale = new Vector3(0.3f, 0.3f, 0.3f);
                 barril.mesh = meshesBarril[j];
                 barriles.Add(barril);
                 //vegetation[i].setColor(Color.SkyBlue);
@@ -368,7 +369,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
 
-            //quadTreeBarriles.render(frustum, drawBoundingBoxes);
+            quadTreeBarriles.render(frustum, drawBoundingBoxes);
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
@@ -376,12 +377,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
-            foreach (Barril barril in barriles)
+            /*foreach (Barril barril in barriles)
             {
                 
                 barril.Render(elapsedTime);
                     
-            }
+            }*/
 
             
 
