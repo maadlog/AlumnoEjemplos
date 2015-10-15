@@ -46,6 +46,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         public Player1 player1 = new Player1();
         public List<Enemy> enemies;
+        public List<Proyectil> proyectiles;
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;        
@@ -68,7 +69,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         public int terrenosVisibles = 0;
         TgcSprite cross;
         Quadtree quadTree;
-        TgcSkyBox skyBox;
+        CustomSkyBox skyBox;
 
         TgcText2d scoreText;
         float score;
@@ -129,19 +130,19 @@ namespace AlumnoEjemplo.Los_Borbotones
             this.ModeloNave = scene2.Meshes[0];
 
             //Creo skybox
-            skyBox = new TgcSkyBox();
+            skyBox = new CustomSkyBox();
             skyBox.Center = new Vector3(0, 0, 0);
             float farplane = CustomFpsCamera.FAR_PLANE;
             skyBox.Size = new Vector3(farplane, farplane, farplane);
 
             string texturesPath = GuiController.Instance.ExamplesMediaDir + "Texturas\\Quake\\SkyBox1\\";
 
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.setFaceTexture(CustomSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.updateValues();
 
             //Creacion del terreno
@@ -202,6 +203,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             player1.Init();
 
             enemies = new List<Enemy>();
+            proyectiles = new List<Proyectil>();
 
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
@@ -272,7 +274,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             player1.Update(elapsedTime);
             if (SPAWN_TIME_COUNTER > SPAWN_TIME && enemies.Count < MAX_ENEMIES) {
                 //si paso un tiempo = SPAWN_TIME agregamos un nuevo enemigo seleccionado al azar
-                rand = random.Next(1, 3);
+                rand = random.Next(1, 4);
                 if (rand == 1){
                 Enemy enemigo = new Enemy_lvl_1();
                 enemies.Add(enemigo);
@@ -284,11 +286,18 @@ namespace AlumnoEjemplo.Los_Borbotones
                     enemies.Add(enemigo);
                     enemigo.Init();
                 }
+                if (rand == 3)
+                {
+                    Enemy enemigo = new Enemy_lvl_3();
+                    enemies.Add(enemigo);
+                    enemigo.Init();
+                }
                 SPAWN_TIME_COUNTER = 0;
             }
 
             //update de los enemigos
             enemies.ForEach(enemy => enemy.Update(elapsedTime));
+            proyectiles.ForEach(proyectil => proyectil.Update(elapsedTime));
 
            
 
@@ -305,8 +314,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                 Init();
             }
             //hacemos que el skybox siga al player para no tener problemas con el farplane
-            skyBox.Center = CustomFpsCamera.Instance.Position;
-            skyBox.updateValues();
+            Matrix translate = Matrix.Translation(CustomFpsCamera.Instance.Position);
+            skyBox.transform(translate);
         }
 
         private void ChangeTextColor()
@@ -367,6 +376,9 @@ namespace AlumnoEjemplo.Los_Borbotones
             foreach(Enemy enemigo in enemies){
                 enemigo.Render(elapsedTime);
             }
+
+            proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
+
             foreach (Barril barril in barriles)
             {
                 
@@ -539,6 +551,12 @@ namespace AlumnoEjemplo.Los_Borbotones
                 playSound(headhunterSoundDir);
                 score += killHeadTracker;
             }
+        }
+
+        public void dispararProyectil(Matrix posicionActual, Vector3 vectorDireccion){
+            Proyectil proyectil = new Proyectil(posicionActual, vectorDireccion);
+            proyectil.Init();
+            proyectiles.Add(proyectil);
         }
 
         public void eliminarEnemigo(Enemy enemy)
