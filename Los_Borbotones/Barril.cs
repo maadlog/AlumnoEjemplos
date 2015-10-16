@@ -1,4 +1,5 @@
 ﻿using AlumnoEjemplo.Los_Borbotones;
+using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +8,20 @@ using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class Barril : GameObject
+    public class Barril : GameObject
 
 
     {
         public State estado = new Activo();
 
+        
+        float EXPLOSION_RADIUS = 300f;
         public TgcBoundingSphere explosion;
-        float EXPLOSION_RADIUS = 25f;
 
         public override void Init()
         {
-            explosion = new TgcBoundingSphere(mesh.Position, EXPLOSION_RADIUS); 
+            explosion = new TgcBoundingSphere(mesh.Position,EXPLOSION_RADIUS);
+            
         }
 
         public override void Update(float elapsedTime)
@@ -30,7 +33,7 @@ namespace AlumnoEjemplos.Los_Borbotones
          public override void Render(float elapsedTime)
          {
 
-             estado.Render(elapsedTime, mesh);
+             estado.Render(elapsedTime, this);
                  
          }
 

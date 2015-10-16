@@ -191,8 +191,10 @@ namespace AlumnoEjemplo.Los_Borbotones
             for (j = 1; j < meshesBarril.Count; j++)
             {
                 Barril barril = new Barril();
+                
                 meshesBarril[j].Scale = new Vector3(0.3f, 0.3f, 0.3f);
                 barril.mesh = meshesBarril[j];
+                barril.Init();
                 barriles.Add(barril);
                 //vegetation[i].setColor(Color.SkyBlue);
                 //Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
@@ -315,6 +317,10 @@ namespace AlumnoEjemplo.Los_Borbotones
             //hacemos que el skybox siga al player para no tener problemas con el farplane
             skyBox.Center = CustomFpsCamera.Instance.Position;
             //skyBox.updateValues();
+            foreach (Barril barril in barriles)
+            {
+                barril.Update(elapsedTime);
+            }
         }
 
         private void ChangeTextColor()
@@ -346,7 +352,11 @@ namespace AlumnoEjemplo.Los_Borbotones
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
-            TgcFrustum frustum = GuiController.Instance.Frustum;      
+            TgcFrustum frustum = GuiController.Instance.Frustum;
+            foreach (Barril barril in barriles)
+            {
+                barril.explosion.render();
+            }
             //frustum culling de los terrenos
             
             /*
@@ -544,6 +554,32 @@ namespace AlumnoEjemplo.Los_Borbotones
 
                 hit = false;
             }
+            //////////////////////////disparo a barriles////////////////////////////////////////
+            for (int i = barriles.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, barriles[i].mesh.BoundingBox, out newPosition))
+                {
+                    foreach (Vector3 posicion in posicionObstaculos)
+                    {
+                        if (Vector3.Length(posicion - ray.Origin) < Vector3.Length(newPosition - ray.Origin))
+                        {
+                            vegetacionFrenoDisparo = true;
+                            break;
+                        }
+                    }
+                    if (!vegetacionFrenoDisparo)
+                    {
+
+                        // playSound(explosionSoundDir); TODO
+
+
+                        barriles[i].explotar();
+
+                    }
+                    vegetacionFrenoDisparo = false;
+                }
+            }
+                /////////////////////////////////////////////////////////////
             
             if (killHeadTracker > 1)
             {
@@ -750,6 +786,14 @@ namespace AlumnoEjemplo.Los_Borbotones
                 healthText.Color = Color.Red;
             }
            
+        }
+        public void eliminarBarril(Barril barril)
+        {
+            meshesBarril.Remove(barril.mesh);
+        }
+        public void agregarBarril(Barril barril)
+        {
+            meshesBarril.Add(barril.mesh);
         }
     }
 }

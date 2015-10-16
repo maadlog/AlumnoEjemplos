@@ -6,7 +6,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class State
+    public class State
     {
         public virtual void Update(float elapsedTime, Barril barril)
         {
@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
 
 
-        public virtual void Render(float elapsedTime, TgcMesh mesh)
+        public virtual void Render(float elapsedTime, Barril barril)
         {
 
 
