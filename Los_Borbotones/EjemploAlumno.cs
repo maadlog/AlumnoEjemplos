@@ -16,6 +16,7 @@ namespace AlumnoEjemplo.Los_Borbotones
     public class EjemploAlumno : TgcExample
     {
         GameManager gameManager;
+        PostProcessManager postProcessManager;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -73,6 +74,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", 0);
 
             ///////////////MODIFIERS//////////////////
+            GuiController.Instance.Modifiers.addBoolean("UsePostProcess", "Usar efectos de post procesado", false);
 
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
@@ -107,11 +109,15 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            //Obtener valores de Modifiers
-            //string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
+            bool useEffects = (bool)GuiController.Instance.Modifiers.getValue("UsePostProcess");
+            if (useEffects){
+                postProcessManager.Update(elapsedTime);
+                postProcessManager.Render(elapsedTime);
+            } else {
+                gameManager.Update(elapsedTime);
+                gameManager.Render(elapsedTime);
+            }
 
-            gameManager.Update(elapsedTime);
-            gameManager.Render(elapsedTime);
         }
 
         /// <summary>
