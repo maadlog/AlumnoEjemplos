@@ -56,6 +56,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         int rand;
 
         public TgcScene Vegetation;
+        Effect windShader;
         CustomTerrain terrain;
         int heightmapResolution;
         int textureResolution;
@@ -111,6 +112,10 @@ namespace AlumnoEjemplo.Los_Borbotones
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
 
+        float time;
+        float windx;
+        float windz;
+
         internal void Init()
         {
             GAME_OVER = false;
@@ -118,8 +123,11 @@ namespace AlumnoEjemplo.Los_Borbotones
             TEXT_DELAY = 0;
             killMultiTracker = 0;
             KILL_DELAY = 0;
-            SPAWN_TIME_COUNTER = 0f; 
-            
+            SPAWN_TIME_COUNTER = 0f;
+            time = 0;
+            windx = 1;
+            windz = 1;
+
             // creo meshes de modelo para clonar y asi optimizar
             TgcSceneLoader loader2 = new TgcSceneLoader();
             TgcScene scene = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
@@ -162,6 +170,9 @@ namespace AlumnoEjemplo.Los_Borbotones
             terrain.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\RenderTerrain.fx");
             terrain.Technique = "RenderTerrain";
 
+            //Creacion del shader de viento
+            windShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\WindTree.fx");
+
             //Creacion de la Vegetacion
             this.vegetation = new List<TgcMesh>();
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -173,6 +184,8 @@ namespace AlumnoEjemplo.Los_Borbotones
             for (i = 1; i < vegetation.Count; i++)
             {
                 vegetation[i].setColor(Color.DarkViolet);
+                vegetation[i].Effect = windShader;
+                vegetation[i].Technique = "WindTree";
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
@@ -273,6 +286,24 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
+            time += elapsedTime;
+
+            //if (SPAWN_TIME_COUNTER > SPAWN_TIME)
+            //{
+                windx += (float)random.NextDouble() / 1000;
+                windz += (float)random.NextDouble() / 1000;
+                windx -= (float)random.NextDouble() / 1000;
+                windz -= (float)random.NextDouble() / 1000;
+
+
+                compareAssign(windx, 1.5f);
+                compareAssign(windz, 1.5f);
+            //}
+
+            windShader.SetValue("time", time);
+            windShader.SetValue("windx", windx);
+            windShader.SetValue("windz", windz);
+
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
             invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];
 
@@ -355,24 +386,6 @@ namespace AlumnoEjemplo.Los_Borbotones
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
             TgcFrustum frustum = GuiController.Instance.Frustum;      
-            //frustum culling de los terrenos
-            
-            /*
-            foreach (BoundingTerrain terreno in terrenos)
-            {
-                TgcCollisionUtils.FrustumResult c = TgcCollisionUtils.classifyFrustumAABB(frustum, terreno.boundingBox);
-
-                if (c == TgcCollisionUtils.FrustumResult.INSIDE || c == TgcCollisionUtils.FrustumResult.INTERSECT)
-                {
-                    terreno.terrain.render();
-                    terrenosVisibles++;
-                }
-                if (drawBoundingBoxes)
-                {
-                    terreno.boundingBox.render();
-                }
-            }
-            */
           
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
@@ -440,6 +453,17 @@ namespace AlumnoEjemplo.Los_Borbotones
                 enemy.dispose();
             }
             enemies.Clear();
+        }
+
+        void compareAssign(float n, float max)
+        {
+            if (n > max)
+            {
+                n = max;
+            }
+            else if (n < -max){
+                n=-max;
+            }
         }
 
         public void gameOver(float elapsedTime)
