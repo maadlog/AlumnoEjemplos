@@ -18,7 +18,7 @@ namespace AlumnoEjemplo.Los_Borbotones
     class Enemy_lvl_1:Enemy
     {
 
-        TgcSkeletalMesh skeletalMesh;
+        public TgcSkeletalMesh skeletalMesh;
         public event TgcViewer.Utils.TgcSkeletalAnimation.TgcSkeletalMesh.AnimationEndsHandler AnimationEnd;
         override
             public void Init(){
@@ -44,6 +44,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                  new string[] { 
                     GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Caminando-TgcSkeletalAnim.xml",
                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Patear-TgcSkeletalAnim.xml",
+                   GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Arrojar-TgcSkeletalAnim.xml",
                 });
             
              skeletalMesh.playAnimation("Caminando", true);
