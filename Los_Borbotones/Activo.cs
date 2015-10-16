@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TgcViewer;
+using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
@@ -10,6 +12,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Activo : State
     {
+        
+        string explosionSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Barril/explosion.wav";
         public override void Update(float elapsedTime, Barril barril)
         {
 
@@ -39,6 +43,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
+            GameManager.Instance.playSound(explosionSoundDir);
         }
 
         private static void chequearColision(Barril barril, Enemy enemy)

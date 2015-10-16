@@ -690,7 +690,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
         }
 
-        private void playSound(string dir)
+        public void playSound(string dir)
         {
             //reproducir un sonido
             sound.dispose();
