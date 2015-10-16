@@ -28,7 +28,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         private static object syncRoot = new Object();
 
         /// <summary>
-        /// Permite acceder a una instancia de la clase GameManager desde cualquier parte del codigo.
+        /// Permite acceder a una instancia de la clase PostProcessManager desde cualquier parte del codigo.
         /// </summary>
         public static PostProcessManager Instance
         {
@@ -56,10 +56,18 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Render(float elapsedTime)
         {
+            //1 -- Cambiar Render Target
+
+            //2 -- Renderizar Normal
+
+            //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
+
+            //4 -- Componer imagenes en textura / Renderizar Quad
         }
 
         internal void close()
         {
+
         }
 
     }

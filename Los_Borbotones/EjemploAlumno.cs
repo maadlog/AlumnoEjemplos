@@ -91,10 +91,12 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
 
-            //Creacion del Game Manager
+            //Creacion del Game Manager y el PostProcess Manager
             gameManager = GameManager.Instance;
+            postProcessManager = PostProcessManager.Instance;
 
             gameManager.Init();
+            postProcessManager.Init();
         }
 
 
@@ -127,6 +129,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         public override void close()
         {
             gameManager.close();
+            postProcessManager.close();
         }
 
     }
