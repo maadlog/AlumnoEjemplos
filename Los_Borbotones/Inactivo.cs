@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlumnoEjemplo.Los_Borbotones;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class Inactivo : State
+    public class Inactivo : State
     {
         float SpawnTime = 20f;
         float Time = 0;
@@ -15,12 +16,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             Time += elapsedTime;
             if (Time >= SpawnTime)
             {
-                barril.estado = new Activo();
+                Respawn(barril);
             }
         }
 
+        private static void Respawn(Barril barril)
+        {
+            barril.estado = new Activo();
+            GameManager.Instance.agregarBarril(barril);
+        }
 
-        public override void Render(float elapsedTime, TgcMesh mesh)
+
+        public override void Render(float elapsedTime, Barril barril)
         {
 
 
