@@ -75,7 +75,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
             //Configurar Technique dentro del shader
-            theShader.Technique = "PostProcess";
+            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
 
 
             depthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
@@ -115,6 +115,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
+            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
             GameManager.Instance.Update(elapsedTime);
         }
 

@@ -76,6 +76,11 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addBoolean("UsePostProcess", "Usar efectos de post procesado", false);
 
+            GuiController.Instance.Modifiers.addInterval("PostProcessTechnique", new string[] {
+                "Propagation",
+                "GreyScale"
+            },1);
+
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
             GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);
