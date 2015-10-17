@@ -30,9 +30,9 @@ sampler2D renderTargetSampler = sampler_state
 	Texture = (g_RenderTarget);
 	ADDRESSU = WRAP;
 	ADDRESSV = WRAP;
-	MINFILTER = LINEAR;
-	MAGFILTER = LINEAR;
-	MIPFILTER = LINEAR;
+	MINFILTER = POINT;
+	MAGFILTER = POINT;
+	MIPFILTER = POINT;
 };
 float screen_dx;
 float screen_dy; 

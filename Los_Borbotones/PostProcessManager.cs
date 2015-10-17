@@ -84,10 +84,13 @@ namespace AlumnoEjemplo.Los_Borbotones
                                                                          MultiSampleType.None,
                                                                          0,
                                                                          true);
-            // Inicializar el render target
+
+
+            // Inicializar el/los render target
+
             firstRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
                     , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.A8R8G8B8, Pool.Default);
+                        Format.A16B16G16R16, Pool.Default);
 
             // inicializar valores en el Shader
             theShader.SetValue("g_RenderTarget", firstRenderTarget);

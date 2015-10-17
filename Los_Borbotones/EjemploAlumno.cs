@@ -79,7 +79,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             GuiController.Instance.Modifiers.addInterval("PostProcessTechnique", new string[] {
                 "Propagation",
                 "GreyScale"
-            },1);
+            },0);
 
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
