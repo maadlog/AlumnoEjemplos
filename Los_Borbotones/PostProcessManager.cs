@@ -139,18 +139,14 @@ namespace AlumnoEjemplo.Los_Borbotones
             device.DepthStencilSurface = depthStencil;
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
-            //device.BeginScene();
 
             //2 -- Renderizar Normal
-            GuiController.Instance.CustomRenderEnabled = false;
+           
             GameManager.Instance.Render(elapsedTime);
-            GuiController.Instance.CustomRenderEnabled = true;
-            //device.EndScene();
+            
             pSurf.Dispose();
 
             //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
-
-
 
 
             //4 -- Restuaro el render target y el stencil
@@ -168,13 +164,13 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
 
-            //theShader.Begin(FX.None);
+            theShader.Begin(FX.None);
             theShader.BeginPass(0);
 
             device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2); //Renderiza 2 triangulos empezando del vertice 0 que pase en el stream
 
             theShader.EndPass();
-            //theShader.End();
+            theShader.End();
 
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
             device.EndScene();
