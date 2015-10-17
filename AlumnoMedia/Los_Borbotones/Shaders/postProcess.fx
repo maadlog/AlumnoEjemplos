@@ -79,8 +79,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 //Pixel Shader
 float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 {      
-	float4 fvBaseColor = tex2D( renderTargetSampler, Texcoord );
-	return fvBaseColor;
+	return tex2D( renderTargetSampler, Texcoord );
 }
 
 float4 ps_main_greyscale( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0

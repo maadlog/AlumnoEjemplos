@@ -85,12 +85,11 @@ namespace AlumnoEjemplo.Los_Borbotones
                                                                          0,
                                                                          true);
 
-
             // Inicializar el/los render target
 
             firstRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
                     , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.A16B16G16R16, Pool.Default);
+                        Format.X8R8G8B8, Pool.Default);
 
             // inicializar valores en el Shader
             theShader.SetValue("g_RenderTarget", firstRenderTarget);
@@ -125,8 +124,6 @@ namespace AlumnoEjemplo.Los_Borbotones
         internal void Render(float elapsedTime)
         {
             Device device = GuiController.Instance.D3dDevice;
-            Control panel3d = GuiController.Instance.Panel3d;
-            float aspectRatio = (float)panel3d.Width / (float)panel3d.Height;
 
             //1 -- Cambiar Render Target:
             //guardo el Render target anterior y seteo la textura como render target
