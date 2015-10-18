@@ -12,7 +12,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     public class Proyectil:GameObject
     {
         public Matrix shooterMatrix;
-        float MOVEMENT_SPEED = 1000f;
+        float MOVEMENT_SPEED = 4000f;
         public Vector3 vectorDireccion;
         Matrix posActual;
 
@@ -29,11 +29,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh = scene.Meshes[0];
 
             mesh.AutoTransformEnable = false;
-            Matrix offY = Matrix.Translation(15, 30, 20);
-            Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
+           // Matrix offY = Matrix.Translation(15, 30, 20);
+            //Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
             Matrix scale = Matrix.Scaling(new Vector3(0.07f, 0.07f, 0.07f));
             Matrix pos = Matrix.Translation(CustomFpsCamera.Instance.Position);
-            posActual = scale *offY * offXZ * shooterMatrix;
+            posActual = scale * shooterMatrix;
             mesh.Transform = posActual;
             Vector3 vectorPosActual = new Vector3(posActual.M41, posActual.M42, posActual.M43);
             vectorDireccion = (vectorPosActual -CustomFpsCamera.Instance.Position);
