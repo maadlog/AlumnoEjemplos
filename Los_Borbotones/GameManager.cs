@@ -113,8 +113,6 @@ namespace AlumnoEjemplo.Los_Borbotones
         public TgcScene Barriles;
 
         float time;
-        float windx;
-        float windz;
 
         internal void Init()
         {
@@ -125,18 +123,11 @@ namespace AlumnoEjemplo.Los_Borbotones
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f;
             time = 0;
-            windx = 1;
-            windz = 1;
 
             // creo meshes de modelo para clonar y asi optimizar
             TgcSceneLoader loader2 = new TgcSceneLoader();
             TgcScene scene = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
-            this.ModeloRobot = scene.Meshes[0];
-            
-
-           
-           
-            
+            this.ModeloRobot = scene.Meshes[0];            
             TgcScene scene2 = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.ModeloNave = scene2.Meshes[0];
 
@@ -289,22 +280,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         internal void Update(float elapsedTime)
         {
             time += elapsedTime;
-
-            //if (SPAWN_TIME_COUNTER > SPAWN_TIME)
-            //{
-                windx += (float)random.NextDouble() / 1000;
-                windz += (float)random.NextDouble() / 1000;
-                windx -= (float)random.NextDouble() / 1000;
-                windz -= (float)random.NextDouble() / 1000;
-
-
-                compareAssign(windx, 1.5f);
-                compareAssign(windz, 1.5f);
-            //}
-
             windShader.SetValue("time", time);
-            windShader.SetValue("windx", windx);
-            windShader.SetValue("windz", windz);
 
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
             invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];

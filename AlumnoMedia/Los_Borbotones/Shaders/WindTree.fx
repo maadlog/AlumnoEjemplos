@@ -24,8 +24,6 @@ sampler2D diffuseMap = sampler_state
 	MIPFILTER = LINEAR;
 };
 
-float windx = 1.00;
-float windz = 1.00; 
 float time = 0;
 
 /**************************************************************************************/
@@ -77,14 +75,11 @@ VS_OUTPUT vs_main2( VS_INPUT Input )
    float Y = Input.Position.y;
    float X = Input.Position.x;
    float Z = Input.Position.z;
-
-   float Wx = windx;
-   float Wz = windz;
    
    // Animar posicion
-   Input.Position.y = Y;
-   Input.Position.x = X + (Y*Y)/7000 * Wx * abs(cos(time*2* abs(Wx)) + 3* abs(Wx));
-   Input.Position.z = Z + (Y*Y)/7000 * Wz * abs(cos(time*2* abs(Wz)) + 3* abs(Wz));
+   Input.Position.y = Y + (X*X)/10000 * (sin(time*3))/1.5 + (Z*Z)/10000 * (cos(time*3))/1.5;
+   Input.Position.x = X + (Y*Y)/7000 * abs(cos(time) - 1);
+   Input.Position.z = Z + (Y*Y)/7000 * abs(cos(time) - 1);
    
    //Proyectar posicion
    Output.Position = mul( Input.Position, matWorldViewProj);
