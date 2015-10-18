@@ -127,7 +127,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             //Ataque de los robots
             if (attacking && !attacked) 
             {
-                GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
+                GameManager.Instance.player1.recibirAtaque(attackDamage);
                 attacked = true;
             }
             else if(!attacking)

@@ -326,7 +326,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         virtual public void attack(float elapsedTime)
         {
-            GameManager.Instance.player1.recibirAtaque(attackDamage, elapsedTime);
+            GameManager.Instance.player1.recibirAtaque(attackDamage);
             GameManager.Instance.eliminarEnemigo(this);
             
         }

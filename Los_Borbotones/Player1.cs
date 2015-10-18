@@ -251,7 +251,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
         }
 
-        public void recibirAtaque(int damage, float elapsedTime)
+        public void recibirAtaque(int damage)
         {
             
             hitSound.play(false);
@@ -261,7 +261,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             GameManager.Instance.ChangeColorHealth();
             if(vida <= 0)
             {
-                GameManager.Instance.gameOver(elapsedTime);
+                GameManager.Instance.gameOver();
             }
         }
 

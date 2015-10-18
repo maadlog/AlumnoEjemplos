@@ -369,10 +369,13 @@ namespace AlumnoEjemplo.Los_Borbotones
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
 
-            TgcFrustum frustum = GuiController.Instance.Frustum;      
-            foreach (Barril barril in barriles)
+            TgcFrustum frustum = GuiController.Instance.Frustum;
+            if (drawBoundingBoxes)
             {
-                barril.explosion.render();
+                foreach (Barril barril in barriles)
+                {
+                    barril.explosion.render();
+                }
             }
 
             skyBox.render();
@@ -454,7 +457,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
         }
 
-        public void gameOver(float elapsedTime)
+        public void gameOver()
         {
             if (GAME_OVER || invincibility) { return; }
             specialKillText.Text = "GAME OVER";

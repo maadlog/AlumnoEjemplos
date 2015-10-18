@@ -24,9 +24,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
 
             barril.mesh.render();
-            barril.explosion.render();
+            if (GameManager.Instance.drawBoundingBoxes)
+            {
+                barril.explosion.render();
+            }
             
-
         }
 
         public override void explotar(Barril barril)
@@ -40,6 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
             }*/
             GameManager.Instance.enemies.ForEach( enemy => chequearColision(barril, enemy));
+
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
