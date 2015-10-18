@@ -27,9 +27,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.playAnimation("Arrojar", false, 100);
             attackDelay = ATTACK_DELAY;
             attacking = true;
-            //Matrix poss = Matrix.Translation(new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
-            //GameManager.Instance.dispararProyectil(poss, vectorDireccion);
-            GameManager.Instance.dispararProyectil(posicionActual, vectorDireccion);
+            Matrix poss = Matrix.Translation(new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43));
+            GameManager.Instance.dispararProyectil(poss, vectorDireccion);
         }
 
         protected override void onAnimationEnds(TgcSkeletalMesh mesh)

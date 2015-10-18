@@ -30,11 +30,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             mesh.AutoTransformEnable = false;
             Matrix offY = Matrix.Translation(15, 30, 20);
-            //Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
+            Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
             Matrix scale = Matrix.Scaling(new Vector3(0.07f, 0.07f, 0.07f));
             Matrix pos = Matrix.Translation(CustomFpsCamera.Instance.Position);
-            //posActual = scale *offY * offXZ * shooterMatrix;
-            posActual = scale * offY * shooterMatrix;
+            posActual = scale *offY * offXZ * shooterMatrix;
             mesh.Transform = posActual;
             Vector3 vectorPosActual = new Vector3(posActual.M41, posActual.M42, posActual.M43);
             vectorDireccion = (vectorPosActual -CustomFpsCamera.Instance.Position);
