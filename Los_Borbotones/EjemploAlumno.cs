@@ -7,6 +7,7 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
+using AlumnoEjemplo.Los_Borbotones;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {

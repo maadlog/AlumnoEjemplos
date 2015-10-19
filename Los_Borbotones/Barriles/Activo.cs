@@ -44,12 +44,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     GameManager.Instance.eliminarEnemigo(GameManager.Instance.enemies[i]);
                 }
             }*/
-<<<<<<< HEAD:Los_Borbotones/Activo.cs
-            
-=======
-            GameManager.Instance.enemies.ForEach( enemy => chequearColision(barril, enemy));
 
->>>>>>> 013fbcde14bd5615cecf6896fc42f49d2bbf7921:Los_Borbotones/Barriles/Activo.cs
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
