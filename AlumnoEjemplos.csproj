@@ -97,7 +97,10 @@
     <Compile Include="Los_Borbotones\CustomFpsCamera.cs" />
     <Compile Include="Los_Borbotones\Enemigos\Enemy_lvl_1.cs" />
     <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
+
     <Compile Include="Los_Borbotones\Enemigos\Enemy.cs" />
+    <Compile Include="Los_Borbotones\Explosion.cs" />
+
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
     <Compile Include="Los_Borbotones\Barriles\Inactivo.cs" />

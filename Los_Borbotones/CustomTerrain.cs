@@ -10,7 +10,7 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer;
 using System.Windows.Forms;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     /// <summary>
     /// Permite crear la malla de un terreno en base a una textura de Heightmap

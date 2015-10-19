@@ -15,7 +15,7 @@ using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Player1:GameObject
     {
@@ -217,7 +217,6 @@ namespace AlumnoEjemplo.Los_Borbotones
             runSound.dispose();
             breathSound.dispose();
             hitSound.dispose();
-            base.dispose();
         }
 
         public void recibirAtaque(int damage)
