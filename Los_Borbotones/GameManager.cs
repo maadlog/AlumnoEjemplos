@@ -505,6 +505,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             });
 
             Vector3 min = posicionObstaculos[0];
+            MessageBox.Show(distanciaACamara(min).ToString());
             explosion = new Explosion();
             explosion.posicion = min;
             explosion.init();
@@ -514,7 +515,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             Vector3 camara = CustomFpsCamera.Instance.eye;
             Vector3 dist = camara - vector;
-            return -dist.Length();
+            return dist.Length();
         }
 
         public void fireSniper()

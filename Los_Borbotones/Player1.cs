@@ -58,7 +58,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             walkSound = new TgcStaticSound();
             runSound = new TgcStaticSound();
 
-            weapon = new Sniper();
+            //weapon = new Sniper();
+            weapon = new RocketLauncher();
             weapon.Init();
 
             //Mesh auxiliar para el sonido
