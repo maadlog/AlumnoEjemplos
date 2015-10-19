@@ -1,4 +1,4 @@
-﻿using AlumnoEjemplo.Los_Borbotones;
+﻿using AlumnoEjemplos.Los_Borbotones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime, Barril barril)
         {
 
-
+            barril.explosionParticle.render(elapsedTime);
 
         }
 

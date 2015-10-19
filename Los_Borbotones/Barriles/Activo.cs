@@ -1,4 +1,4 @@
-﻿using AlumnoEjemplo.Los_Borbotones;
+﻿using AlumnoEjemplos.Los_Borbotones;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using TgcViewer;
 using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Particles;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -24,10 +25,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
 
             barril.mesh.render();
+
             if (GameManager.Instance.drawBoundingBoxes)
             {
-                barril.explosion.render();
+               // barril.explosion.render();
             }
+
             
         }
 
@@ -41,20 +44,16 @@ namespace AlumnoEjemplos.Los_Borbotones
                     GameManager.Instance.eliminarEnemigo(GameManager.Instance.enemies[i]);
                 }
             }*/
-            GameManager.Instance.enemies.ForEach( enemy => chequearColision(barril, enemy));
 
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
             GameManager.Instance.playSound(explosionSoundDir);
+            barril.explosionParticle = new Explosion();
+             barril.explosionParticle.posicion = barril.mesh.Position;
+             barril.explosionParticle.init();
         }
 
-        private static void chequearColision(Barril barril, Enemy enemy)
-        {
-            if (TgcCollisionUtils.testSphereAABB(barril.explosion, enemy.mesh.BoundingBox))
-            {
-                GameManager.Instance.eliminarEnemigo(enemy);
-            }
-        }
+       
     }
 }

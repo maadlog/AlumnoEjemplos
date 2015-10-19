@@ -19,7 +19,7 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
 using AlumnoEjemplos.Los_Borbotones;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     public class GameManager
     {
@@ -372,10 +372,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             TgcFrustum frustum = GuiController.Instance.Frustum;
             if (drawBoundingBoxes)
             {
+
                 foreach (Barril barril in barriles)
                 {
-                    barril.explosion.render();
+                  //  barril.explosion.render();
                 }
+
             }
 
             skyBox.render();
@@ -392,12 +394,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
 
-            /*foreach (Barril barril in barriles)
-            {
-                
-                barril.Render(elapsedTime);
-                    
-            }*/
+         
 
             
 
@@ -424,7 +421,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             int valor2 = (int)GuiController.Instance.UserVars.getValue("N Sub-terrenos Visibles");
             terrenosVisibles = 0;
 
+            foreach (Barril barril in barriles)
+            {
 
+                barril.Render(elapsedTime);
+
+            }
         }
 
         internal void close()
