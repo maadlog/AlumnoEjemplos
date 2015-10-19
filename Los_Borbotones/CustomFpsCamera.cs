@@ -11,7 +11,7 @@ using TgcViewer.Utils.Input;
 using TgcViewer;
 using TgcViewer.Utils.TgcGeometry;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     public class CustomFpsCamera:TgcCamera
     {
