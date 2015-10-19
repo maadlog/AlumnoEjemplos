@@ -111,6 +111,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         List<Barril> barriles = new List<Barril>();
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
+        Explosion explosion;
 
         float time;
 
@@ -427,6 +428,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                 barril.Render(elapsedTime);
 
             }
+
+            if (explosion != null)
+            {
+                explosion.render(elapsedTime);
+            }
         }
 
         internal void close()
@@ -465,6 +471,50 @@ namespace AlumnoEjemplos.Los_Borbotones
             specialKillText.Text = "GAME OVER";
             TEXT_DELAY = TEXT_DELAY_MAX;
             GAME_OVER = true;
+        }
+
+        public void fireLauncher()
+        {
+            //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
+            TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
+            Vector3 newPosition = new Vector3(0, 0, 0);
+            List<Vector3> posicionObstaculos = new List<Vector3>();
+            foreach (TgcMesh obstaculo in vegetation)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, obstaculo.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition);
+            }
+
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition);       
+            }
+            //////////////////////////disparo a barriles////////////////////////////////////////
+            for (int i = barriles.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, barriles[i].mesh.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition); 
+            }
+
+            posicionObstaculos.Add(intersectRayTerrain(ray));
+
+            posicionObstaculos.Sort(delegate(Vector3 x, Vector3 y)
+            {
+                return distanciaACamara(x).CompareTo(distanciaACamara(y));
+            });
+
+            Vector3 min = posicionObstaculos[0];
+            explosion = new Explosion();
+            explosion.posicion = min;
+            explosion.init();
+        }
+
+        float distanciaACamara(Vector3 vector)
+        {
+            Vector3 camara = CustomFpsCamera.Instance.eye;
+            Vector3 dist = camara - vector;
+            return -dist.Length();
         }
 
         public void fireSniper()
@@ -679,7 +729,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             sound.play();
         }
 
-        public Vector3 intersectRayTerrain(TgcRay ray, CustomTerrain terrain)
+        public Vector3 intersectRayTerrain(TgcRay ray)
         {
             int iteraciones = heightmapResolution/cantidadFilasColumnas * (int)currentScaleXZ;
             Vector3 dir = ray.Direction;
