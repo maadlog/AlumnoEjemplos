@@ -80,6 +80,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\WINDOWS\Microsoft.NET\Managed DirectX\v9.03.91\Microsoft.DirectX.DirectSound.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualC" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -87,26 +88,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Los_Borbotones\Barril.cs" />
-    <Compile Include="Los_Borbotones\Activo.cs" />
+    <Compile Include="Los_Borbotones\Barriles\Barril.cs" />
+    <Compile Include="Los_Borbotones\Barriles\Activo.cs" />
     <Compile Include="Los_Borbotones\CustomSkyBox.cs" />
-    <Compile Include="Los_Borbotones\Enemy_lvl_3.cs" />
+    <Compile Include="Los_Borbotones\Enemigos\Enemy_lvl_3.cs" />
     <Compile Include="Los_Borbotones\CustomTerrain.cs" />
-    <Compile Include="Los_Borbotones\Enemy_lvl_2.cs" />
+    <Compile Include="Los_Borbotones\Enemigos\Enemy_lvl_2.cs" />
     <Compile Include="Los_Borbotones\CustomFpsCamera.cs" />
-    <Compile Include="Los_Borbotones\Enemy_lvl_1.cs" />
+    <Compile Include="Los_Borbotones\Enemigos\Enemy_lvl_1.cs" />
     <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
+<<<<<<< HEAD
     <Compile Include="Los_Borbotones\Enemy.cs" />
     <Compile Include="Los_Borbotones\Explosion.cs" />
+=======
+    <Compile Include="Los_Borbotones\Enemigos\Enemy.cs" />
+>>>>>>> 013fbcde14bd5615cecf6896fc42f49d2bbf7921
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
-    <Compile Include="Los_Borbotones\Inactivo.cs" />
+    <Compile Include="Los_Borbotones\Barriles\Inactivo.cs" />
     <Compile Include="Los_Borbotones\Player1.cs" />
-    <Compile Include="Los_Borbotones\Proyectil.cs" />
-    <Compile Include="Los_Borbotones\Quadtree.cs" />
-    <Compile Include="Los_Borbotones\QuadtreeBuilder.cs" />
-    <Compile Include="Los_Borbotones\QuadtreeNode.cs" />
-    <Compile Include="Los_Borbotones\State.cs" />
+    <Compile Include="Los_Borbotones\PostProcessManager.cs" />
+    <Compile Include="Los_Borbotones\Enemigos\Proyectil.cs" />
+    <Compile Include="Los_Borbotones\Quadtree\Quadtree.cs" />
+    <Compile Include="Los_Borbotones\Quadtree\QuadtreeBuilder.cs" />
+    <Compile Include="Los_Borbotones\Quadtree\QuadtreeNode.cs" />
+    <Compile Include="Los_Borbotones\Barriles\State.cs" />
+    <Compile Include="Los_Borbotones\Armas\RocketLauncher.cs" />
+    <Compile Include="Los_Borbotones\Armas\Sniper.cs" />
+    <Compile Include="Los_Borbotones\Armas\Weapon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

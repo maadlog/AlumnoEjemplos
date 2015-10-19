@@ -113,8 +113,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         public TgcScene Barriles;
 
         float time;
-        float windx;
-        float windz;
 
         internal void Init()
         {
@@ -125,18 +123,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f;
             time = 0;
-            windx = 1;
-            windz = 1;
 
             // creo meshes de modelo para clonar y asi optimizar
             TgcSceneLoader loader2 = new TgcSceneLoader();
             TgcScene scene = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "ModelosTgc\\Robot\\Robot-TgcScene.xml");
-            this.ModeloRobot = scene.Meshes[0];
-            
-
-           
-           
-            
+            this.ModeloRobot = scene.Meshes[0];            
             TgcScene scene2 = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.ModeloNave = scene2.Meshes[0];
 
@@ -289,22 +280,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void Update(float elapsedTime)
         {
             time += elapsedTime;
-
-            //if (SPAWN_TIME_COUNTER > SPAWN_TIME)
-            //{
-                windx += (float)random.NextDouble() / 1000;
-                windz += (float)random.NextDouble() / 1000;
-                windx -= (float)random.NextDouble() / 1000;
-                windz -= (float)random.NextDouble() / 1000;
-
-
-                compareAssign(windx, 1.5f);
-                compareAssign(windz, 1.5f);
-            //}
-
             windShader.SetValue("time", time);
-            windShader.SetValue("windx", windx);
-            windShader.SetValue("windz", windz);
 
             drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
             invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];
@@ -393,10 +369,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
 
-            TgcFrustum frustum = GuiController.Instance.Frustum;      
-            foreach (Barril barril in barriles)
+            TgcFrustum frustum = GuiController.Instance.Frustum;
+            if (drawBoundingBoxes)
             {
-               // barril.explosion.render();
+
+                foreach (Barril barril in barriles)
+                {
+                  //  barril.explosion.render();
+                }
+
             }
 
             skyBox.render();
@@ -478,7 +459,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
-        public void gameOver(float elapsedTime)
+        public void gameOver()
         {
             if (GAME_OVER || invincibility) { return; }
             specialKillText.Text = "GAME OVER";
@@ -486,7 +467,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             GAME_OVER = true;
         }
 
-        public void fireWeapon()
+        public void fireSniper()
         {
             //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
@@ -696,6 +677,26 @@ namespace AlumnoEjemplos.Los_Borbotones
             sound.dispose();
             sound.loadSound(dir);
             sound.play();
+        }
+
+        public Vector3 intersectRayTerrain(TgcRay ray, CustomTerrain terrain)
+        {
+            int iteraciones = heightmapResolution/cantidadFilasColumnas * (int)currentScaleXZ;
+            Vector3 dir = ray.Direction;
+            dir.Normalize();
+            Vector3 origin = ray.Origin;
+            Vector3 pos = origin;
+            float y = 0;
+            for (int i = 0; i < iteraciones; i++)
+            {
+                interpoledHeight(pos.X, pos.Z, out y);
+                if (FastMath.Abs(pos.Y - y) < 0.1f)
+                {
+                    return pos;
+                }
+                pos += dir;
+            }
+            return pos;
         }
 
         /// <summary>

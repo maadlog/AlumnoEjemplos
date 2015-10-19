@@ -1,4 +1,5 @@
-﻿using Microsoft.DirectX;
+﻿using AlumnoEjemplos.Los_Borbotones;
+using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
@@ -18,10 +19,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Player1:GameObject
     {
-        float WEAPON_ORIENTATION_Y;
-        Vector3 WEAPON_OFFSET;
-        float FIRE_DELAY = 0;
-        float MAX_DELAY = 2;
+        Weapon weapon;
+
         TgcStaticSound weaponSound;
         TgcStaticSound hitSound;
         TgcStaticSound breathSound;
@@ -33,14 +32,13 @@ namespace AlumnoEjemplos.Los_Borbotones
         string hitSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Hit.wav";
         string walkSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Walk.wav";
         string runSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Run.wav";
-        Vector3 prevEye;
+        public Vector3 prevEye;
         public int vida;
         double intensidadMaximaEscalable = Math.Pow(0.7, 2);
         float sprintTime;
         float tiredTime;
         float MAX_SPRINT_TIME = 5;
         float TIRED_TIME = 4.5f;
-        float weaponOscilation = 0;
         
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
@@ -53,7 +51,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             sprintTime = 0;
             tiredTime = 0;
             running = false;
-            weaponOscilation = 0;
 
             weaponSound = new TgcStaticSound();
             hitSound = new TgcStaticSound();
@@ -61,12 +58,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             walkSound = new TgcStaticSound();
             runSound = new TgcStaticSound();
 
-            //Carga del mesh del arma
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\svd\\svd-TgcScene.xml");
-            mesh = scene.Meshes[0];
+            weapon = new Sniper();
+            weapon.Init();
 
             //Mesh auxiliar para el sonido
+            TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\svd\\svd-TgcScene.xml");
             meshAuxiliarParaSonido = scene2.Meshes[0];
 
@@ -81,9 +77,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
             CustomFpsCamera.Instance.setCamera(new Vector3(0, 930, 0), new Vector3(-400, 930, 0));
-
-            //Permitir matrices custom
-            mesh.AutoTransformEnable = false;
 
             prevEye = CustomFpsCamera.Instance.eye;
             //cargar sonido
@@ -100,22 +93,20 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             CustomFpsCamera.Instance.JumpSpeed = (float)GuiController.Instance.Modifiers["FlySpeed"];
 
-            WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
-            WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
             //update de la pos del mesh auxiliar
             meshAuxiliarParaSonido.Position = CustomFpsCamera.Instance.eye;
             //Procesamos input de teclado
             TgcD3dInput input = GuiController.Instance.D3dInput;
             //Seteamos las teclas
-            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && FIRE_DELAY <= 0)
+            if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && weapon.FIRE_DELAY <= 0)
             {
-                FIRE_DELAY = MAX_DELAY;
-                GameManager.Instance.fireWeapon();
+                weapon.FIRE_DELAY = weapon.MAX_DELAY;
+                weapon.fireWeapon();
                 CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
                 playSound(weaponSound,weaponSoundDir, false);
             }
 
-            if (FIRE_DELAY > 0) { FIRE_DELAY -= elapsedTime; }
+            if (weapon.FIRE_DELAY > 0) { weapon.FIRE_DELAY -= elapsedTime; }
 
 
             if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0.5f)
@@ -159,7 +150,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (ZOOM_DELAY > 0) { ZOOM_DELAY -= elapsedTime; }
 
             //muzzleFlash.Position = WEAPON_OFFSET;
-            mesh.Transform = getWeaponTransform();
+
+            weapon.Update(elapsedTime);
 
             //Maxima inclinacion sobre terreno
             float yActual;
@@ -209,19 +201,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             else if(!running) { walkSound.play(true); }
 
-            float length = ((CustomFpsCamera.Instance.eye - prevEye).Length());
-            if (CustomFpsCamera.Instance.moveBackwardsPressed)
-            {
-                length *= -1;
-            }
-            weaponOscilation += length/37;
-
             prevEye = CustomFpsCamera.Instance.eye;
         }
 
         public override void Render(float elapsedTime)
         {
-            mesh.render();
+            weapon.Render(elapsedTime);
            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 
@@ -235,33 +220,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             base.dispose();
         }
 
-        public Matrix getWeaponTransform()
-        {
-            Matrix fpsMatrixInv = Matrix.Invert(CustomFpsCamera.Instance.ViewMatrix);
-
-            float weaponRecoil = FIRE_DELAY/MAX_DELAY;
-
-            double z = Math.Cos((double)weaponOscilation)/2;
-            double y = Math.Sin(2 * (double)weaponOscilation) / 16;
-
-            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET + new Vector3(0, 0, 4 * -weaponRecoil) + new Vector3(0, (float)y, (float)z));
-            Matrix weaponScale = Matrix.Scaling(0.5f, 0.5f, 0.5f);
-            Matrix weaponRotationY = Matrix.RotationY(WEAPON_ORIENTATION_Y);
-
-            return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
-        }
-
-        public void recibirAtaque(int damage, float elapsedTime)
+        public void recibirAtaque(int damage)
         {
             
             hitSound.play(false);
-            FIRE_DELAY = 0.5f;
+            weapon.FIRE_DELAY = 0.5f;
             vida -= damage;
             GameManager.Instance.healthText.Text = "HEALTH: " + vida;
             GameManager.Instance.ChangeColorHealth();
             if(vida <= 0)
             {
-                GameManager.Instance.gameOver(elapsedTime);
+                GameManager.Instance.gameOver();
             }
         }
 

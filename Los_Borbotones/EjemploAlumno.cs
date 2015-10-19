@@ -16,6 +16,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     public class EjemploAlumno : TgcExample
     {
         GameManager gameManager;
+        PostProcessManager postProcessManager;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -73,6 +74,12 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", 0);
 
             ///////////////MODIFIERS//////////////////
+            GuiController.Instance.Modifiers.addBoolean("UsePostProcess", "Usar efectos de post procesado", false);
+
+            GuiController.Instance.Modifiers.addInterval("PostProcessTechnique", new string[] {
+                "Propagation",
+                "GreyScale"
+            },0);
 
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
@@ -89,10 +96,12 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
 
-            //Creacion del Game Manager
+            //Creacion del Game Manager y el PostProcess Manager
             gameManager = GameManager.Instance;
+            postProcessManager = PostProcessManager.Instance;
 
             gameManager.Init();
+            postProcessManager.Init();
         }
 
 
@@ -107,11 +116,15 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Device de DirectX para renderizar
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
-            //Obtener valores de Modifiers
-            //string opcionElegida = (string)GuiController.Instance.Modifiers["valorIntervalo"];
+            bool useEffects = (bool)GuiController.Instance.Modifiers.getValue("UsePostProcess");
+            if (useEffects){
+                postProcessManager.Update(elapsedTime);
+                postProcessManager.Render(elapsedTime);
+            } else {
+                gameManager.Update(elapsedTime);
+                gameManager.Render(elapsedTime);
+            }
 
-            gameManager.Update(elapsedTime);
-            gameManager.Render(elapsedTime);
         }
 
         /// <summary>
@@ -121,6 +134,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         public override void close()
         {
             gameManager.close();
+            postProcessManager.close();
         }
 
     }
