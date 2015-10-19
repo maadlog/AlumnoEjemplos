@@ -108,6 +108,9 @@
     <Compile Include="Los_Borbotones\Quadtree\QuadtreeBuilder.cs" />
     <Compile Include="Los_Borbotones\Quadtree\QuadtreeNode.cs" />
     <Compile Include="Los_Borbotones\Barriles\State.cs" />
+    <Compile Include="Los_Borbotones\Armas\RocketLauncher.cs" />
+    <Compile Include="Los_Borbotones\Armas\Sniper.cs" />
+    <Compile Include="Los_Borbotones\Armas\Weapon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

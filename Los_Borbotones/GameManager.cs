@@ -465,7 +465,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             GAME_OVER = true;
         }
 
-        public void fireWeapon()
+        public void fireSniper()
         {
             //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
@@ -675,6 +675,26 @@ namespace AlumnoEjemplo.Los_Borbotones
             sound.dispose();
             sound.loadSound(dir);
             sound.play();
+        }
+
+        public Vector3 intersectRayTerrain(TgcRay ray, CustomTerrain terrain)
+        {
+            int iteraciones = heightmapResolution/cantidadFilasColumnas * (int)currentScaleXZ;
+            Vector3 dir = ray.Direction;
+            dir.Normalize();
+            Vector3 origin = ray.Origin;
+            Vector3 pos = origin;
+            float y = 0;
+            for (int i = 0; i < iteraciones; i++)
+            {
+                interpoledHeight(pos.X, pos.Z, out y);
+                if (FastMath.Abs(pos.Y - y) < 0.1f)
+                {
+                    return pos;
+                }
+                pos += dir;
+            }
+            return pos;
         }
 
         /// <summary>
