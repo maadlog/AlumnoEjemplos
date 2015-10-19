@@ -217,7 +217,6 @@ namespace AlumnoEjemplo.Los_Borbotones
             runSound.dispose();
             breathSound.dispose();
             hitSound.dispose();
-            base.dispose();
         }
 
         public void recibirAtaque(int damage)
