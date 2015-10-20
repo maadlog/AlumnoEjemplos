@@ -14,7 +14,6 @@ namespace AlumnoEjemplos.Los_Borbotones
     public class Activo : State
     {
         
-        string explosionSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Barril/explosion.wav";
         public override void Update(float elapsedTime, Barril barril)
         {
 
@@ -48,7 +47,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
-            GameManager.Instance.playSound(explosionSoundDir);
             barril.explosionParticle = new Explosion();
              barril.explosionParticle.posicion = barril.mesh.Position;
              barril.explosionParticle.init();

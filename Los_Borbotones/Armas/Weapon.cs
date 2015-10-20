@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.Sound;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -16,12 +17,15 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float MAX_DELAY;
         public float FIRE_DELAY;
         float weaponOscilation;
+        public string weaponSoundDir;
+        TgcStaticSound weaponSound;
 
         public override void Init()
         {
             weaponOscilation = 0;
             FIRE_DELAY = 0;
             MAX_DELAY = 2;
+            weaponSound = new TgcStaticSound();
 
             //Permitir matrices custom
             mesh.AutoTransformEnable = false;
@@ -62,6 +66,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             return weaponScale * weaponRotationY * weaponOffset * fpsMatrixInv;
         }
 
-        public virtual void fireWeapon() { }
+        public virtual void fireWeapon() 
+        {
+            GameManager.Instance.player1.playSound(weaponSound, weaponSoundDir, false);
+        }
     }
 }

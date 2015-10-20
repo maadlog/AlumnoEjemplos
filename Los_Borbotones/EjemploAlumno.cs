@@ -82,6 +82,11 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
                 "GreyScale"
             },0);
 
+            GuiController.Instance.Modifiers.addInterval("Arma", new string[] {
+                "Sniper",
+                "Rocket Launcher"
+            }, 1);
+
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
             GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);

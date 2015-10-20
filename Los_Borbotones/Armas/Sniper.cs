@@ -16,13 +16,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcSceneLoader loader = new TgcSceneLoader();
             TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\svd\\svd-TgcScene.xml");
             mesh = scene.Meshes[0];
-
+            weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Sniper.wav";
             base.Init();
         }
 
         public override void fireWeapon()
         {
             GameManager.Instance.fireSniper();
+            base.fireWeapon();
         }
     }
 }

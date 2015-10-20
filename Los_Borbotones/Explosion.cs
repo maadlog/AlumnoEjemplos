@@ -8,6 +8,7 @@ using Microsoft.DirectX.Direct3D;
 using TgcViewer;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.Sound;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -15,9 +16,11 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
             public Vector3 posicion;
             public TgcBoundingSphere sphere;
-                 float EXPLOSION_RADIUS = 300f;
+            float EXPLOSION_RADIUS = 300f;
             Device device = GuiController.Instance.D3dDevice;
             float time = 0;
+            string explosionSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Barril/explosion.wav";
+            TgcStaticSound sound;
 
             ParticleEmitter emisorParticulas;
             ParticleEmitter emisor;
@@ -25,6 +28,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                 
                 Device device = GuiController.Instance.D3dDevice;
                 sphere = new TgcBoundingSphere(posicion, EXPLOSION_RADIUS);
+
+                sound = new TgcStaticSound();
 
                 Explotar();
                 emisorParticulas = new ParticleEmitter(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Particulas\\explosion.png", 100);
@@ -51,7 +56,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             public void Explotar()
             {
+                GameManager.Instance.playSound(sound, explosionSoundDir, false);
                 GameManager.Instance.enemies.ForEach(enemy => chequearColision(sphere, enemy));
+                GameManager.Instance.barriles.ForEach(barril => chequearColision(sphere, barril));
             }
             //emisor.GradoDeDispersion = 1000;
             //emisor.TiempoDeVidaParticula = 1.0f;
@@ -91,6 +98,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (TgcCollisionUtils.testSphereAABB(sphere, enemy.mesh.BoundingBox))
             {
                 GameManager.Instance.eliminarEnemigo(enemy);
+            }
+        }
+        private static void chequearColision(TgcBoundingSphere sphere, Barril barril)
+        {
+            if (TgcCollisionUtils.testSphereAABB(sphere, barril.mesh.BoundingBox))
+            {
+                barril.explotar();
             }
         }
     }

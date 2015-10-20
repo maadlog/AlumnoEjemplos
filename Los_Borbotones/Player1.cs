@@ -20,14 +20,14 @@ namespace AlumnoEjemplos.Los_Borbotones
     public class Player1:GameObject
     {
         Weapon weapon;
+        Sniper sniper;
+        RocketLauncher launcher;
 
-        TgcStaticSound weaponSound;
         TgcStaticSound hitSound;
         TgcStaticSound breathSound;
         TgcStaticSound walkSound;
         TgcStaticSound runSound;
         bool running;
-        string weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Sniper.wav";
         string breathingSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Breathing.wav";
         string hitSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Hit.wav";
         string walkSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Walk.wav";
@@ -52,15 +52,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             tiredTime = 0;
             running = false;
 
-            weaponSound = new TgcStaticSound();
             hitSound = new TgcStaticSound();
             breathSound = new TgcStaticSound();
             walkSound = new TgcStaticSound();
             runSound = new TgcStaticSound();
 
-            //weapon = new Sniper();
-            weapon = new RocketLauncher();
-            weapon.Init();
+            sniper = new Sniper();
+            sniper.Init();
+            launcher = new RocketLauncher();
+            launcher.Init();
+
+            weapon = sniper;
 
             //Mesh auxiliar para el sonido
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -91,6 +93,17 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
+            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
+            switch (weap)
+            {
+                case "Sniper":
+                    weapon = sniper;
+                    break;
+                
+                case "Rocket Launcher":
+                    weapon = launcher;
+                    break;
+            }
 
             CustomFpsCamera.Instance.JumpSpeed = (float)GuiController.Instance.Modifiers["FlySpeed"];
 
@@ -104,7 +117,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 weapon.FIRE_DELAY = weapon.MAX_DELAY;
                 weapon.fireWeapon();
                 CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
-                playSound(weaponSound,weaponSoundDir, false);
             }
 
             if (weapon.FIRE_DELAY > 0) { weapon.FIRE_DELAY -= elapsedTime; }
@@ -234,7 +246,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
-        private void playSound(TgcStaticSound sound, string dir, bool loop)
+        public void playSound(TgcStaticSound sound, string dir, bool loop)
         {
             //reproducir un sonido
             sound.dispose();

@@ -108,10 +108,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcTexture normalScope;
         TgcTexture zoomedScope;
         float screenCovered = 0.12f;
-        List<Barril> barriles = new List<Barril>();
+        public List<Barril> barriles = new List<Barril>();
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
-        Explosion explosion;
 
         float time;
 
@@ -429,10 +428,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             }
 
-            if (explosion != null)
-            {
-                explosion.render(elapsedTime);
-            }
         }
 
         internal void close()
@@ -473,7 +468,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             GAME_OVER = true;
         }
 
-        public void fireLauncher()
+        public Vector3 fireLauncher()
         {
             //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
@@ -505,13 +500,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             });
 
             Vector3 min = posicionObstaculos[0];
-            MessageBox.Show(distanciaACamara(min).ToString());
-            explosion = new Explosion();
-            explosion.posicion = min;
-            explosion.init();
+            return min;
         }
 
-        float distanciaACamara(Vector3 vector)
+        public float distanciaACamara(Vector3 vector)
         {
             Vector3 camara = CustomFpsCamera.Instance.eye;
             Vector3 dist = camara - vector;
@@ -549,19 +541,12 @@ namespace AlumnoEjemplos.Los_Borbotones
                     {
                         hit = true;
                         score += 1;
-                        score += enemies[i].score;
                         killHeadTracker++;
                         specialKillText.Text = "HEADSHOT!!";
                         TEXT_DELAY = TEXT_DELAY_MAX;
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
                         eliminarEnemigo(enemies[i]);
-                        killMultiTracker++;
-                        awardKill();
-                        KILL_DELAY = KILL_DELAY_MAX;
-                        //Hacemos refresh del score
-                        scoreText.Text = "SCORE: " + score;
-                        ChangeTextColor();
                     }
                     vegetacionFrenoDisparo = false;
                 }
@@ -581,14 +566,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                         hit = true;
                         if (enemies[i].health <= 0)
                         {
-                            score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
-                            killMultiTracker++;
-                            awardKill();
-                            KILL_DELAY = KILL_DELAY_MAX;
-                            //Hacemos refresh del score
-                            scoreText.Text = "SCORE: " + score;
-                            ChangeTextColor();
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -607,14 +585,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                         enemies[i].health -= 50;
                         if (enemies[i].health <= 0)
                         {
-                            score += enemies[i].score;
                             eliminarEnemigo(enemies[i]);
-                            killMultiTracker++;
-                            awardKill();
-                            KILL_DELAY = KILL_DELAY_MAX;
-                            //Hacemos refresh del score
-                            scoreText.Text = "SCORE: " + score;
-                            ChangeTextColor();
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -667,6 +638,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void eliminarEnemigo(Enemy enemy)
         {
+            score += enemy.score;
+            killMultiTracker++;
+            awardKill();
+            KILL_DELAY = KILL_DELAY_MAX;
+            //Hacemos refresh del score
+            scoreText.Text = "SCORE: " + score;
+            ChangeTextColor();
+
             if (enemies.Count == 0)
             {
                 Enemy enemigo = new Enemy_lvl_1();
@@ -730,6 +709,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             sound.play();
         }
 
+        public void playSound(TgcStaticSound sound, string dir, bool loop)
+        {
+            //reproducir un sonido
+            sound.dispose();
+            sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
+            sound.play(loop);
+        }
+
         public Vector3 intersectRayTerrain(TgcRay ray)
         {
             int iteraciones = heightmapResolution/cantidadFilasColumnas * (int)currentScaleXZ;
@@ -741,7 +728,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             for (int i = 0; i < iteraciones; i++)
             {
                 interpoledHeight(pos.X, pos.Z, out y);
-                if (FastMath.Abs(pos.Y - y) < 0.1f)
+                if (FastMath.Abs(pos.Y - y) < 1f)
                 {
                     return pos;
                 }
