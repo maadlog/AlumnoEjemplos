@@ -97,15 +97,16 @@ namespace AlumnoEjemplo.Los_Borbotones
             //       Resolucion de pantalla
             theShader.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
             theShader.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
-
+            float desf_x = (float)(1 / (d3dDevice.PresentationParameters.BackBufferWidth * 0.5));
+            float desf_y = (float)(1 / (d3dDevice.PresentationParameters.BackBufferHeight * 0.5));
 
             //Crea los 2 Triangulos
             CustomVertex.PositionTextured[] Vertices = new CustomVertex.PositionTextured[]
             {
-                new CustomVertex.PositionTextured( -1, 1, 1, 0,0),
-                new CustomVertex.PositionTextured(1,  1, 1, 1,0),
-                new CustomVertex.PositionTextured(-1, -1, 1, 0,1),
-                new CustomVertex.PositionTextured(1,-1, 1, 1,1)
+                new CustomVertex.PositionTextured( -1-desf_x, 1+desf_y, 1, 0,0),
+                new CustomVertex.PositionTextured(1-desf_x,  1+desf_y, 1, 1,0),
+                new CustomVertex.PositionTextured(-1-desf_x, -1+desf_y, 1, 0,1),
+                new CustomVertex.PositionTextured(1-desf_x,-1+desf_y, 1, 1,1)
             };
             //vertex buffer de los triangulos
             quadVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured),
