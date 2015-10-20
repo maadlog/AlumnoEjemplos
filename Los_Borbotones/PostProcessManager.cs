@@ -104,9 +104,9 @@ namespace AlumnoEjemplo.Los_Borbotones
             CustomVertex.PositionTextured[] Vertices = new CustomVertex.PositionTextured[]
             {
                 new CustomVertex.PositionTextured( -1-desf_x, 1+desf_y, 1, 0,0),
-                new CustomVertex.PositionTextured(1-desf_x,  1+desf_y, 1, 1,0),
-                new CustomVertex.PositionTextured(-1-desf_x, -1+desf_y, 1, 0,1),
-                new CustomVertex.PositionTextured(1-desf_x,-1+desf_y, 1, 1,1)
+                new CustomVertex.PositionTextured(1,  1+desf_y, 1, 1,0),
+                new CustomVertex.PositionTextured(-1-desf_x, -1, 1, 0,1),
+                new CustomVertex.PositionTextured(1,-1, 1, 1,1)
             };
             //vertex buffer de los triangulos
             quadVertexBuffer = new VertexBuffer(typeof(CustomVertex.PositionTextured),
@@ -144,7 +144,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             //2 -- Renderizar Normal
            
-            GameManager.Instance.Render(elapsedTime);
+            GameManager.Instance.RenderAll(elapsedTime);
             
             pSurf.Dispose();
 

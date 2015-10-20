@@ -364,7 +364,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
-        internal void Render(float elapsedTime)
+        internal void RenderAll(float elapsedTime)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();

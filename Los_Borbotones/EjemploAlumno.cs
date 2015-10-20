@@ -128,7 +128,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
                 postProcessManager.Render(elapsedTime);
             } else {
                 gameManager.Update(elapsedTime);
-                gameManager.Render(elapsedTime);
+                gameManager.RenderAll(elapsedTime);
             }
 
         }
