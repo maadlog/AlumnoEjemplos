@@ -9,7 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Sound;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     class Enemy_lvl_2:Enemy
     {

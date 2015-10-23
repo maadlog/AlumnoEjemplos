@@ -19,7 +19,7 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
 using AlumnoEjemplos.Los_Borbotones;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     public class GameManager
     {
@@ -108,11 +108,25 @@ namespace AlumnoEjemplo.Los_Borbotones
         TgcTexture normalScope;
         TgcTexture zoomedScope;
         float screenCovered = 0.12f;
-        List<Barril> barriles = new List<Barril>();
+        public List<Barril> barriles = new List<Barril>();
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
 
         float time;
+        public List<TgcPlaneWall> pastos = new List<TgcPlaneWall>();
+        public List<string> texture_pastos = new List<string>();
+        int pastoSecuense = 0;
+        bool positiveMove0 = true;
+        bool positiveMove1 = true;
+        bool positiveMove2 = true;
+        float tLeftMoved0 = 0;
+        float tRightMoved0 = 0;
+        float tLeftMoved1 = 0;
+        float tRightMoved1 = 0;
+        float tLeftMoved2 = 0;
+        float tRightMoved2 = 0;
+        float maxMoved = 5;
+        float minMoved = -5;
 
         internal void Init()
         {
@@ -275,6 +289,18 @@ namespace AlumnoEjemplo.Los_Borbotones
             string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Ambiente/Deep_space.wav";
             ambient.loadSound(dir, -1500);
             ambient.play(true);
+           
+            texture_pastos.Add("pasto1.png");
+            texture_pastos.Add("pasto2.png");
+            texture_pastos.Add("pasto3.png");
+            texture_pastos.Add("pasto1.png");
+            texture_pastos.Add("pasto2.png");
+            texture_pastos.Add("pasto3.png");
+            int t;
+            for(t=0; t < 6; t++)
+            { 
+                pastos.Add(crearPasto(d3dDevice));
+            }
         }
 
         internal void Update(float elapsedTime)
@@ -288,13 +314,15 @@ namespace AlumnoEjemplo.Los_Borbotones
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;//contamos el tiempo que paso desde el ultimo spawn de enemigos
 
             player1.Update(elapsedTime);
-            if (SPAWN_TIME_COUNTER > SPAWN_TIME && enemies.Count < MAX_ENEMIES) {
+            if (SPAWN_TIME_COUNTER > SPAWN_TIME && enemies.Count < MAX_ENEMIES)
+            {
                 //si paso un tiempo = SPAWN_TIME agregamos un nuevo enemigo seleccionado al azar
                 rand = random.Next(1, 4);
-                if (rand == 1){
-                Enemy enemigo = new Enemy_lvl_1();
-                enemies.Add(enemigo);
-                enemigo.Init();
+                if (rand == 1)
+                {
+                    Enemy enemigo = new Enemy_lvl_1();
+                    enemies.Add(enemigo);
+                    enemigo.Init();
                 }
                 if (rand == 2)
                 {
@@ -315,11 +343,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             enemies.ForEach(enemy => updateYEliminarMuertos(elapsedTime, enemy));
             proyectiles.ForEach(proyectil => proyectil.Update(elapsedTime));
 
-           
+
 
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
             if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
-            if (KILL_DELAY <= 0 && killMultiTracker >= 0) {                
+            if (KILL_DELAY <= 0 && killMultiTracker >= 0)
+            {
                 if (killMultiTracker >= 2) { playSound(deniedSoundDir); }
                 killMultiTracker = 0;
             }
@@ -336,6 +365,45 @@ namespace AlumnoEjemplo.Los_Borbotones
             foreach (Barril barril in barriles)
             {
                 barril.Update(elapsedTime);
+            }
+
+            if (positiveMove0)
+            {
+                tLeftMoved0 += 0.02f;
+                tRightMoved0 += 0.02f;
+                if (tLeftMoved0 >= maxMoved) positiveMove0 = false;
+            }
+            else
+            {
+                tLeftMoved0 -= 0.02f;
+                tRightMoved0 -= 0.02f;
+                if (tLeftMoved0 <= minMoved) positiveMove0 = true;
+            }
+
+            if (positiveMove1)
+            {
+                tLeftMoved1 += 0.015f;
+                tRightMoved1 += 0.015f;
+                if (tLeftMoved1 >= maxMoved) positiveMove1 = false;
+            }
+            else
+            {
+                tLeftMoved1 -= 0.015f;
+                tRightMoved1 -= 0.015f;
+                if (tLeftMoved1 <= minMoved) positiveMove1 = true;
+            }
+
+            if (positiveMove2)
+            {
+                tLeftMoved2 += 0.01f;
+                tRightMoved2 += 0.01f;
+                if (tLeftMoved2 >= maxMoved) positiveMove2 = false;
+            }
+            else
+            {
+                tLeftMoved2 -= 0.01f;
+                tRightMoved2 -= 0.01f;
+                if (tLeftMoved2 <= minMoved) positiveMove2 = true;
             }
         }
 
@@ -376,7 +444,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
         }
 
-        internal void Render(float elapsedTime)
+        internal void RenderAll(float elapsedTime)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
@@ -384,10 +452,12 @@ namespace AlumnoEjemplo.Los_Borbotones
             TgcFrustum frustum = GuiController.Instance.Frustum;
             if (drawBoundingBoxes)
             {
+
                 foreach (Barril barril in barriles)
                 {
-                    barril.explosion.render();
+                  //  barril.explosion.render();
                 }
+
             }
 
             skyBox.render();
@@ -404,13 +474,8 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
 
-            /*foreach (Barril barril in barriles)
-            {
-                
-                barril.Render(elapsedTime);
-                    
-            }*/
 
+            player1.Render(elapsedTime);
             
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
@@ -426,8 +491,6 @@ namespace AlumnoEjemplo.Los_Borbotones
             healthText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
 
-            player1.Render(elapsedTime);
-
             //Obtener valor de UserVar (hay que castear)
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
             int valor = (int)GuiController.Instance.UserVars.getValue("N Vegetacion Visible");
@@ -436,7 +499,19 @@ namespace AlumnoEjemplo.Los_Borbotones
             int valor2 = (int)GuiController.Instance.UserVars.getValue("N Sub-terrenos Visibles");
             terrenosVisibles = 0;
 
+            foreach (Barril barril in barriles)
+            {
 
+                barril.Render(elapsedTime);
+
+            }
+
+            int t = 0;
+            foreach (TgcPlaneWall pasto in pastos)
+            {
+                renderPasto(pasto, t);
+                t++;
+            }
         }
 
         internal void close()
@@ -456,6 +531,10 @@ namespace AlumnoEjemplo.Los_Borbotones
                 enemy.dispose();
             }
             enemies.Clear();
+            foreach (TgcPlaneWall pasto in pastos)
+            {
+                pasto.dispose();
+            }
         }
 
         void compareAssign(float n, float max)
@@ -477,7 +556,49 @@ namespace AlumnoEjemplo.Los_Borbotones
             GAME_OVER = true;
         }
 
-        public void fireWeapon()
+        public Vector3 fireLauncher()
+        {
+            //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
+            TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
+            Vector3 newPosition = new Vector3(0, 0, 0);
+            List<Vector3> posicionObstaculos = new List<Vector3>();
+            foreach (TgcMesh obstaculo in vegetation)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, obstaculo.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition);
+            }
+
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, enemies[i].mesh.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition);       
+            }
+            //////////////////////////disparo a barriles////////////////////////////////////////
+            for (int i = barriles.Count - 1; i >= 0; i--)
+            {
+                if (TgcCollisionUtils.intersectRayAABB(ray, barriles[i].mesh.BoundingBox, out newPosition))
+                    posicionObstaculos.Add(newPosition); 
+            }
+
+            posicionObstaculos.Add(intersectRayTerrain(ray));
+
+            posicionObstaculos.Sort(delegate(Vector3 x, Vector3 y)
+            {
+                return distanciaACamara(x).CompareTo(distanciaACamara(y));
+            });
+
+            Vector3 min = posicionObstaculos[0];
+            return min;
+        }
+
+        public float distanciaACamara(Vector3 vector)
+        {
+            Vector3 camara = CustomFpsCamera.Instance.eye;
+            Vector3 dist = camara - vector;
+            return dist.Length();
+        }
+
+        public void fireSniper()
         {
             //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
             TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
@@ -508,12 +629,12 @@ namespace AlumnoEjemplo.Los_Borbotones
                     {
                         hit = true;
                         score += 1;
-                        score += enemies[i].score;
                         killHeadTracker++;
                         specialKillText.Text = "HEADSHOT!!";
                         TEXT_DELAY = TEXT_DELAY_MAX;
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
+
                         //eliminarEnemigo(enemies[i]);
                         enemies[i].morirse();
                         killMultiTracker++;
@@ -522,6 +643,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                         //Hacemos refresh del score
                         scoreText.Text = "SCORE: " + score;
                         ChangeTextColor();
+
                     }
                     vegetacionFrenoDisparo = false;
                 }
@@ -541,6 +663,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                         hit = true;
                         if (enemies[i].health <= 0)
                         {
+
                             score += enemies[i].score;
                            // eliminarEnemigo(enemies[i]);
                             enemies[i].morirse();
@@ -550,6 +673,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                             //Hacemos refresh del score
                             scoreText.Text = "SCORE: " + score;
                             ChangeTextColor();
+
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -568,6 +692,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                         enemies[i].health -= 50;
                         if (enemies[i].health <= 0)
                         {
+
                             score += enemies[i].score;
                             //eliminarEnemigo(enemies[i]);
                             enemies[i].morirse();
@@ -577,6 +702,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                             //Hacemos refresh del score
                             scoreText.Text = "SCORE: " + score;
                             ChangeTextColor();
+
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -629,6 +755,14 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         public void eliminarEnemigo(Enemy enemy)
         {
+            score += enemy.score;
+            killMultiTracker++;
+            awardKill();
+            KILL_DELAY = KILL_DELAY_MAX;
+            //Hacemos refresh del score
+            scoreText.Text = "SCORE: " + score;
+            ChangeTextColor();
+
             if (enemies.Count == 0)
             {
                 Enemy enemigo = new Enemy_lvl_1();
@@ -690,6 +824,34 @@ namespace AlumnoEjemplo.Los_Borbotones
             sound.dispose();
             sound.loadSound(dir);
             sound.play();
+        }
+
+        public void playSound(TgcStaticSound sound, string dir, bool loop)
+        {
+            //reproducir un sonido
+            sound.dispose();
+            sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
+            sound.play(loop);
+        }
+
+        public Vector3 intersectRayTerrain(TgcRay ray)
+        {
+            int iteraciones = heightmapResolution/cantidadFilasColumnas * (int)currentScaleXZ;
+            Vector3 dir = ray.Direction;
+            dir.Normalize();
+            Vector3 origin = ray.Origin;
+            Vector3 pos = origin;
+            float y = 0;
+            for (int i = 0; i < iteraciones; i++)
+            {
+                interpoledHeight(pos.X, pos.Z, out y);
+                if (FastMath.Abs(pos.Y - y) < 1f)
+                {
+                    return pos;
+                }
+                pos += dir;
+            }
+            return pos;
         }
 
         /// <summary>
@@ -824,13 +986,148 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
            
         }
+
         public void eliminarBarril(Barril barril)
         {
             meshesBarril.Remove(barril.mesh);
         }
+
         public void agregarBarril(Barril barril)
         {
             meshesBarril.Add(barril.mesh);
+        }
+
+        public TgcPlaneWall crearPasto(Device d3dDevice)
+        {
+            TgcPlaneWall pasto_try;
+            TgcTexture pasto_texture;
+            
+            string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Textures\\" + texture_pastos[pastoSecuense];
+            pastoSecuense++;
+            pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
+
+            //Crear pared
+            pasto_try = new TgcPlaneWall();
+            pasto_try.AlphaBlendEnable = true;
+            pasto_try.setTexture(pasto_texture);
+
+            TgcPlaneWall.Orientations or = TgcPlaneWall.Orientations.XYplane;
+
+            //Aplicar valores en pared
+            switch (pastoSecuense)
+            { 
+                case 0:
+                    pasto_try.Origin = new Vector3(22, 900, 21);
+                    break;
+                case 1:
+                    pasto_try.Origin = new Vector3(18, 900, 18);
+                    break;
+                case 2:
+                    pasto_try.Origin = new Vector3(13, 900, 19);
+                    break;
+                case 3:
+                    pasto_try.Origin = new Vector3(26, 900, 21);
+                    break;
+                case 4:
+                    pasto_try.Origin = new Vector3(30, 900, 20);
+                    break;
+                case 5:
+                    pasto_try.Origin = new Vector3(34, 900, 19);
+                    break;
+            }
+            pasto_try.Size = new Vector3(20, 20, 20);
+            pasto_try.Orientation = or;
+            pasto_try.AutoAdjustUv = false;
+            pasto_try.UTile = 1;
+            pasto_try.VTile = 1;
+
+            //Es necesario ejecutar updateValues() para que los cambios tomen efecto
+            return pasto_try;
+        }
+
+        public void renderPasto(TgcPlaneWall pasto, int t)
+        {
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+
+            d3dDevice.RenderState.AlphaTestEnable = true;
+            d3dDevice.RenderState.AlphaBlendEnable = true;
+
+            texturesManager.shaderSet(pasto.Effect, "texDiffuseMap", pasto.Texture);
+            texturesManager.clear(1);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(pasto.Effect);
+            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
+            pasto.Effect.Technique = pasto.Technique;
+
+            //Render con shader
+            pasto.Effect.Begin(0);
+            pasto.Effect.BeginPass(0);
+            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(pasto, t));
+            pasto.Effect.EndPass();
+            pasto.Effect.End();
+
+            d3dDevice.RenderState.AlphaTestEnable = false;
+            d3dDevice.RenderState.AlphaBlendEnable = false;
+        }
+
+        public CustomVertex.PositionTextured[] actualizarPasto(TgcPlaneWall pasto, int t)
+        {
+            float autoWidth;
+            float autoHeight;
+
+            //Calcular los 4 corners de la pared, segun el tipo de orientacion
+            Vector3 bLeft, tLeft, bRight, tRight;
+            bLeft = pasto.Origin;
+            tLeft = new Vector3(pasto.Origin.X + pasto.Size.X, pasto.Origin.Y, pasto.Origin.Z);
+            bRight = new Vector3(pasto.Origin.X, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+            tRight = new Vector3(pasto.Origin.X + pasto.Size.X, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                        
+            switch(t)
+            {
+                case 0:
+                case 3:
+                    bRight = new Vector3(pasto.Origin.X - tLeftMoved0, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    tRight = new Vector3(pasto.Origin.X + pasto.Size.X - tRightMoved0, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    break;
+                case 1:
+                case 4:
+                    bRight = new Vector3(pasto.Origin.X - tLeftMoved1, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    tRight = new Vector3(pasto.Origin.X + pasto.Size.X - tRightMoved1, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    break;
+                case 2:
+                case 5:
+                    bRight = new Vector3(pasto.Origin.X - tLeftMoved2, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    tRight = new Vector3(pasto.Origin.X + pasto.Size.X - tRightMoved2, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
+                    break;
+            }
+            
+            autoWidth = (pasto.Size.X / pasto.Texture.Width);
+            autoHeight = (pasto.Size.Y / pasto.Texture.Height);
+            
+            //Auto ajustar UV
+            if (pasto.AutoAdjustUv)
+            {
+                pasto.UTile = autoHeight;
+                pasto.VTile = autoWidth;
+            }
+            float offsetU = pasto.UVOffset.X;
+            float offsetV = pasto.UVOffset.Y;
+
+            CustomVertex.PositionTextured[] vertices = new CustomVertex.PositionTextured[6];
+            //Primer triangulo
+            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + pasto.UTile, offsetV + pasto.VTile);
+            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + pasto.VTile);
+            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+
+            //Segundo triangulo
+            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + pasto.UTile, offsetV + pasto.VTile);
+            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + pasto.UTile, offsetV);            
+
+            //BoundingBox
+            pasto.BoundingBox.setExtremes(bLeft, tRight);
+
+            return vertices;
         }
     }
 }

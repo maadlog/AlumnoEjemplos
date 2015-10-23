@@ -7,8 +7,9 @@ using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
+using AlumnoEjemplo.Los_Borbotones;
 
-namespace AlumnoEjemplo.Los_Borbotones
+namespace AlumnoEjemplos.Los_Borbotones
 {
     /// <summary>
     /// Ejemplo del alumno
@@ -81,6 +82,11 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
                 "GreyScale"
             },0);
 
+            GuiController.Instance.Modifiers.addInterval("Arma", new string[] {
+                "Sniper",
+                "Rocket Launcher"
+            }, 1);
+
             GuiController.Instance.Modifiers.addBoolean("DrawBoundingBoxes", "Renderizar BoundingBoxes", false);
 
             GuiController.Instance.Modifiers.addBoolean("Invincibility", "Activar invencibilidad", false);
@@ -122,7 +128,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
                 postProcessManager.Render(elapsedTime);
             } else {
                 gameManager.Update(elapsedTime);
-                gameManager.Render(elapsedTime);
+                gameManager.RenderAll(elapsedTime);
             }
 
         }

@@ -1,4 +1,4 @@
-﻿using AlumnoEjemplo.Los_Borbotones;
+﻿using AlumnoEjemplos.Los_Borbotones;
 using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
@@ -15,13 +15,13 @@ namespace AlumnoEjemplos.Los_Borbotones
         public State estado = new Activo();
 
         
-        float EXPLOSION_RADIUS = 300f;
+       
         public TgcBoundingSphere explosion;
-
+        public Explosion explosionParticle ;
         public override void Init()
         {
-            explosion = new TgcBoundingSphere(mesh.Position,EXPLOSION_RADIUS);
-            
+           
+           
         }
 
         public override void Update(float elapsedTime)
