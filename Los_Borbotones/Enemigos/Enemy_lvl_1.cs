@@ -19,6 +19,7 @@ namespace AlumnoEjemplo.Los_Borbotones
     {
 
         public TgcSkeletalMesh skeletalMesh;
+        public float angulo = 0f;
         public event TgcViewer.Utils.TgcSkeletalAnimation.TgcSkeletalMesh.AnimationEndsHandler AnimationEnd;
         override
             public void Init(){
@@ -27,7 +28,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                 score = 1;
              Device d3dDevice = GuiController.Instance.D3dDevice;
              MESH_SCALE = 0.5f;
-             
+             tiempoMuerte = 5f;
              attackDamage = 25;
             //cargamos el mesh
             //Despues de agregar el skeletalMesh dejamos de renderizar este mesh, pero igual lo utilizamos para calcular muchas cosas
@@ -87,12 +88,37 @@ namespace AlumnoEjemplo.Los_Borbotones
             base.Update(elapsedTime);
             //actualizamos el skeletalmesh
             this.skeletalMesh.Transform = MatOrientarObjeto * posicionActual * Traslacion;
+            if (muerto)
+            {
+                Matrix tr = Matrix.Translation(new Vector3(0, 40, 0));
+                vectorDireccionRotacion.Normalize();
+                Vector3 Direc = Vector3.Cross(this.direccionMuerto, new Vector3(0, 1, 0));
+                Direc.Normalize();
+                Matrix ro = Matrix.RotationX((float)Math.PI/2);
+                if (tiempoDesdeMuerto <= 1)
+                {
+                    angulo = angulo + (float)Math.PI / 2 * elapsedTime;
+                }
+                else { angulo = (float)Math.PI / 2; }
+                ro = Matrix.RotationAxis(Direc,angulo);
+                Matrix MatOrientarMuer = MatOrientarMuerto * Matrix.RotationY(-(float)Math.PI/2);
+                Matrix po = Matrix.Translation(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+                Matrix sc = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
+                this.skeletalMesh.Transform =sc*MatOrientarMuer* ro * po ;
+                this.skeletalMesh.stopAnimation();
+
+            }
         }
         public override void Render(float elapsedTime)
         {
             //setBaseEffectValues(elapsedTime);
             //renderizamos el skeletalmesh
-            skeletalMesh.animateAndRender();
+            if (muerto)
+            {
+                skeletalMesh.render();
+            }
+            else { skeletalMesh.animateAndRender(); }
+            
             //se puede habilitar el renderizado de los boundingbox
             if (GameManager.Instance.drawBoundingBoxes)
             {

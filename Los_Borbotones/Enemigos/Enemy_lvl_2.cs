@@ -19,6 +19,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             //seteamos atributos particulares de las naves
             health = 50;
             score = 2;
+            tiempoMuerte = 0.1f;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
             attackDamage = 50;

@@ -312,7 +312,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             }
 
             //update de los enemigos
-            enemies.ForEach(enemy => enemy.Update(elapsedTime));
+            enemies.ForEach(enemy => updateYEliminarMuertos(elapsedTime, enemy));
             proyectiles.ForEach(proyectil => proyectil.Update(elapsedTime));
 
            
@@ -337,6 +337,18 @@ namespace AlumnoEjemplo.Los_Borbotones
             {
                 barril.Update(elapsedTime);
             }
+        }
+
+        public void updateYEliminarMuertos(float elapsedTime, Enemy enemy)
+        {
+            if (enemy.tiempoDesdeMuerto > enemy.tiempoMuerte)
+            {
+                eliminarEnemigo(enemy);
+            }
+            else
+            {
+                enemy.Update(elapsedTime);
+            };
         }
 
         private void ChangeTextColor()
@@ -502,7 +514,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                         TEXT_DELAY = TEXT_DELAY_MAX;
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
-                        eliminarEnemigo(enemies[i]);
+                        //eliminarEnemigo(enemies[i]);
+                        enemies[i].morirse();
                         killMultiTracker++;
                         awardKill();
                         KILL_DELAY = KILL_DELAY_MAX;
@@ -529,7 +542,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                         if (enemies[i].health <= 0)
                         {
                             score += enemies[i].score;
-                            eliminarEnemigo(enemies[i]);
+                           // eliminarEnemigo(enemies[i]);
+                            enemies[i].morirse();
                             killMultiTracker++;
                             awardKill();
                             KILL_DELAY = KILL_DELAY_MAX;
@@ -555,7 +569,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                         if (enemies[i].health <= 0)
                         {
                             score += enemies[i].score;
-                            eliminarEnemigo(enemies[i]);
+                            //eliminarEnemigo(enemies[i]);
+                            enemies[i].morirse();
                             killMultiTracker++;
                             awardKill();
                             KILL_DELAY = KILL_DELAY_MAX;

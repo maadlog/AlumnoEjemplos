@@ -48,6 +48,11 @@ namespace AlumnoEjemplo.Los_Borbotones
         public Vector3 vectorDireccionAnterior;
         public Vector3 vectorDireccionRotacionAnterior;
         public Tgc3dSound SonidoMovimiento ;
+        public float tiempoDesdeMuerto ;
+        public Boolean muerto = false;
+        public Matrix MatOrientarMuerto;
+        public Vector3 direccionMuerto;
+        public float tiempoMuerte;
 
         public override void Init()   
         {
@@ -69,6 +74,10 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
+            if (muerto)
+            {
+                tiempoDesdeMuerto += elapsedTime;
+            }
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             //Realizamos ataque de enemigos
             if (!attacking)
@@ -251,7 +260,9 @@ namespace AlumnoEjemplo.Los_Borbotones
                 this.HEADSHOT_BOUNDINGBOX.render();
                 this.CHEST_BOUNDINGBOX.render();
                 this.LEGS_BOUNDINGBOX.render();
+                
             }
+            
             
         }
 
@@ -275,8 +286,19 @@ namespace AlumnoEjemplo.Los_Borbotones
             MatOrientarObjeto = calcularMatrizOrientacion(vectorDireccionRotacion);
             //hacemos que sigan al player
             Traslacion = Matrix.Translation(Direccion * MOVEMENT_SPEED * elapsedTime);
-
             Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
+           /* if (muerto)
+            {
+                Matrix tr = Matrix.Translation(new Vector3(0, 40, 0));
+                vectorDireccionRotacion.Normalize();
+                Vector3 Direc = Vector3.Cross(this.vectorDireccion, new Vector3(0, 1, 0));
+                Direc.Normalize();
+                Matrix ro = Matrix.RotationX((float)Math.PI);
+                Matrix po = Matrix.Translation(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+                transform = ro * po;
+            }*/
+
+            
             //aplicamos las transformaciones
             this.mesh.Transform = transform;
 
@@ -335,6 +357,15 @@ namespace AlumnoEjemplo.Los_Borbotones
             //devuelve la posicion actual en un vector3
             Vector3 vec = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             return vec;
+        }
+
+        internal void morirse()
+        {
+            muerto = true;
+            tiempoDesdeMuerto = 0f;
+            MOVEMENT_SPEED = 0;
+            MatOrientarMuerto = MatOrientarObjeto ;
+            direccionMuerto = vectorDireccionRotacion;
         }
     }
 }
