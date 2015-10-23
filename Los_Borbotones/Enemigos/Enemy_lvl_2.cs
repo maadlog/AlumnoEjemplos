@@ -13,13 +13,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     class Enemy_lvl_2:Enemy
     {
+        public Explosion explo;
         override
            public void Init()
         {
             //seteamos atributos particulares de las naves
             health = 50;
             score = 2;
-            tiempoMuerte = 0.1f;
+            tiempoMuerte = 5f;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
             attackDamage = 50;
@@ -47,6 +48,25 @@ namespace AlumnoEjemplos.Los_Borbotones
             SonidoMovimiento.MinDistance = 130f;
             SonidoMovimiento.play(true);
             
+        }
+        public override void morirse()
+        {
+            base.morirse();
+            explo = new Explosion();
+            explo.posicion = getPosicionActual();
+
+            explo.init();
+        }
+        public override void Render(float elapsedTime)
+        {
+            if (!muerto)
+            {
+                base.Render(elapsedTime);
+            }
+            if (muerto)
+            {
+                explo.render(elapsedTime);
+            }
         }
 
         override public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
