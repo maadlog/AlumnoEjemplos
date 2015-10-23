@@ -46,6 +46,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 explosion = new Explosion();
                 explosion.posicion = target;
                 explosion.init();
+                explosion.Explotar();
                 fired = false;
             }
             base.Update(elapsedTime);

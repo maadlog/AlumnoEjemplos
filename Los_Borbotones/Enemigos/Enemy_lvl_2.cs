@@ -54,7 +54,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             base.morirse();
             explo = new Explosion();
             explo.posicion = getPosicionActual();
-
             explo.init();
         }
         public override void Render(float elapsedTime)

@@ -33,8 +33,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 sound = new TgcStaticSound();
                 time = GuiController.Instance.ElapsedTime;
 
-                Explotar();
-
                 int width = GuiController.Instance.Panel3d.Width;
                 int height = GuiController.Instance.Panel3d.Height;
 

@@ -13,7 +13,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Activo : State
     {
-        
+
         public override void Update(float elapsedTime, Barril barril)
         {
 
@@ -27,31 +27,32 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (GameManager.Instance.drawBoundingBoxes)
             {
-               // barril.explosion.render();
+                // barril.explosion.render();
             }
 
-            
+
         }
 
         public override void explotar(Barril barril)
         {
 
-           /* for (int i = GameManager.Instance.enemies.Count - 1; i >= 0; i--)
-            {
-                if(TgcCollisionUtils.testSphereAABB(barril.explosion, GameManager.Instance.enemies[i].mesh.BoundingBox))
-                {
-                    GameManager.Instance.eliminarEnemigo(GameManager.Instance.enemies[i]);
-                }
-            }*/
+            /* for (int i = GameManager.Instance.enemies.Count - 1; i >= 0; i--)
+             {
+                 if(TgcCollisionUtils.testSphereAABB(barril.explosion, GameManager.Instance.enemies[i].mesh.BoundingBox))
+                 {
+                     GameManager.Instance.eliminarEnemigo(GameManager.Instance.enemies[i]);
+                 }
+             }*/
 
             barril.estado = new Inactivo();
 
             GameManager.Instance.eliminarBarril(barril);
             barril.explosionParticle = new Explosion();
-             barril.explosionParticle.posicion = barril.mesh.Position;
-             barril.explosionParticle.init();
+            barril.explosionParticle.posicion = barril.mesh.Position;
+            barril.explosionParticle.init();
+            barril.explosionParticle.Explotar();
         }
 
-       
+
     }
 }

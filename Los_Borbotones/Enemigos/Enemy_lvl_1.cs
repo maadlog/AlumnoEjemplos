@@ -13,10 +13,10 @@ using TgcViewer.Utils.Sound;
 using System.Drawing;
 
 
-namespace AlumnoEjemplos.Los_Borbotones 
+namespace AlumnoEjemplos.Los_Borbotones
 {
 
-    class Enemy_lvl_1:Enemy
+    class Enemy_lvl_1 : Enemy
     {
 
         public TgcSkeletalMesh skeletalMesh;
@@ -25,45 +25,46 @@ namespace AlumnoEjemplos.Los_Borbotones
         GotaEmitter blood;
 
         override
-            public void Init(){
+            public void Init()
+        {
             //seteamos atributos particulares del robot
-                health = 100;
-                score = 1;
-             Device d3dDevice = GuiController.Instance.D3dDevice;
-             MESH_SCALE = 0.5f;
-             tiempoMuerte = 5f;
-             attackDamage = 25;
+            health = 100;
+            score = 1;
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            MESH_SCALE = 0.5f;
+            tiempoMuerte = 5f;
+            attackDamage = 25;
             //cargamos el mesh
             //Despues de agregar el skeletalMesh dejamos de renderizar este mesh, pero igual lo utilizamos para calcular muchas cosas
-             this.mesh = GameManager.Instance.ModeloRobot.clone("robot");
+            this.mesh = GameManager.Instance.ModeloRobot.clone("robot");
 
-             giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
+            giroInicial = Matrix.RotationY(-(float)Math.PI / 2);
 
-            
+
             //carga de animaciones
-             TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
+            TgcSkeletalLoader skeletalLoader = new TgcSkeletalLoader();
 
-             skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(
-                 GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
-                 new string[] { 
+            skeletalMesh = skeletalLoader.loadMeshAndAnimationsFromFile(
+                GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Robot-TgcSkeletalMesh.xml",
+                new string[] { 
                     GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Caminando-TgcSkeletalAnim.xml",
                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Patear-TgcSkeletalAnim.xml",
                    GuiController.Instance.ExamplesMediaDir + "SkeletalAnimations\\Robot\\" + "Arrojar-TgcSkeletalAnim.xml",
                 });
-            
-             skeletalMesh.playAnimation("Caminando", true);
-             skeletalMesh.AnimationEnds += this.onAnimationEnds;
+
+            skeletalMesh.playAnimation("Caminando", true);
+            skeletalMesh.AnimationEnds += this.onAnimationEnds;
             //realizamos el init() comun a todos los enemigos
-             base.Init();
+            base.Init();
             //Creamos boundingBox nuevas para la cabeza, pecho y piernas del robot
-             HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
-             CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
-             LEGS_BOUNDINGBOX = this.mesh.BoundingBox.clone();
-            Matrix escalabox = Matrix.Scaling(new Vector3(0.43f,0.3f,0.43f));
-            Matrix traslationbox = Matrix.Translation(new Vector3(0,90f,0));
+            HEADSHOT_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+            CHEST_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+            LEGS_BOUNDINGBOX = this.mesh.BoundingBox.clone();
+            Matrix escalabox = Matrix.Scaling(new Vector3(0.43f, 0.3f, 0.43f));
+            Matrix traslationbox = Matrix.Translation(new Vector3(0, 90f, 0));
             HEADSHOT_BOUNDINGBOX.transform(escalabox * traslationbox);
             posicionActualHeadshot = escalabox * traslationbox * posicionActual;
-           Matrix escalabox2 = Matrix.Scaling(new Vector3(0.6f, 0.3f, 0.6f));
+            Matrix escalabox2 = Matrix.Scaling(new Vector3(0.6f, 0.3f, 0.6f));
             Matrix traslationbox2 = Matrix.Translation(new Vector3(0, 50f, 0));
             CHEST_BOUNDINGBOX.transform(escalabox2 * traslationbox2);
             posicionActualChest = escalabox2 * traslationbox2 * posicionActual;
@@ -79,7 +80,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             SonidoMovimiento = new Tgc3dSound(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio\\Robot\\servomotor.wav", getPosicionActual());
             SonidoMovimiento.MinDistance = 70f;
             SonidoMovimiento.play(true);
-                        
+
             //setBaseEffect();
 
         }
@@ -96,17 +97,17 @@ namespace AlumnoEjemplos.Los_Borbotones
                 vectorDireccionRotacion.Normalize();
                 Vector3 Direc = Vector3.Cross(this.direccionMuerto, new Vector3(0, 1, 0));
                 Direc.Normalize();
-                Matrix ro = Matrix.RotationX((float)Math.PI/2);
+                Matrix ro = Matrix.RotationX((float)Math.PI / 2);
                 if (tiempoDesdeMuerto <= 1)
                 {
                     angulo = angulo + (float)Math.PI / 2 * elapsedTime;
                 }
                 else { angulo = (float)Math.PI / 2; }
-                ro = Matrix.RotationAxis(Direc,angulo);
-                Matrix MatOrientarMuer = MatOrientarMuerto * Matrix.RotationY(-(float)Math.PI/2);
+                ro = Matrix.RotationAxis(Direc, angulo);
+                Matrix MatOrientarMuer = MatOrientarMuerto * Matrix.RotationY(-(float)Math.PI / 2);
                 Matrix po = Matrix.Translation(posicionActual.M41, posicionActual.M42, posicionActual.M43);
                 Matrix sc = Matrix.Scaling(MESH_SCALE, MESH_SCALE, MESH_SCALE);
-                this.skeletalMesh.Transform =sc*MatOrientarMuer* ro * po ;
+                this.skeletalMesh.Transform = sc * MatOrientarMuer * ro * po;
                 this.skeletalMesh.stopAnimation();
 
             }
@@ -123,7 +124,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 SystemState_Particulas.Instance.SetRenderState_Zero();
             }
             else { skeletalMesh.animateAndRender(); }
-            
+
             //se puede habilitar el renderizado de los boundingbox
             if (GameManager.Instance.drawBoundingBoxes)
             {
@@ -140,9 +141,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             Vector3 origen = new Vector3(posicionActual.M41, posicionActual.M42 + 50, posicionActual.M43);//Parametrizable
             float speed = 0f;//Parametrizable
             float divergence = 0f;//Parametrizable
-            Vector3 velocidad = new Vector3(divergence,speed,divergence);
+            Vector3 velocidad = new Vector3(divergence, speed, divergence);
             Vector3 aceleracion = new Vector3(0, -18.8f, 0);
-            float max=200f,aRRecorrer=50f;//Parametrizables
+            float max = 200f, aRRecorrer = 50f;//Parametrizables
             int alpha = 255;
             float sizeSpeed = 2f;
             blood = new GotaEmitter(cantidad, origen, velocidad, aceleracion, max, aRRecorrer, Color.Red, alpha, 0f, 0.01f, sizeSpeed, 100f, 5f);
@@ -171,12 +172,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void attack(float elapsedTime)
         {
             //Ataque de los robots
-            if (attacking && !attacked) 
+            if (attacking && !attacked)
             {
                 GameManager.Instance.player1.recibirAtaque(attackDamage);
                 attacked = true;
             }
-            else if(!attacking)
+            else if (!attacking)
             {
                 posicionActual = posicionAnterior;
                 posicionActualHeadshot = posicionAnteriorHeadshot;
