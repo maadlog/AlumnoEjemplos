@@ -50,5 +50,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             base.Update(elapsedTime);
         }
+
+        public override void Render(float elapsedTime)
+        {
+            if (explosion != null) { explosion.render(elapsedTime); }
+            base.Render(elapsedTime);
+        }
     }
 }

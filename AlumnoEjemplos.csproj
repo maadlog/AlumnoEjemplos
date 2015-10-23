@@ -97,13 +97,20 @@
     <Compile Include="Los_Borbotones\CustomFpsCamera.cs" />
     <Compile Include="Los_Borbotones\Enemigos\Enemy_lvl_1.cs" />
     <Compile Include="Los_Borbotones\EjemploAlumno.cs" />
-
     <Compile Include="Los_Borbotones\Enemigos\Enemy.cs" />
     <Compile Include="Los_Borbotones\Explosion.cs" />
-
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
     <Compile Include="Los_Borbotones\Barriles\Inactivo.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Emitter.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Explosion\EjemploExplosiones.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Explosion\ExplosionEmitter.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Explosion\ExplosionPart.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Humo\Smoke.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Humo\SmokeEmitter.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Humo\SmokePart.cs" />
+    <Compile Include="Los_Borbotones\Particulas\Particle.cs" />
+    <Compile Include="Los_Borbotones\Particulas\SystemState_Particulas.cs" />
     <Compile Include="Los_Borbotones\Player1.cs" />
     <Compile Include="Los_Borbotones\PostProcessManager.cs" />
     <Compile Include="Los_Borbotones\Enemigos\Proyectil.cs" />

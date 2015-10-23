@@ -394,8 +394,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
 
-         
 
+            player1.Render(elapsedTime);
             
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
@@ -410,8 +410,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText.render();
             healthText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
-
-            player1.Render(elapsedTime);
 
             //Obtener valor de UserVar (hay que castear)
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
