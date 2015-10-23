@@ -359,7 +359,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             return vec;
         }
 
-        internal void morirse()
+        virtual public void morirse()
         {
             muerto = true;
             tiempoDesdeMuerto = 0f;
