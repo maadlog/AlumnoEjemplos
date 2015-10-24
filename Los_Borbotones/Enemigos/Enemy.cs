@@ -359,6 +359,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             return vec;
         }
 
+        virtual public void sangrar(Vector3 dir, float yOffset)
+        {
+
+        }
 
         virtual public void morirse()
 

@@ -47,14 +47,15 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             GotaPart p;
             int i;
-            Vector3 dire = new Vector3(0,1,0);
+            Vector3 dire = this.Speed;
+            //this.Speed = new Vector3(5,0,5);
             float size = this.PointSizeMin;
             int tex;
 
             for (i = 0; i < (this.ParticlesAmount); i++)
             {
                 tex = r.Next(0, this.Textures.Count);
-                p = new GotaPart(this.InitCoords, this.Speed, this.Acceleration, dire, this.InitialColor, this.InitialAlpha, size, this.TimeToLive_Particle, this.Textures[tex]);
+                p = new GotaPart(this.InitCoords, new Vector3(5,0,5), this.Acceleration, this.Speed, this.InitialColor, this.InitialAlpha, size, this.TimeToLive_Particle, this.Textures[tex]);
                 this.Particles.Add(p);
                 p.Index_ParticleVertex = i;
                 this.ParticlesVertex.Add(p.CV_PositionColored);
@@ -73,7 +74,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void InicializarSplash()
         {
             //El origen del splash es a la altura donde termina la gota
-            Vector3 pos = new Vector3(this.InitCoords.X,this.InitCoords.Y - TimeToLive_Particle,this.InitCoords.Z);
+            Vector3 pos = new Vector3(this.InitCoords.X + 5 * Speed.X * 0.50f * TimeToLive_Particle, this.InitCoords.Y - TimeToLive_Particle, this.InitCoords.Z + 5 * Speed.Z * 0.50f * TimeToLive_Particle);
             Vector3 speed = new Vector3(this.SplashSpeed, this.SplashSpeed, this.SplashSpeed);
             this.Splash = new SplashEmitter(SPLASH_CANTIDAD, pos, speed, new Vector3(0, -9.8f, 0), this.SplashSize, this.SplashSize, this.InitialColor, 255, 0f, this.UpdateTime);
             this.Splash.Init();

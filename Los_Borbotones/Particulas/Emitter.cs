@@ -306,7 +306,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     else
                     {
-                        p.Matar(this);
+                        //p.Matar(this);
                     }
                     //Actualiza el point sprite de la particula
                     p.CV_PositionColored = new CustomVertex.PositionColored(p.CurrentPos, Color.FromArgb(p.Alpha, p.Colour).ToArgb());

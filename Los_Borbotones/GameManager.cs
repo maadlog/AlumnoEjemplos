@@ -601,7 +601,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void fireSniper()
         {
             //Disparamos el arma, nos fijamos si colisiona con un enemigo, y si hay obstaculos en el medio
-            TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position);
+            Vector3 dir = CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position;
+            TgcRay ray = new TgcRay(CustomFpsCamera.Instance.Position, dir);
             Vector3 newPosition = new Vector3(0, 0, 0);
             List<Vector3> posicionObstaculos = new List<Vector3>();
             bool vegetacionFrenoDisparo = false;
@@ -634,15 +635,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                         TEXT_DELAY = TEXT_DELAY_MAX;
                         playSound(headshotSoundDir);
                         enemies[i].health = 0;
+                        enemies[i].sangrar(-dir, newPosition.Y - enemies[i].getPosicionActual().Y);
 
                         //eliminarEnemigo(enemies[i]);
                         enemies[i].morirse();
-                        killMultiTracker++;
-                        awardKill();
-                        KILL_DELAY = KILL_DELAY_MAX;
-                        //Hacemos refresh del score
-                        scoreText.Text = "SCORE: " + score;
-                        ChangeTextColor();
+                        sumarScore(enemies[i]);
 
                     }
                     vegetacionFrenoDisparo = false;
@@ -660,19 +657,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                     if (!vegetacionFrenoDisparo)
                     {
                         enemies[i].health -= 25;
+                        enemies[i].sangrar(-dir, newPosition.Y - enemies[i].getPosicionActual().Y);
                         hit = true;
                         if (enemies[i].health <= 0)
                         {
-
-                            score += enemies[i].score;
                            // eliminarEnemigo(enemies[i]);
                             enemies[i].morirse();
-                            killMultiTracker++;
-                            awardKill();
-                            KILL_DELAY = KILL_DELAY_MAX;
-                            //Hacemos refresh del score
-                            scoreText.Text = "SCORE: " + score;
-                            ChangeTextColor();
+                            sumarScore(enemies[i]);
 
                         }
                     }
@@ -690,19 +681,12 @@ namespace AlumnoEjemplos.Los_Borbotones
                     if (!vegetacionFrenoDisparo)
                     {
                         enemies[i].health -= 50;
+                        enemies[i].sangrar(-dir, newPosition.Y - enemies[i].getPosicionActual().Y);
                         if (enemies[i].health <= 0)
                         {
-
-                            score += enemies[i].score;
                             //eliminarEnemigo(enemies[i]);
                             enemies[i].morirse();
-                            killMultiTracker++;
-                            awardKill();
-                            KILL_DELAY = KILL_DELAY_MAX;
-                            //Hacemos refresh del score
-                            scoreText.Text = "SCORE: " + score;
-                            ChangeTextColor();
-
+                            sumarScore(enemies[i]);
                         }
                     }
                     vegetacionFrenoDisparo = false;
@@ -753,7 +737,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             proyectiles.Add(proyectil);
         }
 
-        public void eliminarEnemigo(Enemy enemy)
+        public void sumarScore(Enemy enemy)
         {
             score += enemy.score;
             killMultiTracker++;
@@ -762,6 +746,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Hacemos refresh del score
             scoreText.Text = "SCORE: " + score;
             ChangeTextColor();
+        }
+        public void eliminarEnemigo(Enemy enemy)
+        {
 
             if (enemies.Count == 0)
             {

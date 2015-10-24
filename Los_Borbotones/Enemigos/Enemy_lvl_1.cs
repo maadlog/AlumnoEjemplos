@@ -119,9 +119,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (muerto)
             {
                 skeletalMesh.render();
-                SystemState_Particulas.Instance.SetRenderState();
-                blood.Render(elapsedTime);
-                SystemState_Particulas.Instance.SetRenderState_Zero();
             }
             else { skeletalMesh.animateAndRender(); }
 
@@ -133,23 +130,15 @@ namespace AlumnoEjemplos.Los_Borbotones
                 this.CHEST_BOUNDINGBOX.render();
                 this.LEGS_BOUNDINGBOX.render();
             }
+
+            if (blood != null)
+            {
+                SystemState_Particulas.Instance.SetRenderState();
+                blood.Render(elapsedTime);
+                SystemState_Particulas.Instance.SetRenderState_Zero();
+            }
         }
 
-        public override void morirse()
-        {
-            int cantidad = 1;//Parametrizable
-            Vector3 origen = new Vector3(posicionActual.M41, posicionActual.M42 + 50, posicionActual.M43);//Parametrizable
-            float speed = 0f;//Parametrizable
-            float divergence = 0f;//Parametrizable
-            Vector3 velocidad = new Vector3(divergence, speed, divergence);
-            Vector3 aceleracion = new Vector3(0, -18.8f, 0);
-            float max = 200f, aRRecorrer = 50f;//Parametrizables
-            int alpha = 255;
-            float sizeSpeed = 2f;
-            blood = new GotaEmitter(cantidad, origen, velocidad, aceleracion, max, aRRecorrer, Color.Red, alpha, 0f, 0.01f, sizeSpeed, 100f, 5f);
-            blood.Init();
-            base.morirse();
-        }
         /*
         public override void setBaseEffect()
         {
@@ -192,6 +181,23 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.playAnimation("Patear", false);
             attackDelay = ATTACK_DELAY;
             attacking = true;
+        }
+        public override void sangrar(Vector3 dir, float yOffset)
+        {
+            int cantidad = 1;//Parametrizable
+            Vector3 origen = new Vector3(posicionActual.M41, posicionActual.M42 + yOffset, posicionActual.M43);//Parametrizable
+            //float speed = 0f;//Parametrizable
+            //float divergence = 0f;//Parametrizable
+            //Vector3 velocidad = new Vector3(divergence, speed, divergence);
+            dir.Y = 1;
+            dir.Normalize();
+            Vector3 velocidad = dir;
+            Vector3 aceleracion = new Vector3(0, -18.8f, 0);
+            float max = 100f, aRRecorrer = yOffset;//Parametrizables
+            int alpha = 255;
+            float sizeSpeed = 2f;
+            blood = new GotaEmitter(cantidad, origen, velocidad, aceleracion, max, aRRecorrer, Color.Red, alpha, 0f, 0.01f, sizeSpeed, 100f, 10f);
+            blood.Init();
         }
 
         protected virtual void onAnimationEnds(TgcSkeletalMesh mesh)
