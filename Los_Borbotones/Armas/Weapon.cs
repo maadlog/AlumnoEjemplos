@@ -2,6 +2,7 @@
 using Microsoft.DirectX;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using TgcViewer;
@@ -19,6 +20,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float weaponOscilation;
         public string weaponSoundDir;
         TgcStaticSound weaponSound;
+        ExplosionEmitter muzzle;
 
         public override void Init()
         {
@@ -47,6 +49,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Render(float elapsedTime)
         {
+            if (FIRE_DELAY > 0)
+            {
+                SystemState_Particulas.Instance.SetRenderState();
+                muzzle.Render(elapsedTime);
+                SystemState_Particulas.Instance.SetRenderState_Zero();
+            }
             mesh.render();
         }
 
@@ -69,6 +77,23 @@ namespace AlumnoEjemplos.Los_Borbotones
         public virtual void fireWeapon() 
         {
             GameManager.Instance.player1.playSound(weaponSound, weaponSoundDir, false);
+
+            //int cantExplosion = 10;
+            //float particleTime = 4f, sizeMax = 100f, expSpeed = 1f, expSizeSpeed = 2f; ;
+            //float expUpdateTime = 0.01f;
+
+            int cantExplosion = 20;
+            float particleTime = 1f, sizeMax = 2000f, expSpeed = 1f, expSizeSpeed = 20f; ;
+            float expUpdateTime = 0;
+            Matrix matrix = mesh.Transform;
+            Matrix offset = Matrix.Translation(0, 0, 50);
+            matrix = offset * matrix;
+            Vector3 posicion = new Vector3(matrix.M41, matrix.M42, matrix.M43);
+
+            //Creo el emisor de explosion
+            //muzzle = new ExplosionEmitter(cantExplosion, posicion, new Vector3(expSpeed, expSpeed, expSpeed), new Vector3(0.00f, 0.00f, 0.00f), 50f, sizeMax, particleTime, Color.White, 150, 0f, expUpdateTime, GameManager.Instance.random.Next(0, 1000), expSizeSpeed, 2);
+            muzzle = new ExplosionEmitter(cantExplosion, posicion, new Vector3(expSpeed, expSpeed, expSpeed), new Vector3(0.00f, 0.00f, 0.00f), 500f, sizeMax, particleTime, Color.White, 150, 0f, expUpdateTime, GameManager.Instance.random.Next(0, 1000), expSizeSpeed, 2);
+            muzzle.Init();
         }
     }
 }

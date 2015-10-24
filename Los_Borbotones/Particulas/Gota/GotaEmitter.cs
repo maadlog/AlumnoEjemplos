@@ -12,7 +12,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class GotaEmitter : Emitter
     {
-        static private float MIN_SIZE = 100f;
+        static private float MIN_SIZE = 10f;
 
         //Cantidad de particulas para la salpicadura
         static private int SPLASH_CANTIDAD = 30;
@@ -122,7 +122,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 this.RevivirParticula();
                 this.Spawn = 0f;
-                this.TimeToCreateParticle = 1000;
             }
             
             foreach (GotaPart p in this.Particles)
@@ -137,7 +136,8 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     else
                     {
-                        p.Matar(this);
+                        p.Render(this);
+                        //p.Matar(this);
                         //Si muere ya se hace el render del splash
                         this.Splash.RevivirParticulas();
                     }

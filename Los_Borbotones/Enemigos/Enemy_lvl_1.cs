@@ -184,7 +184,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public override void sangrar(Vector3 dir, float yOffset)
         {
-            int cantidad = 1;//Parametrizable
+            int cantidad = 10;//Parametrizable
             Vector3 origen = new Vector3(posicionActual.M41, posicionActual.M42 + yOffset, posicionActual.M43);//Parametrizable
             //float speed = 0f;//Parametrizable
             //float divergence = 0f;//Parametrizable
@@ -196,7 +196,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             float max = 100f, aRRecorrer = yOffset;//Parametrizables
             int alpha = 255;
             float sizeSpeed = 2f;
-            blood = new GotaEmitter(cantidad, origen, velocidad, aceleracion, max, aRRecorrer, Color.Red, alpha, 0f, 0.01f, sizeSpeed, 100f, 10f);
+            blood = new GotaEmitter(cantidad, origen, velocidad, aceleracion, max, aRRecorrer, Color.DarkRed, alpha, 0.02f, 0.005f, sizeSpeed, 100f, 10f);
             blood.Init();
         }
 
