@@ -104,10 +104,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         public bool invincibility;
 
         bool zoomEnabled = false;
+        float SMALL_SCOPE = 0.10f; // 20% of screen covered by scope (X-Axis)
+        float BIGASS_SCOPE = 2f;  // 200%
         float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
         TgcTexture normalScope;
         TgcTexture zoomedScope;
-        float screenCovered = 0.12f;
+        float screenCovered;
         public List<Barril> barriles = new List<Barril>();
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
@@ -256,8 +258,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
             healthText.Position = new Point(0, 250);
             healthText.Align = TgcText2d.TextAlign.LEFT;
-            
+
             //cargamos la mira
+            screenCovered = SMALL_SCOPE;
             cross = new TgcSprite();
             normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\normalScope.png");
             zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\zoomedScope.png");
@@ -927,10 +930,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void refreshScopeTexture()
         {
             Size tamaño = cross.Texture.Size;
-            Size screen = GuiController.Instance.Panel3d.Size;
-            cross.Scaling = new Vector2((float)screen.Width * screenCovered / (float)tamaño.Width, (float)screen.Width * screenCovered / (float)tamaño.Height);
-            Vector2 size = new Vector2(tamaño.Width * cross.Scaling.X, tamaño.Height * cross.Scaling.Y);
-            cross.Position = new Vector2((screen.Width - size.X) / 2, (screen.Height - size.Y) / 2);
+            float scale = ScreenWidth * screenCovered / tamaño.Width;
+            cross.Scaling = new Vector2(scale, scale);
+            cross.Position = new Vector2((ScreenWidth - (tamaño.Width * scale)) / 2, (ScreenHeight - (tamaño.Height * scale)) / 2);
         }
 
         public void zoomCamera()
@@ -941,14 +943,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 cross.Texture = normalScope;
                 CustomFpsCamera.Instance.Zoom = 0;
-                screenCovered = 0.12f; // 1/12 of screen covered by scope
+                screenCovered = SMALL_SCOPE; // 1/6 of screen covered by scope
                 zoomEnabled = false;
             }
             else
             {
                 cross.Texture = zoomedScope;
                 CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
-                screenCovered = 2f; // scope scaled to twice the screen wdth
+                screenCovered = BIGASS_SCOPE; // scope scaled to twice the screen wdth
                 zoomEnabled = true;
             }
 
