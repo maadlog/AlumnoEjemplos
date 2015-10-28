@@ -8,6 +8,7 @@ using System.Drawing;
 using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using AlumnoEjemplo.Los_Borbotones;
+using TgcViewer.Utils.Input;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -122,8 +123,8 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public override void render(float elapsedTime)
         {
-           postProcessManager.Update(elapsedTime);
-           postProcessManager.Render(elapsedTime);
+            postProcessManager.Update(elapsedTime);
+            postProcessManager.Render(elapsedTime);
         }
 
         /// <summary>
