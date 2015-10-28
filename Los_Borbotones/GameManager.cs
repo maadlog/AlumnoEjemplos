@@ -517,6 +517,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
+        internal void RenderNightVision(float elapsedTime)
+        {
+            //TODO
+        }
+
         internal void close()
         {
             Vegetation.disposeAll();

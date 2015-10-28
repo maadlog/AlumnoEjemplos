@@ -75,7 +75,10 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", 0);
 
             ///////////////MODIFIERS//////////////////
-            GuiController.Instance.Modifiers.addBoolean("UsePostProcess", "Usar efectos de post procesado", false);
+            GuiController.Instance.Modifiers.addInterval("RenderFlux", new string[] {
+                "RenderAll",
+                "NightVision"
+            }, 0);
 
             GuiController.Instance.Modifiers.addInterval("PostProcessTechnique", new string[] {
                 "Propagation",
@@ -119,18 +122,8 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public override void render(float elapsedTime)
         {
-            //Device de DirectX para renderizar
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-
-            bool useEffects = (bool)GuiController.Instance.Modifiers.getValue("UsePostProcess");
-            if (useEffects){
-                postProcessManager.Update(elapsedTime);
-                postProcessManager.Render(elapsedTime);
-            } else {
-                gameManager.Update(elapsedTime);
-                gameManager.RenderAll(elapsedTime);
-            }
-
+           postProcessManager.Update(elapsedTime);
+           postProcessManager.Render(elapsedTime);
         }
 
         /// <summary>
