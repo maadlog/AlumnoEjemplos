@@ -54,7 +54,10 @@ static const int kernel_r = 6;
 static const int kernel_size = 13;
 static const float Kernel[kernel_size] = 
 {
-    0.002216,    0.008764,    0.026995,    0.064759,    0.120985,    0.176033,    0.199471,    0.176033,    0.120985,    0.064759,    0.026995,    0.008764,    0.002216,
+    0.002216,    0.008764,   	0.026995,   	0.064759,
+    0.120985,    0.176033,		0.199471,    	0.176033,
+	0.120985,
+    0.064759,    0.026995,    	0.008764,    	0.002216,
 };
 
 
@@ -140,7 +143,8 @@ float4 ps_downFilter4( in float2 Tex : TEXCOORD0 ) : COLOR0
 float4 ps_nightVision( in float2 Tex : TEXCOORD0 , in float2 vpos : VPOS) : COLOR0
 {
 	float4 ColorBase = tex2D(RenderTarget, Tex);
-	float4 ColorBrillante = tex2D(GlowMap, Tex+float2((float)16/screen_dx,(float)16/screen_dy));
+	float4 ColorBrillante = tex2D(GlowMap, Tex);
+	
 	 // Y = 0.2126 R + 0.7152 G + 0.0722 B
 	float Yb = 0.2126*ColorBase.r + 0.7152*ColorBase.g + 0.0722*ColorBase.b;
 	float Yk = 0.2126*ColorBrillante.r + 0.7152*ColorBrillante.g + 0.0722*ColorBrillante.b;
@@ -150,7 +154,7 @@ float4 ps_nightVision( in float2 Tex : TEXCOORD0 , in float2 vpos : VPOS) : COLO
 		Yk *= 0.85;
 	}
 
-	return float4(Yk*0.75,Yb*0.6+Yk*4,Yk*0.75,1);
+	return float4(Yk*0.50,Yb*0.6+Yk*4,Yk*0.50,1);
 }
 
 
