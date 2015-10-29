@@ -102,6 +102,12 @@
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
     <Compile Include="Los_Borbotones\Barriles\Inactivo.cs" />
+    <Compile Include="Los_Borbotones\Menus\CreditsMenu.cs" />
+    <Compile Include="Los_Borbotones\Menus\HelpMenu.cs" />
+    <Compile Include="Los_Borbotones\Menus\MainMenu.cs" />
+    <Compile Include="Los_Borbotones\Menus\Menu.cs" />
+    <Compile Include="Los_Borbotones\Menus\MenuManager.cs" />
+    <Compile Include="Los_Borbotones\Menus\Pantalla.cs" />
     <Compile Include="Los_Borbotones\Particulas\Emitter.cs" />
     <Compile Include="Los_Borbotones\Particulas\Explosion\EjemploExplosiones.cs" />
     <Compile Include="Los_Borbotones\Particulas\Explosion\ExplosionEmitter.cs" />
