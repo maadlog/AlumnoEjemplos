@@ -82,7 +82,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
             //Configurar Technique dentro del shader
-            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
+            theShader.Technique = "Propagation";
 
             depthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                                                                          d3dDevice.PresentationParameters.BackBufferHeight,
@@ -111,6 +111,7 @@ namespace AlumnoEjemplo.Los_Borbotones
 
             // inicializar valores en el Shader
             theShader.SetValue("g_RenderTarget", firstRenderTarget);
+            theShader.SetValue("g_GlowMap", DownFilterRenderTarget);
 
             //       Resolucion de pantalla
             theShader.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
@@ -136,7 +137,6 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
-            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
             renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
             GameManager.Instance.Update(elapsedTime);
         }
@@ -165,12 +165,13 @@ namespace AlumnoEjemplo.Los_Borbotones
             
             pSurf.Dispose();
 
+            theShader.Technique = "Propagation";
+
             //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
             if (renderFlux == "NightVision")
             {
 
                 // dibujo el glow map
-                theShader.Technique = "GlowMap";
                 pSurf = glowMapRenderTarget.GetSurfaceLevel(0);
                 d3dDevice.SetRenderTarget(0, pSurf);
                 d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
@@ -222,7 +223,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                     d3dDevice.SetRenderTarget(0, pSurf);
 
                     d3dDevice.BeginScene();
-                    theShader.Technique = "GaussianBlurSeparable";
+                    theShader.Technique = "SeparableGaussianBlur";
                     d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
                     d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
 
@@ -247,7 +248,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                     //  Gaussian blur Vertical
                     // -----------------------------------------------------
                     d3dDevice.BeginScene();
-                    theShader.Technique = "GaussianBlurSeparable";
+                    theShader.Technique = "SeparableGaussianBlur";
                     d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
                     d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
                     theShader.SetValue("g_RenderTarget", DownFilterRenderTarget);
@@ -298,6 +299,9 @@ namespace AlumnoEjemplo.Los_Borbotones
         internal void close()
         {
             firstRenderTarget.Dispose();
+            glowMapRenderTarget.Dispose();
+            DownFilterRenderTarget.Dispose();
+            gaussBlurAuxRenderTarget.Dispose();
             quadVertexBuffer.Dispose();
         }
 

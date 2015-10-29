@@ -81,11 +81,6 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
                 "NightVision"
             }, 0);
 
-            GuiController.Instance.Modifiers.addInterval("PostProcessTechnique", new string[] {
-                "Propagation",
-                "GreyScale"
-            },0);
-
             GuiController.Instance.Modifiers.addInterval("Arma", new string[] {
                 "Sniper",
                 "Rocket Launcher"
