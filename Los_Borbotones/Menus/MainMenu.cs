@@ -23,21 +23,21 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
             playText.Text = "Play";
             playText.Color = Color.Crimson;
             playText.Align = TgcText2d.TextAlign.LEFT;
-            playText.Position = new Point(0, 100);
+            playText.Position = new Point(100, 300);
             playText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             helpText = new TgcText2d();
             helpText.Text = "Help";
             helpText.Color = Color.Crimson;
             helpText.Align = TgcText2d.TextAlign.LEFT;
-            helpText.Position = new Point(0, 140);
+            helpText.Position = new Point(100, 400);
             helpText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             creditsText = new TgcText2d();
             creditsText.Text = "Credits";
             creditsText.Color = Color.Crimson;
             creditsText.Align = TgcText2d.TextAlign.LEFT;
-            creditsText.Position = new Point(0, 180);
+            creditsText.Position = new Point(100, 500);
             creditsText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             texts = new TgcText2d[3] { playText, helpText, creditsText };
@@ -48,7 +48,7 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
         {
             base.Update(elapsedTime);
             TgcD3dInput input = GuiController.Instance.D3dInput;
-            if (input.keyPressed(Key.Space))
+            if (input.keyPressed(Key.Space) || input.keyPressed(Key.Return))
             {
                 select = true;
                 switch (texts[selectedText].Text)
