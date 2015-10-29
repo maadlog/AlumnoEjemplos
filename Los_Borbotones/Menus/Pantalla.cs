@@ -13,6 +13,6 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
 
         internal abstract void Render(float elapsedTime);
 
-        internal abstract void Dispose();
+        internal abstract void close();
     }
 }

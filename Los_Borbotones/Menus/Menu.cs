@@ -18,7 +18,6 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
 
         internal override void Init()
         {
-            GuiController.Instance.UserVars.setValue("En menus", true);
             select = false;
             selectedText = 0;
             GuiController.Instance.BackgroundColor = Color.Black;
@@ -68,15 +67,12 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
             }
         }
 
-        internal override void Dispose()
-        {
-            GuiController.Instance.UserVars.setValue("En menus", false);
-            /*
+        internal override void close()
+        {           
             for (int i = texts.Length-1; i < 0; i--)
             {
                 texts[i].dispose();
             }
-             */
         }
     }
 }

@@ -6,35 +6,55 @@ using TgcViewer;
 
 namespace AlumnoEjemplos.Los_Borbotones.Menus
 {
-    internal class MenuManager
+    public class MenuManager
     {
         #region Singleton
-        private static volatile EjemploAlumno instance;
+        private static volatile MenuManager instance;
         private static object syncRoot = new Object();
 
         /// <summary>
         /// Permite acceder a una instancia de la clase GameManager desde cualquier parte del codigo.
         /// </summary>
-        public static EjemploAlumno Instance
+        public static MenuManager Instance
         {
             get
             {
                 lock (syncRoot)
                 {
                     if (instance == null)
-                        instance = new EjemploAlumno();
+                        instance = new MenuManager();
                 }
                 return instance;
             }
         }
         #endregion
 
-        internal Pantalla pantallaActual;
+        public Pantalla pantallaActual;
 
-        internal void cargarPantalla(Pantalla pantalla)
+        public void Init()
         {
-            //pantallaActual.Dispose();
-            GuiController.Instance.UserVars.setValue("En menus", false);
+            pantallaActual = new MainMenu();
+            pantallaActual.Init();
+        }
+
+        public void Update(float elapsedTime)
+        {
+            pantallaActual.Update(elapsedTime);
+        }
+
+        public void Render(float elapsedTime)
+        {
+            pantallaActual.Render(elapsedTime);
+        }
+
+        public void close()
+        {
+            pantallaActual.close();
+        }
+
+        public void cargarPantalla(Pantalla pantalla)
+        {
+            pantallaActual.close();
             pantallaActual = pantalla;
             pantallaActual.Init();
         }

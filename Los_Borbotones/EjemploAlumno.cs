@@ -9,6 +9,7 @@ using Microsoft.DirectX;
 using TgcViewer.Utils.Modifiers;
 using AlumnoEjemplo.Los_Borbotones;
 using TgcViewer.Utils.Input;
+using AlumnoEjemplos.Los_Borbotones.Menus;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -18,7 +19,8 @@ namespace AlumnoEjemplos.Los_Borbotones
     public class EjemploAlumno : TgcExample
     {
         GameManager gameManager;
-        PostProcessManager postProcessManager;
+        MenuManager menuManager;
+        //PostProcessManager postProcessManager;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -103,10 +105,12 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
 
             //Creacion del Game Manager y el PostProcess Manager
             gameManager = GameManager.Instance;
-            postProcessManager = PostProcessManager.Instance;
+            menuManager = MenuManager.Instance;
+            //postProcessManager = PostProcessManager.Instance;
 
+            menuManager.Init();
             gameManager.Init();
-            postProcessManager.Init();
+            //postProcessManager.Init();
         }
 
 
@@ -118,8 +122,10 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         /// <param name="elapsedTime">Tiempo en segundos transcurridos desde el último frame</param>
         public override void render(float elapsedTime)
         {
-            postProcessManager.Update(elapsedTime);
-            postProcessManager.Render(elapsedTime);
+            menuManager.Update(elapsedTime);
+            menuManager.Render(elapsedTime);
+            //postProcessManager.Update(elapsedTime);
+            //postProcessManager.Render(elapsedTime);
         }
 
         /// <summary>
@@ -129,7 +135,8 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         public override void close()
         {
             gameManager.close();
-            postProcessManager.close();
+            menuManager.close();
+            //postProcessManager.close();
         }
 
     }

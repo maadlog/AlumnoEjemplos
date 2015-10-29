@@ -1,4 +1,5 @@
-﻿using Microsoft.DirectX.DirectInput;
+﻿using AlumnoEjemplo.Los_Borbotones;
+using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -52,7 +53,7 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
                 select = true;
                 switch (texts[selectedText].Text)
                 {
-                    case "Play": MenuManager.Instance.cargarPantalla(GameManager.Instance);
+                    case "Play": MenuManager.Instance.cargarPantalla(PostProcessManager.Instance);
                         break;
 
                     case "Help": MenuManager.Instance.cargarPantalla(new HelpMenu());

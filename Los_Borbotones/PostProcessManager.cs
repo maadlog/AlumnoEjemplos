@@ -19,10 +19,11 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils;
 using AlumnoEjemplos.Los_Borbotones;
+using AlumnoEjemplos.Los_Borbotones.Menus;
 
 namespace AlumnoEjemplo.Los_Borbotones
 {
-    public class PostProcessManager
+    public class PostProcessManager:Pantalla
     {
         #region Singleton
         private static volatile PostProcessManager instance;
@@ -63,7 +64,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         //
         public VertexBuffer quadVertexBuffer;
 
-        internal void Init()
+        internal override void Init()
         {
             GuiController.Instance.CustomRenderEnabled = true;
             renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux"); //1.21 GigaWatts
@@ -135,13 +136,13 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         }
 
-        internal void Update(float elapsedTime)
+        internal override void Update(float elapsedTime)
         {
             renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
             GameManager.Instance.Update(elapsedTime);
         }
 
-        internal void Render(float elapsedTime)
+        internal override void Render(float elapsedTime)
         {
             //1 -- Cambiar Render Target:
             //guardo el Render target anterior y seteo la textura como render target
@@ -274,7 +275,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             
             //5 -- Renderizar Quad
 
-            d3dDevice.BeginScene();
+            //d3dDevice.BeginScene();
                         
             d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
             d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
@@ -292,11 +293,11 @@ namespace AlumnoEjemplo.Los_Borbotones
             theShader.End();
 
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
-            d3dDevice.EndScene();
+            //d3dDevice.EndScene();
           
         }
 
-        internal void close()
+        internal override void close()
         {
             firstRenderTarget.Dispose();
             glowMapRenderTarget.Dispose();
