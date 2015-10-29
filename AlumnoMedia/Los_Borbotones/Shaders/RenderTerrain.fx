@@ -103,6 +103,12 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 	return 0.8*fvBaseColor + 0.2*Color;
 }
 
+float4 ps_main_dull( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
+{      
+	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
+	return float4(0,0,0,fvBaseColor.a);
+}
+
 
 // ------------------------------------------------------------------
 technique RenderTerrain
@@ -111,6 +117,16 @@ technique RenderTerrain
    {
 	  VertexShader = compile vs_2_0 vs_main2();
 	  PixelShader = compile ps_2_0 ps_main();
+   }
+
+}
+
+technique DullRender
+{
+   pass Pass_0
+   {
+	  VertexShader = compile vs_2_0 vs_main2();
+	  PixelShader = compile ps_2_0 ps_main_dull();
    }
 
 }

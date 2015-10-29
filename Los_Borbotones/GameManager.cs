@@ -450,6 +450,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void RenderAll(float elapsedTime)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
+            terrain.Technique = "RenderTerrain";
             terrain.render();
 
             TgcFrustum frustum = GuiController.Instance.Frustum;
@@ -520,76 +521,32 @@ namespace AlumnoEjemplos.Los_Borbotones
         internal void RenderBrigth(float elapsedTime)
         {
 
+            TgcFrustum frustum = GuiController.Instance.Frustum;
+
             foreach (Enemy enemigo in enemies)
             {
                 enemigo.Render(elapsedTime);
             }
 
-            foreach (Barril barril in barriles)
-            {
+            quadTreeBarriles.render(frustum, drawBoundingBoxes);
 
-                barril.Render(elapsedTime);
-
-            }
         }
 
         internal void RenderDull(float elapsedTime)
         {
+           
+            terrain.Technique = "DullRender";
+
             Device d3dDevice = GuiController.Instance.D3dDevice;
             terrain.render();
 
             TgcFrustum frustum = GuiController.Instance.Frustum;
-            if (drawBoundingBoxes)
-            {
-
-                foreach (Barril barril in barriles)
-                {
-                    //  barril.explosion.render();
-                }
-
-            }
-
-            skyBox.render();
-            quadTree.render(frustum, drawBoundingBoxes);
-
-            quadTreeBarriles.render(frustum, drawBoundingBoxes);
-
-            if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
             proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
-
-
-            player1.Render(elapsedTime);
-
-
-            //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            GuiController.Instance.Drawer2D.beginDrawSprite();
-
-            //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
-            cross.render();
-
-            //Finalizar el dibujado de Sprites
-            GuiController.Instance.Drawer2D.endDrawSprite();
-
-            scoreText.render();
-            healthText.render();
-            if (TEXT_DELAY > 0) { specialKillText.render(); }
-
-            //Obtener valor de UserVar (hay que castear)
-            GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
-            int valor = (int)GuiController.Instance.UserVars.getValue("N Vegetacion Visible");
-            vegetacionVisible = 0;
-            GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", terrenosVisibles);
-            int valor2 = (int)GuiController.Instance.UserVars.getValue("N Sub-terrenos Visibles");
-            terrenosVisibles = 0;
             
-            int t = 0;
-            foreach (TgcPlaneWall pasto in pastos)
-            {
-                renderPasto(pasto, t);
-                t++;
-            }
         }
+
+
         internal void close()
         {
             Vegetation.disposeAll();

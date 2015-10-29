@@ -138,6 +138,8 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal override void Update(float elapsedTime)
         {
+            theShader.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
+            theShader.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
             renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
             GameManager.Instance.Update(elapsedTime);
         }
@@ -171,7 +173,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
             if (renderFlux == "NightVision")
             {
-
+                d3dDevice.RenderState.FogEnable = false;
                 // dibujo el glow map
                 pSurf = glowMapRenderTarget.GetSurfaceLevel(0);
                 d3dDevice.SetRenderTarget(0, pSurf);
@@ -181,16 +183,16 @@ namespace AlumnoEjemplo.Los_Borbotones
 
                 //Dibujamos SOLO los meshes que tienen glow brillantes
                 GameManager.Instance.RenderBrigth(elapsedTime);
-                // Despues el resto (opacos)
+                //Dibujamos los meshes opacos en negro
                 GameManager.Instance.RenderDull(elapsedTime);
 
                 d3dDevice.EndScene();
                 pSurf.Dispose();
-
+                d3dDevice.RenderState.FogEnable = true;
 
                 // Hago un blur sobre el glow map
-                // 1er pasada: downfilter x 4
-                // -----------------------------------------------------
+                //1er pasada: downfilter x 4
+                //---------------------------------------------------- -
                 pSurf = DownFilterRenderTarget.GetSurfaceLevel(0);
                 d3dDevice.SetRenderTarget(0, pSurf);
                 d3dDevice.BeginScene();
@@ -242,9 +244,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                     pSurf.Dispose();
                     d3dDevice.EndScene();
 
-                    pSurf = DownFilterRenderTarget.GetSurfaceLevel(0);
+                    pSurf = gaussBlurAuxRenderTarget.GetSurfaceLevel(0);
                     d3dDevice.SetRenderTarget(0, pSurf);
-                    pSurf.Dispose();
 
                     //  Gaussian blur Vertical
                     // -----------------------------------------------------
