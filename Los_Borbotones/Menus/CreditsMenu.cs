@@ -83,12 +83,12 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
 
         internal override void Render(float elapsedTime)
         {
+            base.Render(elapsedTime);
             integrante1.render();
             integrante2.render();
             integrante3.render();
             integrante4.render();
             grupo.render();
-            base.Render(elapsedTime);
         }
 
         internal override void close()

@@ -53,8 +53,8 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
 
         internal override void Render(float elapsedTime)
         {
-            instrucciones.render();
             base.Render(elapsedTime);
+            instrucciones.render();
         }
 
         internal override void close()

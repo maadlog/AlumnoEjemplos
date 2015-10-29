@@ -30,14 +30,14 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
             helpText.Text = "Help";
             helpText.Color = Color.Crimson;
             helpText.Align = TgcText2d.TextAlign.LEFT;
-            helpText.Position = new Point(100, 400);
+            helpText.Position = new Point(100, 350);
             helpText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             creditsText = new TgcText2d();
             creditsText.Text = "Credits";
             creditsText.Color = Color.Crimson;
             creditsText.Align = TgcText2d.TextAlign.LEFT;
-            creditsText.Position = new Point(100, 500);
+            creditsText.Position = new Point(100, 400);
             creditsText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             texts = new TgcText2d[3] { playText, helpText, creditsText };
