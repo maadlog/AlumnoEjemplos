@@ -49,10 +49,16 @@ namespace AlumnoEjemplo.Los_Borbotones
         public string MediaDir;
         public string ShaderDir;
         public Effect theShader;
+        string renderFlux;
+        Device d3dDevice;
 
         //Render Targets
         public Surface depthStencil;
         public Texture firstRenderTarget;
+        public Texture glowMapRenderTarget;
+        public Texture DownFilterRenderTarget;
+        public Texture gaussBlurAuxRenderTarget;
+
 
         //
         public VertexBuffer quadVertexBuffer;
@@ -60,14 +66,15 @@ namespace AlumnoEjemplo.Los_Borbotones
         internal void Init()
         {
             GuiController.Instance.CustomRenderEnabled = true;
+            renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux"); //1.21 GigaWatts
 
-            Device d3dDevice = GuiController.Instance.D3dDevice;
+            d3dDevice = GuiController.Instance.D3dDevice;
             MediaDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\";
             ShaderDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\";
 
             //Cargar Shader personalizado
             string compilationErrors;
-            theShader = Effect.FromFile(GuiController.Instance.D3dDevice,
+            theShader = Effect.FromFile(d3dDevice,
                 GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders/postProcess.fx",
                 null, null, ShaderFlags.PreferFlowControl, null, out compilationErrors);
             if (theShader == null)
@@ -75,8 +82,7 @@ namespace AlumnoEjemplo.Los_Borbotones
                 throw new Exception("Error al cargar shader. Errores: " + compilationErrors);
             }
             //Configurar Technique dentro del shader
-            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
-
+            theShader.Technique = "Propagation";
 
             depthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                                                                          d3dDevice.PresentationParameters.BackBufferHeight,
@@ -88,11 +94,24 @@ namespace AlumnoEjemplo.Los_Borbotones
             // Inicializar el/los render target
 
             firstRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                    , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
-                        Format.X8R8G8B8, Pool.Default);
+                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8, Pool.Default);
+
+            glowMapRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8, Pool.Default);
+
+            DownFilterRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8, Pool.Default);
+
+            gaussBlurAuxRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+                Format.X8R8G8B8, Pool.Default);
 
             // inicializar valores en el Shader
             theShader.SetValue("g_RenderTarget", firstRenderTarget);
+            theShader.SetValue("g_GlowMap", DownFilterRenderTarget);
 
             //       Resolucion de pantalla
             theShader.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
@@ -118,29 +137,27 @@ namespace AlumnoEjemplo.Los_Borbotones
 
         internal void Update(float elapsedTime)
         {
-            theShader.Technique = (string)GuiController.Instance.Modifiers.getValue("PostProcessTechnique");
+            renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
             GameManager.Instance.Update(elapsedTime);
         }
 
         internal void Render(float elapsedTime)
         {
-            Device device = GuiController.Instance.D3dDevice;
-
             //1 -- Cambiar Render Target:
             //guardo el Render target anterior y seteo la textura como render target
-            Surface OldRenderTarget = device.GetRenderTarget(0);
+            Surface OldRenderTarget = d3dDevice.GetRenderTarget(0);
             Surface pSurf = firstRenderTarget.GetSurfaceLevel(0);
 
-            device.SetRenderTarget(0, pSurf);
+            d3dDevice.SetRenderTarget(0, pSurf);
 
             //hago lo mismo con el depthbuffer, necesito el que no tiene multisampling
-             Surface OldDepthStencil = device.DepthStencilSurface;
+             Surface OldDepthStencil = d3dDevice.DepthStencilSurface;
             //Probar de comentar esta linea, para ver como se produce el fallo en el ztest
              //por no soportar usualmente el multisampling en el render to texture.
 
-            device.DepthStencilSurface = depthStencil;
+            d3dDevice.DepthStencilSurface = depthStencil;
 
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
 
             //2 -- Renderizar Normal
            
@@ -148,40 +165,143 @@ namespace AlumnoEjemplo.Los_Borbotones
             
             pSurf.Dispose();
 
-            //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
+            theShader.Technique = "Propagation";
 
+            //3 -- Renderizar X (Normales, Iluminacion, GlowMap, Etc.)
+            if (renderFlux == "NightVision")
+            {
+
+                // dibujo el glow map
+                pSurf = glowMapRenderTarget.GetSurfaceLevel(0);
+                d3dDevice.SetRenderTarget(0, pSurf);
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+                d3dDevice.BeginScene();
+
+                //Dibujamos SOLO los meshes que tienen glow brillantes
+                GameManager.Instance.RenderBrigth(elapsedTime);
+                // Despues el resto (opacos)
+                GameManager.Instance.RenderDull(elapsedTime);
+
+                d3dDevice.EndScene();
+                pSurf.Dispose();
+
+
+                // Hago un blur sobre el glow map
+                // 1er pasada: downfilter x 4
+                // -----------------------------------------------------
+                pSurf = DownFilterRenderTarget.GetSurfaceLevel(0);
+                d3dDevice.SetRenderTarget(0, pSurf);
+                d3dDevice.BeginScene();
+                theShader.Technique = "DownFilter4";
+                d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
+
+                theShader.SetValue("g_RenderTarget", glowMapRenderTarget);
+
+                d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
+
+                theShader.Begin(FX.None);
+                theShader.BeginPass(0);
+
+                d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+
+                theShader.EndPass();
+                theShader.End();
+
+                pSurf.Dispose();
+                d3dDevice.EndScene();
+                d3dDevice.DepthStencilSurface = OldDepthStencil;
+
+
+                // Pasadas de blur (3 por default, meh)
+                for (int P = 0; P < 3; ++P)
+                {
+                    // Gaussian blur Horizontal
+                    // -----------------------------------------------------
+                    pSurf = gaussBlurAuxRenderTarget.GetSurfaceLevel(0);
+                    d3dDevice.SetRenderTarget(0, pSurf);
+
+                    d3dDevice.BeginScene();
+                    theShader.Technique = "SeparableGaussianBlur";
+                    d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                    d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
+
+                    theShader.SetValue("g_RenderTarget", DownFilterRenderTarget);
+
+                    d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
+
+                    theShader.Begin(FX.None);
+                    theShader.BeginPass(0);
+
+                    d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+
+                    theShader.EndPass();
+                    theShader.End();
+                    pSurf.Dispose();
+                    d3dDevice.EndScene();
+
+                    pSurf = DownFilterRenderTarget.GetSurfaceLevel(0);
+                    d3dDevice.SetRenderTarget(0, pSurf);
+                    pSurf.Dispose();
+
+                    //  Gaussian blur Vertical
+                    // -----------------------------------------------------
+                    d3dDevice.BeginScene();
+                    theShader.Technique = "SeparableGaussianBlur";
+                    d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+                    d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
+                    theShader.SetValue("g_RenderTarget", DownFilterRenderTarget);
+
+                    d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
+                    theShader.Begin(FX.None);
+                    theShader.BeginPass(1);
+                    d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+                    theShader.EndPass();
+                    theShader.End();
+                    d3dDevice.EndScene();
+
+                }
+
+            theShader.Technique = "NightVision";
+
+            }
 
             //4 -- Restuaro el render target y el stencil
-            device.SetRenderTarget(0, OldRenderTarget);
-            device.DepthStencilSurface = OldDepthStencil;
+            d3dDevice.SetRenderTarget(0, OldRenderTarget);
+            d3dDevice.DepthStencilSurface = OldDepthStencil;
             
             
             //5 -- Renderizar Quad
 
-            device.BeginScene();
+            d3dDevice.BeginScene();
                         
-            device.VertexFormat = CustomVertex.PositionTextured.Format;
-            device.SetStreamSource(0, quadVertexBuffer, 0);
+            d3dDevice.VertexFormat = CustomVertex.PositionTextured.Format;
+            d3dDevice.SetStreamSource(0, quadVertexBuffer, 0);
             theShader.SetValue("g_RenderTarget", firstRenderTarget);
+            theShader.SetValue("g_GlowMap", DownFilterRenderTarget);
 
-            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
+            d3dDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Red, 1.0f, 0);
 
             theShader.Begin(FX.None);
             theShader.BeginPass(0);
 
-            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2); //Renderiza 2 triangulos empezando del vertice 0 que pase en el stream
+            d3dDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2); //Renderiza 2 triangulos empezando del vertice 0 que pase en el stream
 
             theShader.EndPass();
             theShader.End();
 
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
-            device.EndScene();
+            d3dDevice.EndScene();
           
         }
 
         internal void close()
         {
             firstRenderTarget.Dispose();
+            glowMapRenderTarget.Dispose();
+            DownFilterRenderTarget.Dispose();
+            gaussBlurAuxRenderTarget.Dispose();
             quadVertexBuffer.Dispose();
         }
 
