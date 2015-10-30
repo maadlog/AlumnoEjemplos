@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -14,6 +15,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix shooterMatrix;
         float MOVEMENT_SPEED = 4000f;
         public Vector3 vectorDireccion;
+        int damage = 25;
+        float MAX_TIME = 10;
+        float time;
         Matrix posActual;
 
         public Proyectil(Matrix shooterMatrix, Vector3 vectorDireccion)
@@ -24,12 +28,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Init()
         {
-            TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\proyectiles\\EnergyBall-TgcScene.xml");
-            mesh = scene.Meshes[0];
+            this.mesh = GameManager.Instance.ModeloProyectil.clone("proyectil");
+            time = 0;
 
             mesh.AutoTransformEnable = false;
-           // Matrix offY = Matrix.Translation(15, 30, 20);
+            //Matrix offY = Matrix.Translation(15, 30, 20);
             //Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
             Matrix scale = Matrix.Scaling(new Vector3(0.07f, 0.07f, 0.07f));
             Matrix pos = Matrix.Translation(CustomFpsCamera.Instance.Position);
@@ -46,6 +49,38 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Matrix translate = Matrix.Translation(new Vector3(1,0,1) * MOVEMENT_SPEED * elapsedTime);
             posActual = translate * posActual;
             mesh.Transform = posActual;
+            mesh.BoundingBox.transform(mesh.Transform);
+
+            //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
+            List<TgcMesh> obstaculos = new List<TgcMesh>();
+            obstaculos = GameManager.Instance.quadTree.findMeshesToCollide(mesh.BoundingBox);
+
+            foreach (TgcMesh obstaculo in obstaculos)
+            {
+                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                {
+                    GameManager.Instance.eliminarProyectil(this);
+                    return;
+                }
+            }
+
+            //Colision con Player1
+            TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
+            if (resultPlayer == TgcCollisionUtils.BoxBoxResult.Adentro || resultPlayer == TgcCollisionUtils.BoxBoxResult.Atravesando)
+            {
+                GameManager.Instance.player1.recibirAtaque(damage);
+                GameManager.Instance.eliminarProyectil(this);
+                return;
+            }
+
+            if (time > MAX_TIME)
+            {
+                GameManager.Instance.eliminarProyectil(this);
+                return;
+            }
+
+            time += elapsedTime;
         }
 
         public override void Render(float elapsedTime)

@@ -57,7 +57,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         /// <summary>
         /// Renderizar en forma optimizado utilizando el Quadtree para hacer FrustumCulling
         /// </summary>
-        public void render(TgcFrustum frustum, bool debugEnabled)
+        public void render(TgcFrustum frustum, bool debugEnabled, string name)
         {
             Vector3 pMax = sceneBounds.PMax;
             Vector3 pMin = sceneBounds.PMin;
@@ -68,7 +68,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Renderizar
             foreach (TgcMesh mesh in modelos)
             {
-                if (mesh.Enabled)
+                if (mesh.Enabled && mesh.Name.Contains(name))
                 {
                     mesh.render();
                     mesh.Enabled = false;

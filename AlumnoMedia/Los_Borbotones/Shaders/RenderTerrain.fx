@@ -95,8 +95,8 @@ float4 ps_main( float2 Texcoord: TEXCOORD0, float4 Color:COLOR0) : COLOR0
 {      
 	// Obtener el texel de textura
 	// diffuseMap es el sampler, Texcoord son las coordenadas interpoladas
-	Texcoord.x = Texcoord.x * 2;
-	Texcoord.y = Texcoord.y * 2;
+	Texcoord.x = Texcoord.x*2;
+	Texcoord.y = Texcoord.y*2;
 	float4 fvBaseColor = tex2D( diffuseMap, Texcoord );
 	// combino color y textura
 	// en este ejemplo combino un 80% el color de la textura y un 20%el del vertice
