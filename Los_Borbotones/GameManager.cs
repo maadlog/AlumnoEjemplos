@@ -18,6 +18,7 @@ using System.Windows.Forms;
 using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
 using AlumnoEjemplos.Los_Borbotones;
+using AlumnoEjemplos.Los_Borbotones.Menus;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -85,6 +86,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public int MAX_ENEMIES = 10;
         public TgcMesh ModeloRobot;
         public TgcMesh ModeloNave;
+        public TgcMesh ModeloProyectil;
 
         //seteamos las dir de los sonidos
         public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
@@ -146,6 +148,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.ModeloRobot = scene.Meshes[0];            
             TgcScene scene2 = loader2.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\StarWars-Speeder\\StarWars-Speeder-TgcScene.xml");
             this.ModeloNave = scene2.Meshes[0];
+            TgcScene scene3 = loader2.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\proyectiles\\EnergyBall-TgcScene.xml");
+            this.ModeloProyectil = scene3.Meshes[0];
 
             //Creo skybox
             skyBox = new CustomSkyBox();
@@ -190,9 +194,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
-                vegetation[i].setColor(Color.DarkViolet);
-                vegetation[i].Effect = windShader;
-                vegetation[i].Technique = "WindTree";
+                //vegetation[i].setColor(Color.DarkViolet);
+                //vegetation[i].Effect = windShader;
+                //vegetation[i].Technique = "WindTree";
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
@@ -359,6 +363,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (TEXT_DELAY <= 0 && GAME_OVER)
             {
+                MenuManager.Instance.cargarPantalla(new AlumnoEjemplos.Los_Borbotones.Menus.MainMenu());
                 close();
                 Init();
             }
@@ -460,23 +465,30 @@ namespace AlumnoEjemplos.Los_Borbotones
 
                 foreach (Barril barril in barriles)
                 {
-                  //  barril.explosion.render();
+                    //barril.explosion.render();
                 }
 
             }
 
             skyBox.render();
-            quadTree.render(frustum, drawBoundingBoxes);
+            quadTree.render(frustum, drawBoundingBoxes, "ArbolBosque");
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
             //dibujamos todos los enemigos
             foreach(Enemy enemigo in enemies){
+                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, enemigo.mesh.BoundingBox);
+                if (result == TgcCollisionUtils.FrustumResult.INSIDE || result ==  TgcCollisionUtils.FrustumResult.INTERSECT){
                 enemigo.Render(elapsedTime);
+                }
             }
 
-            proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
-
+            foreach(Proyectil proyectil in proyectiles){
+                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, proyectil.mesh.BoundingBox);
+                if (result == TgcCollisionUtils.FrustumResult.INSIDE || result ==  TgcCollisionUtils.FrustumResult.INTERSECT){
+                proyectil.Render(elapsedTime);
+                }
+            }
 
             player1.Render(elapsedTime);
             
@@ -526,6 +538,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 enemigo.Render(elapsedTime);
             }
+
+            quadTree.render(frustum, drawBoundingBoxes, "Oil");
 
         }
 
@@ -789,6 +803,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             enemy.dispose();
             enemies.Remove(enemy);
+        }
+
+        public void eliminarProyectil(Proyectil proy)
+        {
+            proy.dispose();
+            proyectiles.Remove(proy);
         }
 
         private void awardKill()

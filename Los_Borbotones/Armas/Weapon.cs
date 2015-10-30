@@ -13,8 +13,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Weapon:GameObject
     {
-        float WEAPON_ORIENTATION_Y;
-        Vector3 WEAPON_OFFSET;
+        internal float WEAPON_ORIENTATION_Y;
+        internal Vector3 WEAPON_OFFSET;
         public float MAX_DELAY;
         public float FIRE_DELAY;
         float weaponOscilation;
@@ -35,8 +35,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
-            WEAPON_OFFSET = (Vector3)GuiController.Instance.Modifiers["weaponOffset"];
-            WEAPON_ORIENTATION_Y = (float)GuiController.Instance.Modifiers["weaponRotation"];
             mesh.Transform = getWeaponTransform();
             
             float length = ((CustomFpsCamera.Instance.eye - GameManager.Instance.player1.prevEye).Length());

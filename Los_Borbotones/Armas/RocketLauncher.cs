@@ -22,9 +22,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Carga del mesh del arma
             TgcSceneLoader loader = new TgcSceneLoader();
-            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\launcher\\MissilePod-TgcScene.xml");
+            TgcScene scene = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\launcher\\RailGun-TgcScene.xml");
             mesh = scene.Meshes[0];
             weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Launcher.wav";
+            WEAPON_OFFSET = new Vector3(5f, -14.2f, -7f);
+            WEAPON_ORIENTATION_Y = 0.05f;
             base.Init();
 
             MAX_DELAY = 4;
