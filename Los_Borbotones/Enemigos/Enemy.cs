@@ -134,7 +134,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             
             //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
-            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
+            List<TgcMesh> obstaculos = new List<TgcMesh>();
+            obstaculos = GameManager.Instance.quadTree.findMeshesToCollide(mesh.BoundingBox);
+
+            foreach (TgcMesh obstaculo in obstaculos)
             {
                 TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
                 if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)

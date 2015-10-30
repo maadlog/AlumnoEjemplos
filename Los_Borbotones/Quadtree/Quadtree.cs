@@ -4,6 +4,7 @@ using System.Text;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 using Microsoft.DirectX;
+using System.Windows.Forms;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -18,6 +19,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcBoundingBox sceneBounds;
         QuadtreeBuilder builder;
         List<TgcDebugBox> debugQuadtreeBoxes;
+        List<QuadtreeNode> collidedNodes;
 
         public Quadtree()
         {
@@ -87,6 +89,78 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
         }
 
+        public List<TgcMesh> findMeshesToCollide(TgcBoundingBox objeto)
+        {
+            Vector3 pMax = sceneBounds.PMax;
+            Vector3 pMin = sceneBounds.PMin;
+            List<TgcMesh> meshes = new List<TgcMesh>();
+
+            collidedNodes = new List<QuadtreeNode>();
+            findNodesToCollide(objeto, quadtreeRootNode, pMin.X, pMin.Y, pMin.Z,
+                pMax.X, pMax.Y, pMax.Z);
+            
+            foreach (QuadtreeNode node in collidedNodes)
+            {
+                meshes.AddRange(node.models);
+            }
+            return meshes;
+        }
+
+        private void findNodesToCollide(TgcBoundingBox objeto, QuadtreeNode node,
+            float boxLowerX, float boxLowerY, float boxLowerZ,
+            float boxUpperX, float boxUpperY, float boxUpperZ)
+        {
+
+            TgcBoundingBox caja = new TgcBoundingBox(
+                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
+                new Vector3(boxUpperX, boxUpperY, boxUpperZ));
+
+            QuadtreeNode[] children = node.children;
+            TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(objeto, caja);
+
+            //es hoja, cargar todos los meshes
+            if (children == null)
+            {
+                    collidedNodes.Add(node);
+            }
+
+            //recursividad sobre hijos
+            else
+            {
+                float midX = FastMath.Abs((boxUpperX - boxLowerX) / 2);
+                float midZ = FastMath.Abs((boxUpperZ - boxLowerZ) / 2);
+
+                //00
+                testChildCollideability(objeto, children[0], boxLowerX + midX, boxLowerY, boxLowerZ + midZ, boxUpperX, boxUpperY, boxUpperZ);
+
+                //01
+                testChildCollideability(objeto, children[1], boxLowerX + midX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ - midZ);
+
+                //10
+                testChildCollideability(objeto, children[2], boxLowerX, boxLowerY, boxLowerZ + midZ, boxUpperX - midX, boxUpperY, boxUpperZ);
+
+                //11
+                testChildCollideability(objeto, children[3], boxLowerX, boxLowerY, boxLowerZ, boxUpperX - midX, boxUpperY, boxUpperZ - midZ);
+
+            }
+        }
+
+        private void testChildCollideability(TgcBoundingBox objeto, QuadtreeNode childNode,
+                float boxLowerX, float boxLowerY, float boxLowerZ, float boxUpperX, float boxUpperY, float boxUpperZ)
+        {
+
+            //test frustum-box intersection
+            TgcBoundingBox caja = new TgcBoundingBox(
+                new Vector3(boxLowerX, boxLowerY, boxLowerZ),
+                new Vector3(boxUpperX, boxUpperY, boxUpperZ));
+            TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(objeto, caja);
+
+            //parte adentro: seguir haciendo testeos con hijos
+            if (result == TgcCollisionUtils.BoxBoxResult.Encerrando || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+            {
+                findNodesToCollide(objeto, childNode, boxLowerX, boxLowerY, boxLowerZ, boxUpperX, boxUpperY, boxUpperZ);
+            }
+        }
 
         /// <summary>
         /// Recorrer recursivamente el Quadtree para encontrar los nodos visibles

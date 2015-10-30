@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     class QuadtreeBuilder
     {
         //Parametros de corte del QUADTRE
-        int MAX_SECTOR_QUADTREE_RECURSION = 2;
+        int MAX_SECTOR_QUADTREE_RECURSION = 4;
         int MIN_MESH_PER_LEAVE_THRESHOLD = 5;
 
         public QuadtreeNode crearQuadtree(List<TgcMesh> TgcMeshs, TgcBoundingBox sceneBounds)

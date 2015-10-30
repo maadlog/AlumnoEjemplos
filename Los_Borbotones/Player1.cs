@@ -182,7 +182,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
 
             //Colision de la camara con sliding
-            foreach (TgcMesh obstaculo in GameManager.Instance.Vegetation.Meshes)
+            List<TgcMesh> obstaculos = new List<TgcMesh>();
+            obstaculos = GameManager.Instance.quadTree.findMeshesToCollide(CustomFpsCamera.Instance.boundingBox);
+
+            foreach (TgcMesh obstaculo in obstaculos)
             {
                 Vector3 dirMov = CustomFpsCamera.Instance.eye - prevEye;
 

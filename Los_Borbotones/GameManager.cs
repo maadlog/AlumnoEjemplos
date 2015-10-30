@@ -66,12 +66,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        List<TgcMesh> obstaculos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
         TgcSprite cross;
-        Quadtree quadTree;
+        public Quadtree quadTree;
         CustomSkyBox skyBox;
-        Quadtree quadTreeBarriles;
         TgcText2d scoreText;
         float score;
         TgcText2d specialKillText;
@@ -268,13 +268,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             refreshScopeTexture();
 
+            obstaculos = new List<TgcMesh>();
+            obstaculos.AddRange(vegetation);
+            obstaculos.AddRange(meshesBarril);
+
             quadTree = new Quadtree();
-            quadTree.create(vegetation, Vegetation.BoundingBox);
+            quadTree.create(obstaculos, Vegetation.BoundingBox);
             quadTree.createDebugQuadtreeMeshes();
 
-            quadTreeBarriles = new Quadtree();
-            quadTreeBarriles.create(meshesBarril, Barriles.BoundingBox);
-            quadTreeBarriles.createDebugQuadtreeMeshes();
             //seteamos niebla
             Device d3dDevice = GuiController.Instance.D3dDevice;
             //d3dDevice.RenderState.FogTableMode = FogMode.Linear;
@@ -467,8 +468,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes);
 
-            quadTreeBarriles.render(frustum, drawBoundingBoxes);
-
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
             //dibujamos todos los enemigos
@@ -527,8 +526,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 enemigo.Render(elapsedTime);
             }
-
-            quadTreeBarriles.render(frustum, drawBoundingBoxes);
 
         }
 
@@ -1008,12 +1005,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void eliminarBarril(Barril barril)
         {
-            meshesBarril.Remove(barril.mesh);
+            obstaculos.Remove(barril.mesh);
         }
 
         public void agregarBarril(Barril barril)
         {
-            meshesBarril.Add(barril.mesh);
+            obstaculos.Add(barril.mesh);
         }
 
         public TgcPlaneWall crearPasto(Device d3dDevice)
