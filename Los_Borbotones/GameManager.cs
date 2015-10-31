@@ -1037,7 +1037,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             TgcPlaneWall pasto_try;
             TgcTexture pasto_texture;
-            
+
             string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Textures\\" + texture_pastos[pastoSecuense];
             pastoSecuense++;
             pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
@@ -1051,27 +1051,27 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Aplicar valores en pared
             switch (pastoSecuense)
-            { 
+            {
                 case 0:
-                    pasto_try.Origin = new Vector3(22, 900, 21);
+                    pasto_try.Origin = new Vector3(22, 880, 21);
                     break;
                 case 1:
-                    pasto_try.Origin = new Vector3(18, 900, 18);
+                    pasto_try.Origin = new Vector3(18, 880, 18);
                     break;
                 case 2:
-                    pasto_try.Origin = new Vector3(13, 900, 19);
+                    pasto_try.Origin = new Vector3(13, 880, 19);
                     break;
                 case 3:
-                    pasto_try.Origin = new Vector3(26, 900, 21);
+                    pasto_try.Origin = new Vector3(26, 880, 21);
                     break;
                 case 4:
-                    pasto_try.Origin = new Vector3(30, 900, 20);
+                    pasto_try.Origin = new Vector3(30, 880, 20);
                     break;
                 case 5:
-                    pasto_try.Origin = new Vector3(34, 900, 19);
+                    pasto_try.Origin = new Vector3(34, 880, 19);
                     break;
             }
-            pasto_try.Size = new Vector3(20, 20, 20);
+            pasto_try.Size = new Vector3(40, 40, 40);
             pasto_try.Orientation = or;
             pasto_try.AutoAdjustUv = false;
             pasto_try.UTile = 1;
@@ -1098,7 +1098,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Render con shader
             pasto.Effect.Begin(0);
             pasto.Effect.BeginPass(0);
+
             d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(pasto, t));
+
             pasto.Effect.EndPass();
             pasto.Effect.End();
 
@@ -1106,19 +1108,32 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.AlphaBlendEnable = false;
         }
 
+        public Matrix calcularOrientacion(Vector3 direccion, Vector3 centro, Vector3 normal)
+        {
+            float angle = FastMath.Acos(Vector3.Dot(normal, direccion));
+            Vector3 rotationY = Vector3.Cross(normal, direccion);
+            rotationY.Normalize();
+            Matrix Move = Matrix.Translation(centro);
+            Move.Invert();
+            Matrix m_mWorld = Move * Matrix.RotationAxis(rotationY, angle) * Matrix.Translation(centro);
+
+            return m_mWorld;
+        }
+
         public CustomVertex.PositionTextured[] actualizarPasto(TgcPlaneWall pasto, int t)
         {
             float autoWidth;
             float autoHeight;
 
-            //Calcular los 4 corners de la pared, segun el tipo de orientacion
-            Vector3 bLeft, tLeft, bRight, tRight;
+            //Calcular los 4 corners de la pared
+            Vector3 bLeft, tLeft, bRight, tRight, Center;
             bLeft = pasto.Origin;
             tLeft = new Vector3(pasto.Origin.X + pasto.Size.X, pasto.Origin.Y, pasto.Origin.Z);
             bRight = new Vector3(pasto.Origin.X, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
             tRight = new Vector3(pasto.Origin.X + pasto.Size.X, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
-                        
-            switch(t)
+            Center = new Vector3(pasto.Origin.X + (pasto.Size.X / 2), pasto.Origin.Y + (pasto.Size.Y / 2), pasto.Origin.Z);
+
+            switch (t)
             {
                 case 0:
                 case 3:
@@ -1136,10 +1151,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                     tRight = new Vector3(pasto.Origin.X + pasto.Size.X - tRightMoved2, pasto.Origin.Y + pasto.Size.Y, pasto.Origin.Z);
                     break;
             }
-            
+
             autoWidth = (pasto.Size.X / pasto.Texture.Width);
             autoHeight = (pasto.Size.Y / pasto.Texture.Height);
-            
+
             //Auto ajustar UV
             if (pasto.AutoAdjustUv)
             {
@@ -1148,6 +1163,23 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             float offsetU = pasto.UVOffset.X;
             float offsetV = pasto.UVOffset.Y;
+
+            //Rotation            
+            /*if (pasto.Origin.X > 0) origen.X = pasto.Origin.X + pasto.Size.X / 2;
+            else origen.X = pasto.Origin.X - pasto.Size.X / 2;*/
+            Vector3 v1, v2;
+            v1 = tLeft - tRight;
+            v2 = bLeft - tRight;
+            Vector3 normal = Vector3.Cross(v1, v2);
+            normal.Normalize();
+
+            Vector3 direccion;
+            direccion.X = CustomFpsCamera.Instance.Position.X - Center.X;
+            direccion.Y = 0;
+            direccion.Z = CustomFpsCamera.Instance.Position.Z - Center.Z;
+            direccion.Normalize();
+
+            Matrix matrizOrientacion = calcularOrientacion(direccion, Center, normal);
 
             CustomVertex.PositionTextured[] vertices = new CustomVertex.PositionTextured[6];
             //Primer triangulo
@@ -1158,7 +1190,12 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Segundo triangulo
             vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + pasto.UTile, offsetV + pasto.VTile);
             vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
-            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + pasto.UTile, offsetV);            
+            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + pasto.UTile, offsetV);
+
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, matrizOrientacion);
+            }
 
             //BoundingBox
             pasto.BoundingBox.setExtremes(bLeft, tRight);
