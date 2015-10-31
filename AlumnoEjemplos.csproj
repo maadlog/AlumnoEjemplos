@@ -122,6 +122,7 @@
     <Compile Include="Los_Borbotones\Particulas\Humo\SmokePart.cs" />
     <Compile Include="Los_Borbotones\Particulas\Particle.cs" />
     <Compile Include="Los_Borbotones\Particulas\SystemState_Particulas.cs" />
+    <Compile Include="Los_Borbotones\Pasto.cs" />
     <Compile Include="Los_Borbotones\Player1.cs" />
     <Compile Include="Los_Borbotones\PostProcessManager.cs" />
     <Compile Include="Los_Borbotones\Enemigos\Proyectil.cs" />
