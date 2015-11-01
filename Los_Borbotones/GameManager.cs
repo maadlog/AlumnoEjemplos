@@ -305,13 +305,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             pastosCoords.Add(new Vector3(34, 880, 19));
 
             int secuense = 0;
+            int part = 0;
+            Pasto pasto = new Pasto();
             foreach (Vector3 pastoCoord in pastosCoords)
-            {
-                Pasto pasto = new Pasto();
+            {                
                 pasto.crearPasto(d3dDevice, secuense, pastoCoord);
-                pastos.Add(pasto);
+                if (part == 5)
+                {
+                    pastos.Add(pasto);
+                    pasto = new Pasto();
+                }
                 secuense++;
+                part++;
                 if (secuense > 2) secuense = 0;
+                if (part > 5) part = 0;
             }            
         }
 
@@ -525,23 +532,26 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             }
 
-            int t = 0;
+            int parte, texture = 0;
             foreach (Pasto pasto in pastos)
             {
-                switch(t)
+                for (parte = 0; parte < 6; parte++)
                 {
-                    case 0:
-                        pasto.renderPasto(tLeftMoved0, tRightMoved0);
-                        break;
-                    case 1:
-                        pasto.renderPasto(tLeftMoved1, tRightMoved1);
-                        break;
-                    case 2:
-                        pasto.renderPasto(tLeftMoved2, tRightMoved2);
-                        break;
+                    switch (texture)
+                    {
+                        case 0:
+                            pasto.renderPasto(tLeftMoved0, tRightMoved0, parte);
+                            break;
+                        case 1:
+                            pasto.renderPasto(tLeftMoved1, tRightMoved1, parte);
+                            break;
+                        case 2:
+                            pasto.renderPasto(tLeftMoved2, tRightMoved2, parte);
+                            break;
+                    }
+                    texture++;
+                    if (texture > 2) texture = 0;
                 }
-                t++;
-                if (t > 2) t = 0;
             }
         }
 

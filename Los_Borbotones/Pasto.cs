@@ -13,21 +13,31 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Pasto
     {
-        TgcPlaneWall pastoWall;
-        TgcTexture pasto_texture;
         public List<string> texture_pastos = new List<string>();
+        public List<TgcPlaneWall> partePasto = new List<TgcPlaneWall>();
+        public Matrix m_mRotacion = new Matrix();
 
         public void crearPasto(Device d3dDevice, int pastoSecuense, Vector3 origen)
         {
-            texture_pastos.Add("pasto1.png");
-            texture_pastos.Add("pasto2.png");
-            texture_pastos.Add("pasto3.png");
+            string textureName = "pasto1.png";
+            switch(pastoSecuense)
+            {
+                case 0:
+                    textureName = "pasto1.png";
+                    break;
+                case 1:
+                    textureName = "pasto2.png";
+                    break;
+                case 2:
+                    textureName = "pasto3.png";
+                    break;
+            }
 
-            string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Textures\\" + texture_pastos[pastoSecuense];
-            pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
+            string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Textures\\" + textureName;
+            TgcTexture pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
 
             //Crear pared
-            pastoWall = new TgcPlaneWall();
+            TgcPlaneWall pastoWall = new TgcPlaneWall();
             pastoWall.AlphaBlendEnable = true;
             pastoWall.setTexture(pasto_texture);
 
@@ -40,9 +50,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             pastoWall.AutoAdjustUv = false;
             pastoWall.UTile = 1;
             pastoWall.VTile = 1;
+
+            partePasto.Add(pastoWall);
         }
 
-        public void renderPasto(float tLeftMoved, float tRightMoved)
+        public void renderPasto(float tLeftMoved, float tRightMoved, int parte)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
@@ -50,6 +62,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.AlphaTestEnable = true;
             d3dDevice.RenderState.AlphaBlendEnable = true;
 
+            TgcPlaneWall pastoWall = partePasto[parte];
             texturesManager.shaderSet(pastoWall.Effect, "texDiffuseMap", pastoWall.Texture);
             texturesManager.clear(1);
             GuiController.Instance.Shaders.setShaderMatrixIdentity(pastoWall.Effect);
@@ -60,7 +73,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             pastoWall.Effect.Begin(0);
             pastoWall.Effect.BeginPass(0);
 
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(tLeftMoved, tRightMoved));
+            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(tLeftMoved, tRightMoved, parte, pastoWall));
 
             pastoWall.Effect.EndPass();
             pastoWall.Effect.End();
@@ -69,19 +82,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.AlphaBlendEnable = false;
         }
 
-        public Matrix calcularOrientacion(Vector3 direccion, Vector3 centro, Vector3 normal)
+        public void calcularOrientacion(Vector3 direccion, Vector3 centro, Vector3 normal)
         {
             float angle = FastMath.Acos(Vector3.Dot(normal, direccion));
             Vector3 rotationY = Vector3.Cross(normal, direccion);
             rotationY.Normalize();
             Matrix Move = Matrix.Translation(centro);
             Move.Invert();
-            Matrix m_mWorld = Move * Matrix.RotationAxis(rotationY, angle) * Matrix.Translation(centro);
-
-            return m_mWorld;
+            m_mRotacion = Move * Matrix.RotationAxis(rotationY, angle) * Matrix.Translation(centro);
         }
 
-        public CustomVertex.PositionTextured[] actualizarPasto(float tLeftMoved, float tRightMoved)
+        public CustomVertex.PositionTextured[] actualizarPasto(float tLeftMoved, float tRightMoved, int parte, TgcPlaneWall pastoWall)
         {
             float autoWidth;
             float autoHeight;
@@ -106,22 +117,25 @@ namespace AlumnoEjemplos.Los_Borbotones
             float offsetU = pastoWall.UVOffset.X;
             float offsetV = pastoWall.UVOffset.Y;
 
-            //Rotation            
-            /*if (pasto.Origin.X > 0) origen.X = pasto.Origin.X + pasto.Size.X / 2;
-            else origen.X = pasto.Origin.X - pasto.Size.X / 2;*/
-            Vector3 v1, v2;
-            v1 = tLeft - tRight;
-            v2 = bLeft - tRight;
-            Vector3 normal = Vector3.Cross(v1, v2);
-            normal.Normalize();
+            //Rotation
+            if (parte == 0)
+            {
+                /*if (pasto.Origin.X > 0) origen.X = pasto.Origin.X + pasto.Size.X / 2;
+                else origen.X = pasto.Origin.X - pasto.Size.X / 2;*/
+                Vector3 v1, v2;
+                v1 = tLeft - tRight;
+                v2 = bLeft - tRight;
+                Vector3 normal = Vector3.Cross(v1, v2);
+                normal.Normalize();
 
-            Vector3 direccion;
-            direccion.X = CustomFpsCamera.Instance.Position.X - Center.X;
-            direccion.Y = 0;
-            direccion.Z = CustomFpsCamera.Instance.Position.Z - Center.Z;
-            direccion.Normalize();
+                Vector3 direccion;
+                direccion.X = CustomFpsCamera.Instance.Position.X - Center.X;
+                direccion.Y = 0;
+                direccion.Z = CustomFpsCamera.Instance.Position.Z - Center.Z;
+                direccion.Normalize();
 
-            Matrix matrizOrientacion = calcularOrientacion(direccion, Center, normal);
+                calcularOrientacion(direccion, Center, normal);
+            }
 
             CustomVertex.PositionTextured[] vertices = new CustomVertex.PositionTextured[6];
             //Primer triangulo
@@ -136,7 +150,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, matrizOrientacion);
+                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, m_mRotacion);
             }
 
             //BoundingBox
@@ -147,7 +161,10 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void dispose()
         {
-            pastoWall.dispose();
+            foreach (TgcPlaneWall pastoWall in partePasto)
+            {
+                pastoWall.dispose();
+            }
         }
     }    
 }
