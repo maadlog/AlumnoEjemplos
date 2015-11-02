@@ -98,16 +98,16 @@ namespace AlumnoEjemplo.Los_Borbotones
                 , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            glowMapRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            glowMapRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
+                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            DownFilterRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            DownFilterRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
+                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
-            gaussBlurAuxRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
-                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget,
+            gaussBlurAuxRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth / 4
+                , d3dDevice.PresentationParameters.BackBufferHeight / 4, 1, Usage.RenderTarget,
                 Format.X8R8G8B8, Pool.Default);
 
             // inicializar valores en el Shader
@@ -142,6 +142,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             theShader.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
             renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
             GameManager.Instance.Update(elapsedTime);
+            HUDManager.Instance.Update(elapsedTime);
         }
 
         internal override void Render(float elapsedTime)
@@ -294,7 +295,10 @@ namespace AlumnoEjemplo.Los_Borbotones
             theShader.End();
 
             GuiController.Instance.Text3d.drawText("FPS: " + HighResolutionTimer.Instance.FramesPerSecond, 0, 0, Color.Yellow);
-            //d3dDevice.EndScene();
+
+
+            //Al final, renderiza el HUD
+            HUDManager.Instance.Render(elapsedTime);
           
         }
 
@@ -305,6 +309,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             DownFilterRenderTarget.Dispose();
             gaussBlurAuxRenderTarget.Dispose();
             quadVertexBuffer.Dispose();
+            theShader.Dispose();
         }
 
     }

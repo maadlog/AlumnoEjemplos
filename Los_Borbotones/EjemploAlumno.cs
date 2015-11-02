@@ -20,7 +20,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         GameManager gameManager;
         MenuManager menuManager;
-        //PostProcessManager postProcessManager;
+        HUDManager hudManager;
 
         /// <summary>
         /// Categoría a la que pertenece el ejemplo.
@@ -103,14 +103,14 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Crear un modifier para modificar un vértice
             GuiController.Instance.Modifiers.addVertex3f("weaponOffset", new Vector3(-10, -20, -10), new Vector3(10, 10, 10), new Vector3(5f, -10.2f, 0.8f));
 
-            //Creacion del Game Manager y el PostProcess Manager
+            //Creacion del Game, Menu, y HUD Managers
             gameManager = GameManager.Instance;
             menuManager = MenuManager.Instance;
-            //postProcessManager = PostProcessManager.Instance;
+            hudManager = HUDManager.Instance;
 
             menuManager.Init();
             gameManager.Init();
-            //postProcessManager.Init();
+            hudManager.Init();
         }
 
 
@@ -124,8 +124,6 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         {
             menuManager.Update(elapsedTime);
             menuManager.Render(elapsedTime);
-            //postProcessManager.Update(elapsedTime);
-            //postProcessManager.Render(elapsedTime);
         }
 
         /// <summary>
@@ -136,7 +134,7 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
         {
             gameManager.close();
             menuManager.close();
-            //postProcessManager.close();
+            hudManager.close();
         }
 
     }

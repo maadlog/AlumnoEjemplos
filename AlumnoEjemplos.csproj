@@ -102,6 +102,7 @@
     <Compile Include="Los_Borbotones\GameManager.cs" />
     <Compile Include="Los_Borbotones\GameObject.cs" />
     <Compile Include="Los_Borbotones\Barriles\Inactivo.cs" />
+    <Compile Include="Los_Borbotones\HUDManager.cs" />
     <Compile Include="Los_Borbotones\Menus\CreditsMenu.cs" />
     <Compile Include="Los_Borbotones\Menus\HelpMenu.cs" />
     <Compile Include="Los_Borbotones\Menus\MainMenu.cs" />
