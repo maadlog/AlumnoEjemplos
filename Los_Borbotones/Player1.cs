@@ -83,8 +83,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             prevEye = CustomFpsCamera.Instance.eye;
             //cargar sonido
-            breathSound.loadSound(breathingSoundDir, GameManager.Instance.PLAYER_VOLUME);
-            hitSound.loadSound(hitSoundDir, GameManager.Instance.PLAYER_VOLUME);
+            breathSound.loadSound(breathingSoundDir, HUDManager.Instance.PLAYER_VOLUME);
+            hitSound.loadSound(hitSoundDir, HUDManager.Instance.PLAYER_VOLUME);
             //reproducir sonido de respawn
             playSound(walkSound, walkSoundDir, true);
             playSound(runSound, runSoundDir, true);
@@ -125,7 +125,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0.5f)
             {
                 ZOOM_DELAY = MAX_ZOOM_DELAY;
-                GameManager.Instance.zoomCamera();
+                HUDManager.Instance.zoomCamera();
             }
 
             if (GuiController.Instance.D3dInput.keyDown(Key.LeftShift) && sprintTime < MAX_SPRINT_TIME)
@@ -241,8 +241,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             hitSound.play(false);
             weapon.FIRE_DELAY = 0.5f;
             vida -= damage;
-            GameManager.Instance.healthText.Text = "HEALTH: " + vida;
-            GameManager.Instance.ChangeColorHealth();
+            HUDManager.Instance.refreshHealth();
             if(vida <= 0)
             {
                 GameManager.Instance.gameOver();
@@ -253,7 +252,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             //reproducir un sonido
             sound.dispose();
-            sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
+            sound.loadSound(dir, HUDManager.Instance.PLAYER_VOLUME);
             sound.play(loop);
         }
     }

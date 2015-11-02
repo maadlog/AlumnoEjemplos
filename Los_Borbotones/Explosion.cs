@@ -65,7 +65,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             public void Explotar()
             {
-                GameManager.Instance.playSound(sound, explosionSoundDir, false);
+                HUDManager.Instance.playSound(sound, explosionSoundDir, false);
                 GameManager.Instance.enemies.ForEach(enemy => chequearColision(sphere, enemy));
                 GameManager.Instance.barriles.ForEach(barril => chequearColision(sphere, barril));
             }

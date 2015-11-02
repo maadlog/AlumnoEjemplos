@@ -70,48 +70,27 @@ namespace AlumnoEjemplos.Los_Borbotones
         List<TgcMesh> obstaculos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
-        TgcSprite cross;
+
         public Quadtree quadTree;
         CustomSkyBox skyBox;
-        TgcText2d scoreText;
-        float score;
-        TgcText2d specialKillText;
-        float TEXT_DELAY;
-        float TEXT_DELAY_MAX = 2f;
+
+        public float score;
+
         int killMultiTracker;
         float KILL_DELAY;
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
-        public TgcText2d healthText;
+ 
         public int MAX_ENEMIES = 10;
         public TgcMesh ModeloRobot;
         public TgcMesh ModeloNave;
         public TgcMesh ModeloProyectil;
 
-        //seteamos las dir de los sonidos
-        public int PLAYER_VOLUME = -1500; //va de -10000 (min) a 0 (max) por alguna razon
-        TgcStaticSound sound;
-        TgcStaticSound ambient;
-        string headshotSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/headshot.wav";
-        string headhunterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/headhunter.wav";
-        string doubleSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/doublekill.wav";
-        string multiSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/multikill.wav";
-        string ultraSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/ultrakill.wav";
-        string megaSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/megakill.wav";
-        string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/monsterkill.wav";
-        string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/massacre.wav";
-        string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/denied.wav";
-
+        
         public bool drawBoundingBoxes;
         public bool invincibility;
 
-        bool zoomEnabled = false;
-        float SMALL_SCOPE = 0.10f; // 20% of screen covered by scope (X-Axis)
-        float BIGASS_SCOPE = 2f;  // 200%
-        float ZOOM_CONST = 0.8f; //TODO Hacer dependiente del arma
-        TgcTexture normalScope;
-        TgcTexture zoomedScope;
-        float screenCovered;
+
         public List<Barril> barriles = new List<Barril>();
         private List<TgcMesh> meshesBarril;
         public TgcScene Barriles;
@@ -133,9 +112,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Init()
         {
-            GAME_OVER = false;
+            
             score = 0; //lleva el score del jugador
-            TEXT_DELAY = 0;
+            
             killMultiTracker = 0;
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f;
@@ -238,38 +217,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
 
 
-            //-------------User Interface------------
-            //Textos para los Kills
-            specialKillText = new TgcText2d();
-            specialKillText.Color = Color.Crimson;
-            specialKillText.Align = TgcText2d.TextAlign.CENTER;
-            specialKillText.Position = new Point(0, 100);
-            specialKillText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
             
-            //texto para el score
-            //cambia de color segun el score
-            scoreText = new TgcText2d();
-            scoreText.Text = "SCORE: " + score;
-                scoreText.Color = Color.LightBlue;
-                scoreText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
-
-            //texto para la vida
-            //tambien cambia de color segun la vida
-            healthText = new TgcText2d();
-            healthText.Text = "HEALTH: " + player1.vida;
-            healthText.Color = Color.Green;
-            healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
-            healthText.Position = new Point(0, 250);
-            healthText.Align = TgcText2d.TextAlign.LEFT;
-
-            //cargamos la mira
-            screenCovered = SMALL_SCOPE;
-            cross = new TgcSprite();
-            normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\normalScope.png");
-            zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\zoomedScope.png");
-            cross.Texture = normalScope;
-
-            refreshScopeTexture();
+            
 
             obstaculos = new List<TgcMesh>();
             obstaculos.AddRange(vegetation);
@@ -290,12 +239,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.FogDensity = 0.00006f;
             d3dDevice.RenderState.FogEnable = true;
 
-            //inicializo audio
-            sound = new TgcStaticSound();
-            ambient = new TgcStaticSound();
-            string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Ambiente/Deep_space.wav";
-            ambient.loadSound(dir, -1500);
-            ambient.play(true);
+            
 
             pastosCoords.Add(new Vector3(22, 880, 21));
             pastosCoords.Add(new Vector3(18, 880, 18));
@@ -363,21 +307,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             proyectiles.ForEach(proyectil => proyectil.Update(elapsedTime));
 
 
-
-            if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
             if (KILL_DELAY > 0) { KILL_DELAY -= elapsedTime; }
             if (KILL_DELAY <= 0 && killMultiTracker >= 0)
             {
-                if (killMultiTracker >= 2) { playSound(deniedSoundDir); }
+                if (killMultiTracker >= 2) {
+                    HUDManager.Instance.denied(); }
                 killMultiTracker = 0;
             }
 
-            if (TEXT_DELAY <= 0 && GAME_OVER)
-            {
-                MenuManager.Instance.cargarPantalla(new AlumnoEjemplos.Los_Borbotones.Menus.MainMenu());
-                close();
-                Init();
-            }
+            
             //hacemos que el skybox siga al player para no tener problemas con el farplane
             Matrix translate = Matrix.Translation(CustomFpsCamera.Instance.Position);
             skyBox.transform(translate);
@@ -439,31 +377,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             };
         }
 
-        private void ChangeTextColor()
-        {
-            //cambiamos el color del score segun el puntaje
-            if (score >= 0)
-            {
-                scoreText.Color = Color.White;
-            }
-            if (score > 10)
-            {
-                scoreText.Color = Color.Orange;
-            }
-            if (score > 20)
-            {
-                scoreText.Color = Color.Silver;
-            }
-            if (score > 30)
-            {
-                scoreText.Color = Color.Gold;
-            }
-            if(score > 50)
-            {
-                scoreText.Color = Color.LightCyan;
-            }
-        }
-
         internal void RenderAll(float elapsedTime)
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -502,20 +415,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
 
             player1.Render(elapsedTime);
-            
-
-            //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
-            GuiController.Instance.Drawer2D.beginDrawSprite();
-
-            //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
-            cross.render();
-
-            //Finalizar el dibujado de Sprites
-            GuiController.Instance.Drawer2D.endDrawSprite();
-
-            scoreText.render();
-            healthText.render();
-            if (TEXT_DELAY > 0) { specialKillText.render(); }
 
             //Obtener valor de UserVar (hay que castear)
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
@@ -589,13 +488,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             Vegetation.disposeAll();
             terrain.dispose();
             player1.dispose();
-            specialKillText.dispose();
-            scoreText.dispose();
-            healthText.dispose();
-            normalScope.dispose();
-            zoomedScope.dispose();
+
             skyBox.dispose();
-            ambient.dispose();
+
             foreach (Enemy enemy in enemies)
             {
                 enemy.dispose();
@@ -621,8 +516,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void gameOver()
         {
             if (GAME_OVER || invincibility) { return; }
-            specialKillText.Text = "GAME OVER";
-            TEXT_DELAY = TEXT_DELAY_MAX;
+            HUDManager.Instance.gameOver();
             GAME_OVER = true;
         }
 
@@ -701,9 +595,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                         hit = true;
                         score += 1;
                         killHeadTracker++;
-                        specialKillText.Text = "HEADSHOT!!";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(headshotSoundDir);
+                        HUDManager.Instance.headShot();
                         enemies[i].health = 0;
                         enemies[i].sangrar(-dir, newPosition.Y - enemies[i].getPosicionActual().Y);
 
@@ -794,10 +686,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             if (killHeadTracker > 1)
             {
-                specialKillText.Text = "HEAD HUNTER!!";
-                TEXT_DELAY = TEXT_DELAY_MAX;
-                playSound(headhunterSoundDir);
+                HUDManager.Instance.headHunter();//Constante que reproduce el efecto de headhunter.
                 score += killHeadTracker;
+                HUDManager.Instance.refreshScore();
             }
         }
 
@@ -814,9 +705,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             awardKill();
             KILL_DELAY = KILL_DELAY_MAX;
             //Hacemos refresh del score
-            scoreText.Text = "SCORE: " + score;
-            ChangeTextColor();
+            HUDManager.Instance.refreshScore();
         }
+
         public void eliminarEnemigo(Enemy enemy)
         {
 
@@ -843,58 +734,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (killMultiTracker >= 2)
             {
                 score += 2;
-                switch (killMultiTracker)
-                {
-                    case 2:
-                        specialKillText.Text = "DOUBLE KILL";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(doubleSoundDir);
-                        break;
-                    case 3:
-                        specialKillText.Text = "MULTI KILL";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(multiSoundDir);
-                        break;
-                    case 4:
-                        specialKillText.Text = "MEGA KILL";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(megaSoundDir);
-                        break;
-                    case 5:
-                        specialKillText.Text = "ULTRA KILL";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(ultraSoundDir);
-                        break;
-                    case 6:
-                        specialKillText.Text = "MONSTER KILL";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(monsterSoundDir);
-                        break;
-                    case 10:
-                        specialKillText.Text = "MASSACRE";
-                        TEXT_DELAY = TEXT_DELAY_MAX;
-                        playSound(massacreSoundDir);
-                        break;
-                    default:
-                        break;
-                }
+                HUDManager.Instance.awardKill(killMultiTracker);
             }
-        }
-
-        public void playSound(string dir)
-        {
-            //reproducir un sonido
-            sound.dispose();
-            sound.loadSound(dir);
-            sound.play();
-        }
-
-        public void playSound(TgcStaticSound sound, string dir, bool loop)
-        {
-            //reproducir un sonido
-            sound.dispose();
-            sound.loadSound(dir, GameManager.Instance.PLAYER_VOLUME);
-            sound.play(loop);
         }
 
         public Vector3 intersectRayTerrain(TgcRay ray)
@@ -998,55 +839,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (coords.X >= terrain.HeightmapData.GetLength(0) || coords.Y >= terrain.HeightmapData.GetLength(1) || coords.Y < 0 || coords.X < 0) return false;
 
             return true;
-        }
-
-        public void refreshScopeTexture()
-        {
-            Size tamaño = cross.Texture.Size;
-            float scale = ScreenWidth * screenCovered / tamaño.Width;
-            cross.Scaling = new Vector2(scale, scale);
-            cross.Position = new Vector2((ScreenWidth - (tamaño.Width * scale)) / 2, (ScreenHeight - (tamaño.Height * scale)) / 2);
-        }
-
-        public void zoomCamera()
-        {
-            //hacer zoom
-
-            if (zoomEnabled)
-            {
-                cross.Texture = normalScope;
-                CustomFpsCamera.Instance.Zoom = 0;
-                screenCovered = SMALL_SCOPE; // 1/6 of screen covered by scope
-                zoomEnabled = false;
-            }
-            else
-            {
-                cross.Texture = zoomedScope;
-                CustomFpsCamera.Instance.Zoom = ZOOM_CONST;
-                screenCovered = BIGASS_SCOPE; // scope scaled to twice the screen wdth
-                zoomEnabled = true;
-            }
-
-            refreshScopeTexture();
-
-        }
-
-        public void ChangeColorHealth()
-        {
-            //cambiar color de la vida segun el atributo vida
-            if (player1.vida >=51)
-            {
-                healthText.Color = Color.Green;
-            }
-            if (player1.vida < 51)
-            {
-                healthText.Color = Color.Yellow;
-            }
-            if (player1.vida < 26)
-            {
-                healthText.Color = Color.Red;
-            }
-           
         }
 
         public void eliminarBarril(Barril barril)
