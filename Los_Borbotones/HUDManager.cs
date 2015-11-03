@@ -48,11 +48,23 @@ namespace AlumnoEjemplos.Los_Borbotones
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
         public int ScreenHeight, ScreenWidth;
+        Device d3dDevice;
         float time;
+        string prevWeap;
+
+        TgcSprite HudFront;
         TgcSprite cross;
+        TgcSprite healthSprite;
+
+        Weapon MainWeapon;
+
+        Effect mainWeaponShader;
+
+        Sniper sniper;
+        RocketLauncher launcher;
 
         TgcText2d scoreText;
-        public TgcText2d healthText;
+        
         TgcText2d specialKillText;
         float TEXT_DELAY;
         float TEXT_DELAY_MAX = 2f;
@@ -81,6 +93,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcTexture zoomedScope;
         float screenCovered;
 
+        float hudScreenCovered = 0.15f;
+
 
         public void Init()
         {
@@ -105,24 +119,51 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText.Color = Color.LightBlue;
             scoreText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
 
-            //texto para la vida
-            //tambien cambia de color segun la vida
-            healthText = new TgcText2d();
-            healthText.Text = "HEALTH: "  + GameManager.Instance.player1.vida;
-            healthText.Color = Color.Green;
-            healthText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
-            healthText.Position = new Point(0, 250);
-            healthText.Align = TgcText2d.TextAlign.LEFT;
-
-            // cargamos la mira
+            // cargamos los sprites
             screenCovered = SMALL_SCOPE;
             cross = new TgcSprite();
             normalScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\normalScope.png");
             zoomedScope = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\zoomedScope.png");
             cross.Texture = normalScope;
 
-
             refreshScopeTexture();
+
+            HudFront = new TgcSprite();
+            HudFront.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\HudFront.png");
+
+            initHudFront();
+            
+            healthSprite = new TgcSprite();
+            healthSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\HealthStencil.png");
+
+            healthInit();
+
+            //Cargamos las armas
+            sniper = new Sniper();
+            sniper.Init();
+
+            launcher = new RocketLauncher();
+            launcher.Init();
+
+            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
+            switch (weap)
+                {
+                    case "Sniper":
+                        MainWeapon = sniper;
+                        prevWeap = "Sniper";
+                        break;
+
+                    case "Rocket Launcher":
+                        MainWeapon = launcher;
+                        prevWeap = "Rocket Launcher";
+                        break;
+                }
+
+            //Cargamos los shaders para la HUD
+            mainWeaponShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\HUDGun.fx");
+            mainWeaponShader.Technique = "MainWeapon";
+
+            refreshHUDWeapon();
 
             //inicializo audio
             sound = new TgcStaticSound();
@@ -134,6 +175,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void Update(float elapsedTime)
         {
+            time += elapsedTime;
+
             if (TEXT_DELAY > 0) { TEXT_DELAY -= elapsedTime; }
 
             if (TEXT_DELAY <= 0 && GAME_OVER)
@@ -142,22 +185,54 @@ namespace AlumnoEjemplos.Los_Borbotones
                 close();
                 Init();
             }
+
+            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
+            if (weap != prevWeap)
+            {
+                switch (weap)
+                {
+                    case "Sniper":
+                        MainWeapon = sniper;
+                        prevWeap = "Sniper";
+                        break;
+
+                    case "Rocket Launcher":
+                        MainWeapon = launcher;
+                        prevWeap = "Rocket Launcher";
+                        break;
+                }
+                refreshHUDWeapon();
+
+            }
+
+            mainWeaponShader.SetValue("time",time);
+
         }
 
         public void Render(float elapsedTime)
         {
+            
+
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
 
-            //Dibujar sprite (si hubiese mas, deberian ir todos aquí)
+            healthSprite.render();
+            HudFront.render();
             cross.render();
 
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
 
+           // TODO, cuando el refresh funque  MainWeapon.mesh.render();
+
             scoreText.render();
-            healthText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
+        }
+
+        public void refreshHUDWeapon()
+        {
+            MainWeapon.mesh.Effect = mainWeaponShader;
+            //TODO
         }
 
         //SPRITES
@@ -193,25 +268,41 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         }
 
+        public void initHudFront()
+        {
+            Size tamaño = HudFront.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            HudFront.Scaling = new Vector2(scale, scale);
+            HudFront.Position = new Vector2((ScreenWidth * 0.01f) , ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
+
+        }
+
+        public void healthInit()
+        {
+            Size tamaño = healthSprite.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            healthSprite.Scaling = new Vector2(scale, scale);
+            healthSprite.Position = new Vector2((ScreenWidth * 0.01f) , ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
+            healthSprite.Color = Color.LightGreen;
+        }
+
         //HEALTH
 
-        public void ChangeColorHealth()
+        public void refreshHealth()
         {
-            ;
             //cambiar color de la vida segun el atributo vida
             if (GameManager.Instance.player1.vida >= 51)
             {
-                healthText.Color = Color.Green;
+                healthSprite.Color = Color.Green;
             }
             if (GameManager.Instance.player1.vida < 51)
             {
-                healthText.Color = Color.Yellow;
+                healthSprite.Color = Color.Yellow;
             }
             if (GameManager.Instance.player1.vida < 26)
             {
-                healthText.Color = Color.Red;
+                healthSprite.Color = Color.Red;
             }
-
         }
 
         //SCORE
@@ -219,12 +310,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             scoreText.Text = "SCORE: " + GameManager.Instance.score;
             ChangeTextColor();
-        }
-
-        public void refreshHealth()
-        {
-            healthText.Text = "HEALTH: " + GameManager.Instance.player1.vida;
-            ChangeColorHealth();
         }
 
         public void headShot()
@@ -336,7 +421,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             specialKillText.dispose();
             scoreText.dispose();
-            healthText.dispose();
             normalScope.dispose();
             zoomedScope.dispose();
             ambient.dispose();
