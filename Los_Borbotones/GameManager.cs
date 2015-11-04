@@ -239,14 +239,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.FogDensity = 0.00006f;
             d3dDevice.RenderState.FogEnable = true;
 
-            
-
-            pastosCoords.Add(new Vector3(22, 880, 22));
-            pastosCoords.Add(new Vector3(35, 880, 23));
-            pastosCoords.Add(new Vector3(0, 880, 23));
-            pastosCoords.Add(new Vector3(5, 880, 24));
-            pastosCoords.Add(new Vector3(22, 880, 24));
-            pastosCoords.Add(new Vector3(27, 880, 21));
+            initPastos();
 
             int secuense = 0;
             int part = 0;
@@ -849,6 +842,89 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void agregarBarril(Barril barril)
         {
             obstaculos.Add(barril.mesh);
-        }       
+        }
+
+        private void initPastos()
+        {
+            addPastos(0, 0);
+            addPastos(-17364,65);
+            addPastos(-30420,-15584);
+            addPastos(-29653,16619);
+            addPastos(-9857,28731);
+            addPastos(12670,28548);
+            addPastos(19032,4878);
+            addPastos(28848,-9831);
+            addPastos(-2758,-18265);
+            addPastos(15552,-28198);
+            addPastos(-16219,-31620);
+            /*
+            addArbusto(0, 0);
+            addArbusto(130, 0);
+            addArbusto(90, -66);
+            addArbusto(68,75);
+            addArbusto(12,126);
+            addArbusto(153, 92);
+            addArbusto(175, -20);
+            addArbusto(10, 60);
+            addArbusto(-76,-7);
+            addArbusto(-31,-45);
+            addArbusto(33,-91);
+            addArbusto(129,109);
+            addArbusto(-29,31);
+            addArbusto(100, -29);
+            addArbusto(-13, 98);
+            addArbusto(-33, 18);
+            addArbusto(86, -49);
+            addArbusto(-65, 29);
+            addArbusto(-25, 93);
+            addArbusto(60, -18);
+            
+            pastosCoords.Add(new Vector3(22, 880, 22));
+            pastosCoords.Add(new Vector3(35, 880, 23));
+            pastosCoords.Add(new Vector3(0, 880, 23));
+            pastosCoords.Add(new Vector3(5, 880, 24));
+            pastosCoords.Add(new Vector3(22, 880, 24));
+            pastosCoords.Add(new Vector3(27, 880, 21));
+            */
+        }
+
+        private void addPastos(float x, float z)
+        {
+            float d = 15;
+
+            addArbusto(x, z);
+            addArbusto(x + 130 * d, z);
+            addArbusto(x + 90 * d, z - 66 * d);
+            addArbusto(x + 68 * d, z + 75 * d);
+            addArbusto(x + 12 * d, z + 126 * d);
+            addArbusto(x + 153 * d, z + 92 * d);
+            addArbusto(x + 175 * d, z - 20 * d);
+            addArbusto(x + 10 * d, z + 60 * d);
+            addArbusto(x - 76 * d, z - 7 * d);
+            addArbusto(x - 31 * d, z - 45 * d);
+            addArbusto(x + 33 * d, z - 91 * d);
+            addArbusto(x + 129 * d, z + 109 * d);
+            addArbusto(x - 29 * d, z + 31 * d);
+            addArbusto(x + 100 * d, z - 29 * d);
+            addArbusto(x - 13 * d, z + 98 * d);
+            addArbusto(x - 33 * d, z + 18 * d);
+            addArbusto(x + 86 * d, z - 49 * d);
+            addArbusto(x - 65 * d, z + 29 * d);
+            addArbusto(x - 25 * d, z + 93 * d);
+            addArbusto(x + 60 * d, z - 18 * d);
+        }
+
+        private void addArbusto(float x, float z)
+        {
+            float y;
+            interpoledHeight(x, z, out y);
+
+            pastosCoords.Add(new Vector3(x + 22, y, z + 1));
+            pastosCoords.Add(new Vector3(x + 35, y, z + 2));
+            pastosCoords.Add(new Vector3(x, y, z + 2));
+            pastosCoords.Add(new Vector3(x + 5, y, z + 3));
+            pastosCoords.Add(new Vector3(x + 22, y, z + 3));
+            pastosCoords.Add(new Vector3(x + 27, y, z));
+        }
     }
 }
