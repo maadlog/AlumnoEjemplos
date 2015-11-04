@@ -56,12 +56,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite cross;
         TgcSprite healthSprite;
 
-        Weapon MainWeapon;
+        TgcMesh MainWeapon;
 
         Effect mainWeaponShader;
 
         Sniper sniper;
         RocketLauncher launcher;
+
+        Matrix weaponTransform;
 
         TgcText2d scoreText;
         
@@ -103,6 +105,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             time = 0;
             ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
+            d3dDevice = GuiController.Instance.D3dDevice;
+
+            weaponTransform = Matrix.Translation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0);
 
             //-------------User Interface------------
             //Textos para los Kills
@@ -149,21 +154,24 @@ namespace AlumnoEjemplos.Los_Borbotones
             switch (weap)
                 {
                     case "Sniper":
-                        MainWeapon = sniper;
+                        MainWeapon = sniper.mesh;
                         prevWeap = "Sniper";
                         break;
 
                     case "Rocket Launcher":
-                        MainWeapon = launcher;
+                        MainWeapon = launcher.mesh;
                         prevWeap = "Rocket Launcher";
                         break;
                 }
 
             //Cargamos los shaders para la HUD
             mainWeaponShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\HUDGun.fx");
-            mainWeaponShader.Technique = "MainWeapon";
+            MainWeapon.Technique = "MainWeapon";
 
-            refreshHUDWeapon();
+            MainWeapon.Effect = mainWeaponShader;
+
+            MainWeapon.Scale = new Vector3(0.5f, 0.5f, 0.5f);
+            MainWeapon.Position = new Vector3(0f, 0f, 0f);
 
             //inicializo audio
             sound = new TgcStaticSound();
@@ -192,27 +200,23 @@ namespace AlumnoEjemplos.Los_Borbotones
                 switch (weap)
                 {
                     case "Sniper":
-                        MainWeapon = sniper;
+                        MainWeapon = sniper.mesh;
                         prevWeap = "Sniper";
                         break;
 
                     case "Rocket Launcher":
-                        MainWeapon = launcher;
+                        MainWeapon = launcher.mesh;
                         prevWeap = "Rocket Launcher";
                         break;
                 }
-                refreshHUDWeapon();
+                MainWeapon.Effect = mainWeaponShader;
 
-            }
-
-            mainWeaponShader.SetValue("time",time);
+            } 
 
         }
 
         public void Render(float elapsedTime)
         {
-            
-
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
 
@@ -223,16 +227,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
 
-           // TODO, cuando el refresh funque  MainWeapon.mesh.render();
+            // TODO, cuando el refresh funque 
+            renderHUDWeapon();
 
             scoreText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
         }
 
-        public void refreshHUDWeapon()
+        public void renderHUDWeapon()
         {
-            MainWeapon.mesh.Effect = mainWeaponShader;
-            //TODO
+            mainWeaponShader.SetValue("time", time);
+
+            //MainWeapon.render();
         }
 
         //SPRITES
