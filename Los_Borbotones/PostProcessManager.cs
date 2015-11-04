@@ -134,6 +134,8 @@ namespace AlumnoEjemplo.Los_Borbotones
                         CustomVertex.PositionTextured.Format, Pool.Default);
             quadVertexBuffer.SetData(Vertices, 0, LockFlags.None);
 
+            GameManager.Instance.Init();
+
         }
 
         internal override void Update(float elapsedTime)
