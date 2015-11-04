@@ -241,12 +241,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             
 
-            pastosCoords.Add(new Vector3(22, 880, 21));
-            pastosCoords.Add(new Vector3(18, 880, 18));
-            pastosCoords.Add(new Vector3(13, 880, 19));
-            pastosCoords.Add(new Vector3(26, 880, 21));
-            pastosCoords.Add(new Vector3(30, 880, 20));
-            pastosCoords.Add(new Vector3(34, 880, 19));
+            pastosCoords.Add(new Vector3(22, 880, 22));
+            pastosCoords.Add(new Vector3(35, 880, 23));
+            pastosCoords.Add(new Vector3(0, 880, 23));
+            pastosCoords.Add(new Vector3(5, 880, 24));
+            pastosCoords.Add(new Vector3(22, 880, 24));
+            pastosCoords.Add(new Vector3(27, 880, 21));
 
             int secuense = 0;
             int part = 0;
@@ -327,8 +327,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (positiveMove0)
             {
-                tLeftMoved0 += 0.02f;
-                tRightMoved0 += 0.02f;
+                tLeftMoved0 += 0.017f;
+                tRightMoved0 += 0.017f;
                 if (tLeftMoved0 >= maxMoved) positiveMove0 = false;
             }
             else

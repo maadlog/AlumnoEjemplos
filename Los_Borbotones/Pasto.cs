@@ -23,13 +23,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             switch(pastoSecuense)
             {
                 case 0:
-                    textureName = "pasto1.png";
+                    textureName = "pasto3.png";
                     break;
                 case 1:
                     textureName = "pasto2.png";
                     break;
                 case 2:
-                    textureName = "pasto3.png";
+                    textureName = "pasto1.png";
                     break;
             }
 
@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Aplicar valores en pared
             pastoWall.Origin = origen;
-            pastoWall.Size = new Vector3(40, 40, 40);
+            pastoWall.Size = new Vector3(36, 27, 36);
             pastoWall.Orientation = or;
             pastoWall.AutoAdjustUv = false;
             pastoWall.UTile = 1;
