@@ -55,15 +55,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite HudFront;
         TgcSprite cross;
         TgcSprite healthSprite;
-
-        TgcMesh MainWeapon;
-
-        Effect mainWeaponShader;
-
-        Sniper sniper;
-        RocketLauncher launcher;
-
-        Matrix weaponTransform;
+        TgcSprite hudWeapon;
 
         TgcText2d scoreText;
         
@@ -95,6 +87,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcTexture zoomedScope;
         float screenCovered;
 
+        TgcTexture launcherTexture;
+        TgcTexture sniperTexture;
+
         float hudScreenCovered = 0.15f;
 
 
@@ -107,8 +102,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
             d3dDevice = GuiController.Instance.D3dDevice;
 
-            weaponTransform = Matrix.Translation(ScreenWidth * 0.5f, ScreenHeight * 0.5f, 0);
-
+           
             //-------------User Interface------------
             //Textos para los Kills
             specialKillText = new TgcText2d();
@@ -142,36 +136,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\HealthStencil.png");
 
             healthInit();
+            
+            hudWeapon = new TgcSprite();
+            sniperTexture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\sniperHUD.png");
+            launcherTexture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\launcherHUD.png");
+            refreshMainWeapon();
+            hudWeaponInit();
+
 
             //Cargamos las armas
-            sniper = new Sniper();
-            sniper.Init();
 
-            launcher = new RocketLauncher();
-            launcher.Init();
 
-            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
-            switch (weap)
-                {
-                    case "Sniper":
-                        MainWeapon = sniper.mesh;
-                        prevWeap = "Sniper";
-                        break;
-
-                    case "Rocket Launcher":
-                        MainWeapon = launcher.mesh;
-                        prevWeap = "Rocket Launcher";
-                        break;
-                }
-
-            //Cargamos los shaders para la HUD
-            mainWeaponShader = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\HUDGun.fx");
-            MainWeapon.Technique = "MainWeapon";
-
-            MainWeapon.Effect = mainWeaponShader;
-
-            MainWeapon.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            MainWeapon.Position = new Vector3(0f, 0f, 0f);
 
             //inicializo audio
             sound = new TgcStaticSound();
@@ -179,6 +154,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             string dir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Ambiente/Deep_space.wav";
             ambient.loadSound(dir, -1500);
             ambient.play(true);
+
+            
         }
 
         public void Update(float elapsedTime)
@@ -191,28 +168,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 MenuManager.Instance.cargarPantalla(new AlumnoEjemplos.Los_Borbotones.Menus.MainMenu());
                 close();
-                Init();
+                //Init();
             }
-
-            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
-            if (weap != prevWeap)
-            {
-                switch (weap)
-                {
-                    case "Sniper":
-                        MainWeapon = sniper.mesh;
-                        prevWeap = "Sniper";
-                        break;
-
-                    case "Rocket Launcher":
-                        MainWeapon = launcher.mesh;
-                        prevWeap = "Rocket Launcher";
-                        break;
-                }
-                MainWeapon.Effect = mainWeaponShader;
-
-            } 
-
+            refreshMainWeapon();
         }
 
         public void Render(float elapsedTime)
@@ -222,23 +180,17 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             healthSprite.render();
             HudFront.render();
+            hudWeapon.render();
             cross.render();
 
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
 
             // TODO, cuando el refresh funque 
-            renderHUDWeapon();
+            
 
             scoreText.render();
             if (TEXT_DELAY > 0) { specialKillText.render(); }
-        }
-
-        public void renderHUDWeapon()
-        {
-            mainWeaponShader.SetValue("time", time);
-
-            //MainWeapon.render();
         }
 
         //SPRITES
@@ -292,6 +244,30 @@ namespace AlumnoEjemplos.Los_Borbotones
             healthSprite.Color = Color.LightGreen;
         }
 
+        public void refreshMainWeapon()
+        {
+            string MainWeapon = (string)GuiController.Instance.Modifiers.getValue("Arma");
+            if (MainWeapon != prevWeap) {
+                if (MainWeapon == "Sniper")
+                {
+                    hudWeapon.Texture = sniperTexture;
+                    prevWeap = "Sniper";
+                }
+                else
+                {
+                    hudWeapon.Texture = launcherTexture;
+                    prevWeap = "Rocket Launcher";
+                }
+            }
+        }
+
+        public void hudWeaponInit()
+        {
+            Size tamaño = hudWeapon.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            hudWeapon.Scaling = new Vector2(scale, scale);
+            hudWeapon.Position = new Vector2((ScreenWidth * 0.01f), ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
+        }
         //HEALTH
 
         public void refreshHealth()
