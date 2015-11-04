@@ -50,36 +50,45 @@ namespace AlumnoEjemplos.Los_Borbotones
             pastoWall.AutoAdjustUv = false;
             pastoWall.UTile = 1;
             pastoWall.VTile = 1;
+            pastoWall.updateValues();
 
             partePasto.Add(pastoWall);
         }
 
         public void renderPasto(float tLeftMoved, float tRightMoved, int parte)
         {
-            Device d3dDevice = GuiController.Instance.D3dDevice;
-            TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
+            if ((CustomFpsCamera.Instance.eye - partePasto[parte].Origin).Length() < CustomFpsCamera.FAR_PLANE / 4.5)
+            {
+                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(GuiController.Instance.Frustum, partePasto[parte].BoundingBox);
+                if (result != TgcCollisionUtils.FrustumResult.OUTSIDE)
+                {
 
-            d3dDevice.RenderState.AlphaTestEnable = true;
-            d3dDevice.RenderState.AlphaBlendEnable = true;
+                    Device d3dDevice = GuiController.Instance.D3dDevice;
+                    TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
 
-            TgcPlaneWall pastoWall = partePasto[parte];
-            texturesManager.shaderSet(pastoWall.Effect, "texDiffuseMap", pastoWall.Texture);
-            texturesManager.clear(1);
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(pastoWall.Effect);
-            d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
-            pastoWall.Effect.Technique = pastoWall.Technique;
+                    d3dDevice.RenderState.AlphaTestEnable = true;
+                    d3dDevice.RenderState.AlphaBlendEnable = true;
 
-            //Render con shader
-            pastoWall.Effect.Begin(0);
-            pastoWall.Effect.BeginPass(0);
+                    TgcPlaneWall pastoWall = partePasto[parte];
+                    texturesManager.shaderSet(pastoWall.Effect, "texDiffuseMap", pastoWall.Texture);
+                    texturesManager.clear(1);
+                    GuiController.Instance.Shaders.setShaderMatrixIdentity(pastoWall.Effect);
+                    d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
+                    pastoWall.Effect.Technique = pastoWall.Technique;
 
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(tLeftMoved, tRightMoved, parte, pastoWall));
+                    //Render con shader
+                    pastoWall.Effect.Begin(0);
+                    pastoWall.Effect.BeginPass(0);
 
-            pastoWall.Effect.EndPass();
-            pastoWall.Effect.End();
+                    d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, actualizarPasto(tLeftMoved, tRightMoved, parte, pastoWall));
 
-            d3dDevice.RenderState.AlphaTestEnable = false;
-            d3dDevice.RenderState.AlphaBlendEnable = false;
+                    pastoWall.Effect.EndPass();
+                    pastoWall.Effect.End();
+
+                    d3dDevice.RenderState.AlphaTestEnable = false;
+                    d3dDevice.RenderState.AlphaBlendEnable = false;
+                }
+            }
         }
 
         public void calcularOrientacion(Vector3 direccion, Vector3 centro, Vector3 normal)
