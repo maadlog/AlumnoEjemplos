@@ -1,10 +1,12 @@
 ﻿using AlumnoEjemplos.Los_Borbotones;
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 
@@ -19,6 +21,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float MAX_TIME = 10;
         float time;
         Matrix posActual;
+        Effect effect;
 
         public Proyectil(Matrix shooterMatrix, Vector3 vectorDireccion)
         {
@@ -29,12 +32,15 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Init()
         {
             this.mesh = GameManager.Instance.ModeloProyectil.clone("proyectil");
+            mesh.AlphaBlendEnable = true;
             time = 0;
-
+            effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\Proyectil.fx");
+            mesh.Effect = effect;
+            mesh.Technique = "RenderScene";
             mesh.AutoTransformEnable = false;
             //Matrix offY = Matrix.Translation(15, 30, 20);
             //Matrix offXZ = Matrix.Translation(vectorDireccion * 0.15f);
-            Matrix scale = Matrix.Scaling(new Vector3(0.07f, 0.07f, 0.07f));
+            Matrix scale = Matrix.Scaling(new Vector3(0.12f, 0.12f, 0.12f));
             Matrix pos = Matrix.Translation(CustomFpsCamera.Instance.Position);
             posActual = scale * shooterMatrix;
             mesh.Transform = posActual;
@@ -64,6 +70,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     return;
                 }
             }
+            effect.SetValue("time", time);
 
             //Colision con Player1
             TgcCollisionUtils.BoxBoxResult resultPlayer = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, CustomFpsCamera.Instance.boundingBox);
@@ -95,6 +102,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void dispose()
         {
             base.dispose();
+            effect.Dispose();
         }
     }
 }
