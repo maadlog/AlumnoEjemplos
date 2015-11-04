@@ -172,9 +172,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
-                //vegetation[i].setColor(Color.DarkViolet);
-                //vegetation[i].Effect = windShader;
-                //vegetation[i].Technique = "WindTree";
+                vegetation[i].setColor(Color.Purple);
+                vegetation[i].Effect = windShader;
+                vegetation[i].Technique = "WindTree";
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);

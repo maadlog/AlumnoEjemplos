@@ -54,7 +54,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 float min = 500f, max = 1000f, tiempoVida_Particula = 1f;
                 int alpha = 150;
                 float spawn = 0.01f;
-                float sizeSpeed = 100f;
+                float sizeSpeed = 1000f;
                 float updateTime = 0.02f;
 
                 //Creo los emisores de humo

@@ -258,7 +258,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             foreach (TgcMesh m in models)
             {
                 //Me fijo si el mesh esta fuera de la skybox (La misma se construye con el farplane, por eso se usa aca)
-                if ((CustomFpsCamera.Instance.eye - m.Position).Length() < CustomFpsCamera.FAR_PLANE / 2)
+                if ((CustomFpsCamera.Instance.eye - m.Position).Length() < CustomFpsCamera.FAR_PLANE / 2.2)
                 {
                     m.Enabled = true;
                 }

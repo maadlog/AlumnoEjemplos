@@ -752,7 +752,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //Cambiar el FOV de la proyeccion para dar efecto "zoom"
 
-            GuiController.Instance.D3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI / 4) * (1.01f-zoom), 2f, NEAR_PLANE, FAR_PLANE + (1000.0f * zoom));
+            GuiController.Instance.D3dDevice.Transform.Projection = Matrix.PerspectiveFovLH(((float)Math.PI / 4) * (1.01f-zoom), 2f, NEAR_PLANE, FAR_PLANE);
             
 
             updatePosition(direction, elapsedTimeSec);

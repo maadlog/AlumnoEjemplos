@@ -19,22 +19,22 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
         {
             int ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             int ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
-            int widthRatio = ScreenWidth / 1126;
-            int heightRatio = ScreenHeight / 617;
+            int widthRatio = ScreenWidth * 100 / 1126;
+            int heightRatio = ScreenHeight * 100 / 617;
 
             instrucciones = new TgcText2d();
             instrucciones.Text = @"    El objetivo del juego es sobrevivir la mayor cantidad de tiempo posible y sumar puntos, el juego termina cuando el jugador es alcanzado por los enemigos y pierde toda su vida.
     Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom";
             instrucciones.Color = Color.Crimson;
             instrucciones.Align = TgcText2d.TextAlign.LEFT;
-            instrucciones.Position = new Point(0 * widthRatio, 300 * heightRatio);
+            instrucciones.Position = new Point(0 * widthRatio / 100, 300 * heightRatio / 100);
             instrucciones.changeFont(new System.Drawing.Font("TimesNewRoman", 15, FontStyle.Bold));
 
             TgcText2d backText = new TgcText2d();
             backText.Text = "Back";
             backText.Color = Color.Crimson;
             backText.Align = TgcText2d.TextAlign.LEFT;
-            backText.Position = new Point(100 * widthRatio, 500 * heightRatio);
+            backText.Position = new Point(100 * widthRatio / 100, 500 * heightRatio / 100);
             backText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             texts = new TgcText2d[1] { backText };

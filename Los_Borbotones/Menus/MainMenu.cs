@@ -22,28 +22,28 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
         {
             int ScreenWidth = GuiController.Instance.D3dDevice.Viewport.Width;
             int ScreenHeight = GuiController.Instance.D3dDevice.Viewport.Height;
-            int widthRatio = ScreenWidth / 1126;
-            int heightRatio = ScreenHeight / 617;
+            int widthRatio = ScreenWidth * 100 / 1126;
+            int heightRatio = ScreenHeight * 100 / 617;
 
             playText = new TgcText2d();
             playText.Text = "Play";
             playText.Color = Color.Crimson;
             playText.Align = TgcText2d.TextAlign.LEFT;
-            playText.Position = new Point(100 * widthRatio, 330 * heightRatio);
+            playText.Position = new Point(100 * widthRatio /100, 330 * heightRatio /100);
             playText.changeFont(new System.Drawing.Font("TimesNewRoman", 40, FontStyle.Bold));
 
             helpText = new TgcText2d();
             helpText.Text = "Help";
             helpText.Color = Color.Crimson;
             helpText.Align = TgcText2d.TextAlign.LEFT;
-            helpText.Position = new Point(100*widthRatio, 425*heightRatio);
+            helpText.Position = new Point(100 * widthRatio / 100, 425 * heightRatio / 100);
             helpText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             creditsText = new TgcText2d();
             creditsText.Text = "Credits";
             creditsText.Color = Color.Crimson;
             creditsText.Align = TgcText2d.TextAlign.LEFT;
-            creditsText.Position = new Point(100*widthRatio, 500*heightRatio);
+            creditsText.Position = new Point(100 * widthRatio / 100, 500 * heightRatio / 100);
             creditsText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
             texts = new TgcText2d[3] { playText, helpText, creditsText };

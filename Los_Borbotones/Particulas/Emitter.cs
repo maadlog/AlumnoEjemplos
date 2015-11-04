@@ -262,8 +262,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 if (p.Active)
                 {
+                    float renderSize;
+                    if (CustomFpsCamera.Instance.Zoom != 0) { renderSize = p.Size*5; }
+                    else { renderSize = p.Size; }
                     d3dDevice.SetTexture(0, p.Tex);
-                    d3dDevice.RenderState.PointSize = p.Size;
+                    d3dDevice.RenderState.PointSize = renderSize;
                     d3dDevice.DrawPrimitives(PrimitiveType.PointList, p.Index_ParticleVertex, 1);
                 }
             }
