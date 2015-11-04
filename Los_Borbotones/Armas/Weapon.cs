@@ -50,7 +50,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (FIRE_DELAY > 0)
             {
                 SystemState_Particulas.Instance.SetRenderState();
-                muzzle.Render(elapsedTime);
+                //muzzle.Render(elapsedTime);
                 SystemState_Particulas.Instance.SetRenderState_Zero();
             }
             mesh.render();

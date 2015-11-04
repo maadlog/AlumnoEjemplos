@@ -50,7 +50,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         public string MediaDir;
         public string ShaderDir;
         public Effect theShader;
-        string renderFlux;
+        public string renderFlux;
         Device d3dDevice;
 
         //Render Targets
@@ -67,7 +67,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         internal override void Init()
         {
             GuiController.Instance.CustomRenderEnabled = true;
-            renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux"); //1.21 GigaWatts
+            renderFlux = "RenderAll";//1.21 GigaWatts
 
             d3dDevice = GuiController.Instance.D3dDevice;
             MediaDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\";
@@ -142,7 +142,7 @@ namespace AlumnoEjemplo.Los_Borbotones
         {
             theShader.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
             theShader.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
-            renderFlux = (string)GuiController.Instance.Modifiers.getValue("RenderFlux");
+            
             GameManager.Instance.Update(elapsedTime);
             HUDManager.Instance.Update(elapsedTime);
         }

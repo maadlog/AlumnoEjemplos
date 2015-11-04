@@ -50,7 +50,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public int ScreenHeight, ScreenWidth;
         Device d3dDevice;
         float time;
-        string prevWeap;
+        Weapon prevWeap;
 
         TgcSprite HudFront;
         TgcSprite cross;
@@ -246,17 +246,17 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void refreshMainWeapon()
         {
-            string MainWeapon = (string)GuiController.Instance.Modifiers.getValue("Arma");
+            Weapon MainWeapon = GameManager.Instance.player1.weapon;
             if (MainWeapon != prevWeap) {
-                if (MainWeapon == "Sniper")
+                if (MainWeapon.Equals(GameManager.Instance.player1.sniper))
                 {
                     hudWeapon.Texture = sniperTexture;
-                    prevWeap = "Sniper";
+                    prevWeap = GameManager.Instance.player1.sniper;
                 }
                 else
                 {
                     hudWeapon.Texture = launcherTexture;
-                    prevWeap = "Rocket Launcher";
+                    prevWeap = GameManager.Instance.player1.launcher;
                 }
             }
         }

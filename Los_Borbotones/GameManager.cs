@@ -19,6 +19,8 @@ using TgcViewer.Utils.TgcSkeletalAnimation;
 using TgcViewer.Utils.Shaders;
 using AlumnoEjemplos.Los_Borbotones;
 using AlumnoEjemplos.Los_Borbotones.Menus;
+using TgcViewer.Utils.Input;
+using AlumnoEjemplo.Los_Borbotones;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -87,8 +89,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public TgcMesh ModeloProyectil;
 
         
-        public bool drawBoundingBoxes;
-        public bool invincibility;
+        public bool drawBoundingBoxes = false;
+        public bool invincibility = false;
 
 
         public List<Barril> barriles = new List<Barril>();
@@ -271,8 +273,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             time += elapsedTime;
             windShader.SetValue("time", time);
 
-            drawBoundingBoxes = (bool)GuiController.Instance.Modifiers["DrawBoundingBoxes"];
-            invincibility = (bool)GuiController.Instance.Modifiers["Invincibility"];
+            
+           
 
             SPAWN_TIME_COUNTER = SPAWN_TIME_COUNTER + elapsedTime;//contamos el tiempo que paso desde el ultimo spawn de enemigos
 
@@ -315,7 +317,60 @@ namespace AlumnoEjemplos.Los_Borbotones
                 killMultiTracker = 0;
             }
 
-            
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.N))
+            {
+                if (PostProcessManager.Instance.renderFlux == "RenderAll")
+                {
+                    PostProcessManager.Instance.renderFlux = "NightVision";
+                   }
+                else
+                {
+                    PostProcessManager.Instance.renderFlux = "RenderAll";
+                }
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.Q))
+            {
+                if (player1.weapon.Equals( player1.sniper))
+                {
+                    player1.weapon = player1.launcher;
+                }
+                else
+                {
+                    player1.weapon = player1.sniper;
+                }
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F6))
+            {
+                if (drawBoundingBoxes)
+                {
+                    drawBoundingBoxes = false;
+                }
+                else
+                {
+                    drawBoundingBoxes = true;
+                }
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F7))
+            {
+                if (invincibility)
+                {
+                    invincibility = false;
+                }
+                else
+                {
+                    invincibility = true;
+                }
+            }
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.P))
+            {
+                CustomFpsCamera.Instance.JumpSpeed += 100;
+            }
+
+            if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.O))
+            {
+                CustomFpsCamera.Instance.JumpSpeed -= 100;
+            }
+
             //hacemos que el skybox siga al player para no tener problemas con el farplane
             Matrix translate = Matrix.Translation(CustomFpsCamera.Instance.Position);
             skyBox.transform(translate);
@@ -385,6 +440,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             TgcFrustum frustum = GuiController.Instance.Frustum;
             if (drawBoundingBoxes)
+
+
             {
 
                 foreach (Barril barril in barriles)

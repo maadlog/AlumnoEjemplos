@@ -19,9 +19,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Player1:GameObject
     {
-        Weapon weapon;
-        Sniper sniper;
-        RocketLauncher launcher;
+        public Weapon weapon;
+        public Sniper sniper;
+        public RocketLauncher launcher;
 
         TgcStaticSound hitSound;
         TgcStaticSound breathSound;
@@ -93,7 +93,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
-            string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
+           /* string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
             switch (weap)
             {
                 case "Sniper":
@@ -103,9 +103,9 @@ namespace AlumnoEjemplos.Los_Borbotones
                 case "Rocket Launcher":
                     weapon = launcher;
                     break;
-            }
+            }*/
 
-            CustomFpsCamera.Instance.JumpSpeed = (float)GuiController.Instance.Modifiers["FlySpeed"];
+            
 
             //update de la pos del mesh auxiliar
             meshAuxiliarParaSonido.Position = CustomFpsCamera.Instance.eye;

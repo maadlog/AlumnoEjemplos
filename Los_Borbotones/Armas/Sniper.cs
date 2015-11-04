@@ -9,7 +9,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class Sniper:Weapon
+    public class Sniper:Weapon
     {
         public override void Init()
         {

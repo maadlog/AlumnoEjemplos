@@ -8,7 +8,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    class RocketLauncher:Weapon
+    public class RocketLauncher:Weapon
     {
         float hitDelay;
         float DELAY_FACTOR = 5000;
