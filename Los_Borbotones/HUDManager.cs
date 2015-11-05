@@ -56,6 +56,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite cross;
         TgcSprite healthSprite;
         TgcSprite hudWeapon;
+        TgcSprite scoreSprite;
 
         TgcText2d scoreText;
         
@@ -114,9 +115,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             //texto para el score
             //cambia de color segun el score
             scoreText = new TgcText2d();
-            scoreText.Text = "SCORE: " + GameManager.Instance.score;
+            scoreText.Text = GameManager.Instance.score.ToString();
             scoreText.Color = Color.LightBlue;
-            scoreText.changeFont(new System.Drawing.Font("Arial", 10, FontStyle.Bold));
+            scoreText.changeFont(new System.Drawing.Font("Arial", 20, FontStyle.Bold));
 
             // cargamos los sprites
             screenCovered = SMALL_SCOPE;
@@ -143,7 +144,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             refreshMainWeapon();
             hudWeaponInit();
 
+            scoreSprite = new TgcSprite();
+            scoreSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\Score.png");
 
+            initScoreSprite();
             //Cargamos las armas
 
 
@@ -180,6 +184,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             healthSprite.render();
             HudFront.render();
+            scoreSprite.render();
             hudWeapon.render();
             cross.render();
 
@@ -190,10 +195,19 @@ namespace AlumnoEjemplos.Los_Borbotones
             
 
             scoreText.render();
-            if (TEXT_DELAY > 0) { specialKillText.render(); }
+            if (TEXT_DELAY > 0) {
+                int alphaLerp = (int)(TEXT_DELAY * 255 / TEXT_DELAY_MAX);
+                specialKillText.Color = Color.FromArgb(alphaLerp, specialKillText.Color);
+                specialKillText.render(); }
         }
 
         //SPRITES
+
+        public void specialKillTextInit()
+        {
+            TEXT_DELAY = TEXT_DELAY_MAX;
+            specialKillText.Position = new Point(0, 100);
+        }
 
         public void refreshScopeTexture()
         {
@@ -234,6 +248,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             HudFront.Position = new Vector2((ScreenWidth * 0.01f) , ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
 
         }
+
+        public void initScoreSprite()
+        {
+            Size tamaño = scoreSprite.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            scoreSprite.Scaling = new Vector2(scale, scale);
+            scoreSprite.Position = new Vector2((ScreenWidth * 0.5f) - (tamaño.Width * scale/2), 0f);
+        }
+
 
         public void healthInit()
         {
@@ -290,21 +313,20 @@ namespace AlumnoEjemplos.Los_Borbotones
         //SCORE
         public void refreshScore()
         {
-            scoreText.Text = "SCORE: " + GameManager.Instance.score;
-            ChangeTextColor();
+            scoreText.Text = GameManager.Instance.score.ToString();
         }
 
         public void headShot()
         {
             specialKillText.Text = "HEADSHOT!!";
-            TEXT_DELAY = TEXT_DELAY_MAX;
+            specialKillTextInit();
             playSound(headshotSoundDir);
         }
 
         public void headHunter()
         {
             specialKillText.Text = "HEAD HUNTER!!";
-            TEXT_DELAY = TEXT_DELAY_MAX;
+            specialKillTextInit();
             playSound(headhunterSoundDir);
         }
 
@@ -314,33 +336,39 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 case 2:
                     specialKillText.Text = "DOUBLE KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(doubleSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 200, 200));
                     break;
                 case 3:
                     specialKillText.Text = "MULTI KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(multiSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 170, 170));
                     break;
                 case 4:
                     specialKillText.Text = "MEGA KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(megaSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 120, 120));
                     break;
                 case 5:
                     specialKillText.Text = "ULTRA KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(ultraSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 90, 90));
                     break;
                 case 6:
                     specialKillText.Text = "MONSTER KILL";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(monsterSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 50, 50));
                     break;
                 case 10:
                     specialKillText.Text = "MASSACRE";
-                    TEXT_DELAY = TEXT_DELAY_MAX;
+                    specialKillTextInit();
                     playSound(massacreSoundDir);
+                    ChangeTextColor(Color.FromArgb(255, 0, 0));
                     break;
                 default:
                     break;
@@ -350,38 +378,40 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void gameOver()
         {
             specialKillText.Text = "GAME OVER";
-            TEXT_DELAY = TEXT_DELAY_MAX;
+            specialKillTextInit();
             GAME_OVER = true;
         }
 
         public void denied()
         {
             playSound(deniedSoundDir);
+            ChangeTextColor(Color.LightBlue);
         }
 
-        private void ChangeTextColor()
+        private void ChangeTextColor(Color aColor)
         {
-            //cambiamos el color del score segun el puntaje
-            if (GameManager.Instance.score >= 0)
-            {
-                scoreText.Color = Color.White;
-            }
-            if (GameManager.Instance.score > 10)
-            {
-                scoreText.Color = Color.Orange;
-            }
-            if (GameManager.Instance.score > 20)
-            {
-                scoreText.Color = Color.Silver;
-            }
-            if (GameManager.Instance.score > 30)
-            {
-                scoreText.Color = Color.Gold;
-            }
-            if (GameManager.Instance.score > 50)
-            {
-                scoreText.Color = Color.LightCyan;
-            }
+            scoreText.Color = aColor;
+            ////cambiamos el color del score segun el puntaje
+            //if (GameManager.Instance.score >= 0)
+            //{
+            //    scoreText.Color = Color.White;
+            //}
+            //if (GameManager.Instance.score > 10)
+            //{
+            //    scoreText.Color = Color.Orange;
+            //}
+            //if (GameManager.Instance.score > 20)
+            //{
+            //    scoreText.Color = Color.Silver;
+            //}
+            //if (GameManager.Instance.score > 30)
+            //{
+            //    scoreText.Color = Color.Gold;
+            //}
+            //if (GameManager.Instance.score > 50)
+            //{
+            //    scoreText.Color = Color.LightCyan;
+            //}
         }
 
         public void playSound(string dir)
