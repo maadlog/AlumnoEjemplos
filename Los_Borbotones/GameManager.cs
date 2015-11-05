@@ -568,6 +568,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             if (GAME_OVER || invincibility) { return; }
             HUDManager.Instance.gameOver();
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.SonidoMovimiento.stop();
+            }
             GAME_OVER = true;
         }
 
