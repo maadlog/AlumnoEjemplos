@@ -375,6 +375,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             MOVEMENT_SPEED = 0;
             MatOrientarMuerto = MatOrientarObjeto ;
             direccionMuerto = vectorDireccionRotacion;
+            SonidoMovimiento.stop();
         }
     }
 }

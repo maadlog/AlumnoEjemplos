@@ -229,6 +229,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public override void Render(float elapsedTime)
         {
             weapon.Render(elapsedTime);
+            if (launcher.explosion != null) { launcher.explosion.render(elapsedTime); }
            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 

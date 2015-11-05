@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float DELAY_FACTOR = 5000;
         Vector3 target;
         bool fired;
-        Explosion explosion;
+        public Explosion explosion;
 
         public override void Init()
         {
@@ -57,7 +57,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Render(float elapsedTime)
         {
-            if (explosion != null) { explosion.render(elapsedTime); }
             base.Render(elapsedTime);
         }
     }
