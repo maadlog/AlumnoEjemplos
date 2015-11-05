@@ -465,8 +465,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 }
             }
 
-            player1.Render(elapsedTime);
-
             //Obtener valor de UserVar (hay que castear)
             GuiController.Instance.UserVars.setValue("N Vegetacion Visible", vegetacionVisible);
             int valor = (int)GuiController.Instance.UserVars.getValue("N Vegetacion Visible");
@@ -474,13 +472,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", terrenosVisibles);
             int valor2 = (int)GuiController.Instance.UserVars.getValue("N Sub-terrenos Visibles");
             terrenosVisibles = 0;
-
-            foreach (Barril barril in barriles)
-            {
-
-                barril.Render(elapsedTime);
-
-            }
 
             int parte, texture = 0;
             foreach (Pasto pasto in pastos)
@@ -503,6 +494,15 @@ namespace AlumnoEjemplos.Los_Borbotones
                     if (texture > 2) texture = 0;
                 }
             }
+
+            foreach (Barril barril in barriles)
+            {
+
+                barril.Render(elapsedTime);
+
+            }
+
+            player1.Render(elapsedTime);
         }
 
         internal void RenderBrigth(float elapsedTime)
@@ -514,6 +514,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 enemigo.Render(elapsedTime);
             }
+
+            proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
 
             quadTree.render(frustum, drawBoundingBoxes, "Oil");
 
@@ -528,8 +530,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             terrain.render();
 
             TgcFrustum frustum = GuiController.Instance.Frustum;
-
-            proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));
             
         }
 
