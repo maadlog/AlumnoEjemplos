@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             //Aplicar valores en pared
             pastoWall.Origin = origen;
-            pastoWall.Size = new Vector3(36, 27, 36);
+            pastoWall.Size = new Vector3(36, 30, 36);
             pastoWall.AutoAdjustUv = true;
             pastoWall.UTile = 1;
             pastoWall.VTile = 1;
@@ -143,15 +143,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
 
             CustomVertex.PositionTextured[] vertices = new CustomVertex.PositionTextured[6];
+            float d = 0.02f;
             //Primer triangulo
-            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + pastoWall.UTile, offsetV + pastoWall.VTile);
-            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + pastoWall.VTile);
-            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + pastoWall.UTile + d, offsetV + pastoWall.VTile +d);
+            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU + d, offsetV + pastoWall.VTile + d);
+            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU + d, offsetV + d);
 
             //Segundo triangulo
-            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + pastoWall.UTile, offsetV + pastoWall.VTile);
-            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
-            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + pastoWall.UTile, offsetV);
+            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + pastoWall.UTile + d, offsetV + pastoWall.VTile + d);
+            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU + d, offsetV + d);
+            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + pastoWall.UTile + d, offsetV + d);
 
             for (int i = 0; i < vertices.Length; i++)
             {

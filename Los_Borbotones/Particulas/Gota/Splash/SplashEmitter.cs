@@ -87,7 +87,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     else
                     {
-                        p.Matar(this);
+                        //p.Matar(this);
                     }
                     p.CV_PositionColored = new CustomVertex.PositionColored(p.CurrentPos, Color.FromArgb(p.Alpha, p.Colour).ToArgb());
                     this.ParticlesVertex[p.Index_ParticleVertex] = p.CV_PositionColored;

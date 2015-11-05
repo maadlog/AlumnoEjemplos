@@ -80,7 +80,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
             //Realizamos ataque de enemigos
-            if (!attacking)
+            if (!attacking && !muerto)
             {
                 vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
                 if (vectorDireccion.Length() <= ATTACK_RANGE && attackDelay <= 0) 
