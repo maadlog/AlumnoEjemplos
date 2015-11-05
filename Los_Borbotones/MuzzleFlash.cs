@@ -17,9 +17,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public TgcPlaneWall muzzleFlash;
         Vector3 BLoffset, TLoffset, BRoffset, TRoffset;
         public float MUZZLE_DELAY;
-        public float MAX_DELAY = 0.15f;
+        public float MAX_DELAY = 0.1f;
         public float TIME_RENDER;
         public float MAX_RENDER;
+        public Vector3 scale;
 
         public void crearMuzzle()
         {
@@ -62,8 +63,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void animateTexture()
         {
             int i = 0;
-            if (MUZZLE_DELAY <= MAX_DELAY && MUZZLE_DELAY > 0.075f) i = 0;
-            if (MUZZLE_DELAY < 0.075f && MUZZLE_DELAY > 0) i = 1;
+            if (MUZZLE_DELAY <= MAX_DELAY && MUZZLE_DELAY > 0.05f) i = 0;
+            if (MUZZLE_DELAY < 0.05f && MUZZLE_DELAY > 0) i = 1;
             if (MUZZLE_DELAY <= 0) i = 2;
             Device d3dDevice = GuiController.Instance.D3dDevice;
             string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\" + textures_flash[i];
@@ -103,9 +104,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             Matrix fpsMatrixInv = Matrix.Invert(CustomFpsCamera.Instance.ViewMatrix);
             Matrix muzzleOffset = Matrix.Translation(MUZZLE_OFFSET);
-            Matrix scale = Matrix.Scaling(0.0002f, 0.0002f, 0.0002f);
+            Matrix muzzleScale = Matrix.Scaling(scale);
 
-            return scale * muzzleOffset * fpsMatrixInv;
+            return muzzleScale * muzzleOffset * fpsMatrixInv;
         }
 
         public CustomVertex.PositionTextured[] actualizarFlash()

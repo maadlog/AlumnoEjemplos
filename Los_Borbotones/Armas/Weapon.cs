@@ -21,6 +21,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public string weaponSoundDir;
         TgcStaticSound weaponSound;
         public MuzzleFlash muzzle;
+        public Vector3 scaleMuzzle;
 
         public override void Init()
         {

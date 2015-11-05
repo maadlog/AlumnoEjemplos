@@ -27,6 +27,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Launcher.wav";
             WEAPON_OFFSET = new Vector3(5f, -14.2f, -7f);
             WEAPON_ORIENTATION_Y = 0.05f;
+            scaleMuzzle = new Vector3(0.5f, 0.5f, 0.5f);
             base.Init();
 
             MAX_DELAY = 4;

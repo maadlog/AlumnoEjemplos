@@ -20,6 +20,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             weaponSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Armas/Sniper.wav";
             WEAPON_OFFSET = new Vector3(5f, -10.2f, 0.8f);
             WEAPON_ORIENTATION_Y = 0.1f;
+            scaleMuzzle = new Vector3(0.0002f, 0.0002f, 0.0002f);
             base.Init();
         }
 
