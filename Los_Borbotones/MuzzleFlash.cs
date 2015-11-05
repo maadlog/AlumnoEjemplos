@@ -40,10 +40,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             muzzleFlash.VTile = 1;
 
             //Offsets
+            
+            /*
             BLoffset = new Vector3(-100, -17.7f, 14.7f);
             TLoffset = new Vector3(-100, -17.7f, 14.7f + muzzleFlash.Size.Z);
             BRoffset = new Vector3(-100, -17.7f + muzzleFlash.Size.Y, 14.7f);
             TRoffset = new Vector3(-100, -17.7f + muzzleFlash.Size.Y, 14.7f + muzzleFlash.Size.Z);
+            */
+            
+            BLoffset = new Vector3( 3.5f, -12f, 50);
+            TLoffset = new Vector3(3.5f + muzzleFlash.Size.X, -12f, 50);
+            BRoffset = new Vector3(3.5f, -12f + muzzleFlash.Size.Y, 50);
+            TRoffset = new Vector3(3.5f + muzzleFlash.Size.X, -12f + muzzleFlash.Size.Y, 50);
+            
+            
         }
 
         public void renderFlash()
@@ -75,28 +85,30 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public Matrix calcularOrientacion(Vector3 WEAPON_OFFSET)
         {
+            Matrix fpsMatrixInv = Matrix.Invert(CustomFpsCamera.Instance.ViewMatrix);
+            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET);
 
-            return Matrix.Translation(WEAPON_OFFSET);
+            return weaponOffset * fpsMatrixInv;
         }
 
         public CustomVertex.PositionTextured[] actualizarFlash()
         {
             float autoWidth;
             float autoHeight;
-            Vector3 origen = CustomFpsCamera.Instance.Position;
+            Vector3 origen = new Vector3(0, 0, 0);
             origen.Y -= muzzleFlash.Size.Y / 2;
-            origen.Z -= muzzleFlash.Size.Z / 2;
+            origen.X -= muzzleFlash.Size.X / 2;
             muzzleFlash.Origin = origen;
             
             //Calcular los 4 corners de la pared
             Vector3 bLeft, tLeft, bRight, tRight;
             bLeft = muzzleFlash.Origin;
-            tLeft = new Vector3(muzzleFlash.Origin.X, muzzleFlash.Origin.Y, muzzleFlash.Origin.Z + muzzleFlash.Size.Z);
+            tLeft = new Vector3(muzzleFlash.Origin.X + muzzleFlash.Size.X, muzzleFlash.Origin.Y, muzzleFlash.Origin.Z);
             bRight = new Vector3(muzzleFlash.Origin.X, muzzleFlash.Origin.Y + muzzleFlash.Size.Y, muzzleFlash.Origin.Z);
-            tRight = new Vector3(muzzleFlash.Origin.X, muzzleFlash.Origin.Y + muzzleFlash.Size.Y, muzzleFlash.Origin.Z + muzzleFlash.Size.Z);                                   
+            tRight = new Vector3(muzzleFlash.Origin.X + muzzleFlash.Size.X, muzzleFlash.Origin.Y + muzzleFlash.Size.Y, muzzleFlash.Origin.Z);                                   
             
             autoWidth = (muzzleFlash.Size.Y / muzzleFlash.Texture.Width);
-            autoHeight = (muzzleFlash.Size.Z / muzzleFlash.Texture.Height);
+            autoHeight = (muzzleFlash.Size.X / muzzleFlash.Texture.Height);
 
             //Auto ajustar UV
             if (muzzleFlash.AutoAdjustUv)
