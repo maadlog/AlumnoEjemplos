@@ -15,7 +15,7 @@ namespace AlumnoEjemplos.Los_Borbotones
     {
         public List<string> textures_flash = new List<string>();
         public TgcPlaneWall muzzleFlash;
-        Vector3 BLoffset, TLoffset, BRoffset, TRoffset, ptoRotOffset, ptoRotOffset2;
+        Vector3 BLoffset, TLoffset, BRoffset, TRoffset;
 
         public void crearMuzzle()
         {
@@ -44,8 +44,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             TLoffset = new Vector3(-100, -17.7f, 14.7f + muzzleFlash.Size.Z);
             BRoffset = new Vector3(-100, -17.7f + muzzleFlash.Size.Y, 14.7f);
             TRoffset = new Vector3(-100, -17.7f + muzzleFlash.Size.Y, 14.7f + muzzleFlash.Size.Z);
-            ptoRotOffset = new Vector3(0, 0, 14.7f + muzzleFlash.Size.Z);
-            ptoRotOffset2 = new Vector3(-1, 0, 0);
         }
 
         public void renderFlash()
@@ -77,20 +75,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public Matrix calcularOrientacion(Vector3 WEAPON_OFFSET)
         {
-            Vector3 direccion = CustomFpsCamera.Instance.LookAt - CustomFpsCamera.Instance.Position;
-            direccion.Normalize();
 
-            Vector3 puntoRotacionTranslated = Vector3.TransformCoordinate(CustomFpsCamera.Instance.Position, Matrix.Translation(ptoRotOffset2));
-            Vector3 normal = puntoRotacionTranslated - CustomFpsCamera.Instance.Position;
-            normal.Normalize();
-
-            float angle = FastMath.Acos(Vector3.Dot(normal, direccion));
-            Vector3 rotationVec = Vector3.Cross(normal, direccion);
-            rotationVec.Normalize();
-
-            Vector3 OffsetRotado = Vector3.TransformCoordinate(WEAPON_OFFSET, Matrix.RotationAxis(rotationVec, angle));
-
-            return Matrix.Invert(Matrix.Translation(CustomFpsCamera.Instance.Position)) * Matrix.RotationAxis(rotationVec, angle) * Matrix.Translation(CustomFpsCamera.Instance.Position) * Matrix.Translation(OffsetRotado);
+            return Matrix.Translation(WEAPON_OFFSET);
         }
 
         public CustomVertex.PositionTextured[] actualizarFlash()
