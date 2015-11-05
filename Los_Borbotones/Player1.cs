@@ -115,11 +115,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (GuiController.Instance.D3dInput.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT) && weapon.FIRE_DELAY <= 0)
             {
                 weapon.FIRE_DELAY = weapon.MAX_DELAY;
+                weapon.muzzle.MUZZLE_DELAY = weapon.muzzle.MAX_DELAY;
+                weapon.muzzle.TIME_RENDER = weapon.muzzle.MAX_RENDER;
                 weapon.fireWeapon();
                 CustomFpsCamera.Instance.rotateSmoothly(-0.30f, -1.5f, 0);
             }
 
             if (weapon.FIRE_DELAY > 0) { weapon.FIRE_DELAY -= elapsedTime; }
+            if (weapon.muzzle.MUZZLE_DELAY > 0) { weapon.muzzle.MUZZLE_DELAY -= elapsedTime; }
+            if (weapon.muzzle.TIME_RENDER > 0) { weapon.muzzle.TIME_RENDER -= elapsedTime; }
 
 
             if (GuiController.Instance.D3dInput.buttonPressed(TgcD3dInput.MouseButtons.BUTTON_RIGHT) && ZOOM_DELAY <= 0.5f)

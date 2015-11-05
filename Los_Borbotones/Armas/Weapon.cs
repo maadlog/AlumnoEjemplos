@@ -20,7 +20,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float weaponOscilation;
         public string weaponSoundDir;
         TgcStaticSound weaponSound;
-        MuzzleFlash muzzle;
+        public MuzzleFlash muzzle;
 
         public override void Init()
         {
@@ -51,7 +51,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Render(float elapsedTime)
         {
-            muzzle.renderFlash();
+            if(muzzle.TIME_RENDER > 0) muzzle.renderFlash();
             mesh.render();
         }
 

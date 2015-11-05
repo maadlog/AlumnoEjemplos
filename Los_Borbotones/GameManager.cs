@@ -112,8 +112,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         float maxMoved = 5;
         float minMoved = -5;
 
-        MuzzleFlash muzzle;
-
         internal void Init()
         {
             
@@ -261,9 +259,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 if (secuense > 2) secuense = 0;
                 if (part > 5) part = 0;
             }
-
-            muzzle = new MuzzleFlash();
-            muzzle.crearMuzzle();
         }
 
         internal void Update(float elapsedTime)
@@ -507,8 +502,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                     if (texture > 2) texture = 0;
                 }
             }
-
-            muzzle.renderFlash();
         }
 
         internal void RenderBrigth(float elapsedTime)
@@ -557,7 +550,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 pasto.dispose();
             }
-            muzzle.dispose();
         }
 
         void compareAssign(float n, float max)

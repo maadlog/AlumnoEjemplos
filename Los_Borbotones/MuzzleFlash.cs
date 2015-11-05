@@ -16,6 +16,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public List<string> textures_flash = new List<string>();
         public TgcPlaneWall muzzleFlash;
         Vector3 BLoffset, TLoffset, BRoffset, TRoffset;
+        public float MUZZLE_DELAY;
+        public float MAX_DELAY = 0.15f;
+        public float TIME_RENDER;
+        public float MAX_RENDER;
 
         public void crearMuzzle()
         {
@@ -23,6 +27,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             textures_flash.Add("flash1.png");
             textures_flash.Add("flash2.png");
             textures_flash.Add("flash3.png");
+            MAX_RENDER = MAX_DELAY + MAX_DELAY / 2;
 
             string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\" + textures_flash[0];
             TgcTexture pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
@@ -52,13 +57,24 @@ namespace AlumnoEjemplos.Los_Borbotones
             TLoffset = new Vector3(3.5f + muzzleFlash.Size.X, -12f, 50);
             BRoffset = new Vector3(3.5f, -12f + muzzleFlash.Size.Y, 50);
             TRoffset = new Vector3(3.5f + muzzleFlash.Size.X, -12f + muzzleFlash.Size.Y, 50);
-            
-            
+        }
+
+        public void animateTexture()
+        {
+            int i = 0;
+            if (MUZZLE_DELAY <= MAX_DELAY && MUZZLE_DELAY > 0.075f) i = 0;
+            if (MUZZLE_DELAY < 0.075f && MUZZLE_DELAY > 0) i = 1;
+            if (MUZZLE_DELAY <= 0) i = 2;
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+            string texturePath = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\" + textures_flash[i];
+            TgcTexture pasto_texture = TgcTexture.createTexture(d3dDevice, texturePath);
+            muzzleFlash.setTexture(pasto_texture);
         }
 
         public void renderFlash()
         {
             Device d3dDevice = GuiController.Instance.D3dDevice;
+            animateTexture();
             TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
 
             d3dDevice.RenderState.AlphaTestEnable = true;
@@ -83,12 +99,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             d3dDevice.RenderState.AlphaBlendEnable = false;
         }
 
-        public Matrix calcularOrientacion(Vector3 WEAPON_OFFSET)
+        public Matrix calcularOrientacion(Vector3 MUZZLE_OFFSET)
         {
             Matrix fpsMatrixInv = Matrix.Invert(CustomFpsCamera.Instance.ViewMatrix);
-            Matrix weaponOffset = Matrix.Translation(WEAPON_OFFSET);
+            Matrix muzzleOffset = Matrix.Translation(MUZZLE_OFFSET);
+            Matrix scale = Matrix.Scaling(0.0002f, 0.0002f, 0.0002f);
 
-            return weaponOffset * fpsMatrixInv;
+            return scale * muzzleOffset * fpsMatrixInv;
         }
 
         public CustomVertex.PositionTextured[] actualizarFlash()
