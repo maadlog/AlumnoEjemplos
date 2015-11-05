@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
  
-        public int MAX_ENEMIES = 10;
+        public int MAX_ENEMIES = 20;
         public TgcMesh ModeloRobot;
         public TgcMesh ModeloNave;
         public TgcMesh ModeloProyectil;
@@ -450,14 +450,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
-            //dibujamos todos los enemigos
-            foreach(Enemy enemigo in enemies){
-                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, enemigo.mesh.BoundingBox);
-                if (result == TgcCollisionUtils.FrustumResult.INSIDE || result ==  TgcCollisionUtils.FrustumResult.INTERSECT){
-                enemigo.Render(elapsedTime);
-                }
-            }
-
             foreach(Proyectil proyectil in proyectiles){
                 TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, proyectil.mesh.BoundingBox);
                 if (result == TgcCollisionUtils.FrustumResult.INSIDE || result ==  TgcCollisionUtils.FrustumResult.INTERSECT){
@@ -492,6 +484,16 @@ namespace AlumnoEjemplos.Los_Borbotones
                     }
                     texture++;
                     if (texture > 2) texture = 0;
+                }
+            }
+
+            //dibujamos todos los enemigos
+            foreach (Enemy enemigo in enemies)
+            {
+                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, enemigo.mesh.BoundingBox);
+                if (result == TgcCollisionUtils.FrustumResult.INSIDE || result == TgcCollisionUtils.FrustumResult.INTERSECT)
+                {
+                    enemigo.Render(elapsedTime);
                 }
             }
 

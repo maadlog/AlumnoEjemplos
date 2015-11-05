@@ -23,7 +23,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float ATTACK_RANGE = 200f;
         public float ATTACK_DELAY = 3f;
         public float attackDelay = 0;
-        public float MOVEMENT_SPEED = 125f;
+        public float MOVEMENT_SPEED = 175f;
         public float SPAWN_RADIUS= 5000f;
         public Matrix posicionActual;
         public Vector3 Normal;

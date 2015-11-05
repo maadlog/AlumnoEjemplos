@@ -24,7 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Device d3dDevice = GuiController.Instance.D3dDevice;
             MESH_SCALE = 0.5f;
             attackDamage = 50;
-            MOVEMENT_SPEED = 170f;
+            MOVEMENT_SPEED = 225f;
             //cargamos el mesh
             //las naves no tienen skeletalMesh
             this.mesh = GameManager.Instance.ModeloNave.clone("Nave");
