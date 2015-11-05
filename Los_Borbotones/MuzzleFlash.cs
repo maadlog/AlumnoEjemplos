@@ -154,7 +154,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             vertices[3].Position = Vector3.TransformCoordinate(vertices[3].Position, calcularOrientacion(BLoffset));
             vertices[4].Position = Vector3.TransformCoordinate(vertices[4].Position, calcularOrientacion(TRoffset));
             vertices[5].Position = Vector3.TransformCoordinate(vertices[5].Position, calcularOrientacion(BRoffset));
-            
 
             //BoundingBox
             muzzleFlash.BoundingBox.setExtremes(bLeft, tRight);
@@ -165,6 +164,11 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void dispose()
         {
             muzzleFlash.dispose();
+        }
+
+        public Vector3 getPosicion()
+        {
+            return Vector3.TransformCoordinate(new Vector3(0,0,0), calcularOrientacion(new Vector3(3.5f + muzzleFlash.Size.X/2, -12f + muzzleFlash.Size.Y/2, 55)));
         }
     }
 }
