@@ -984,11 +984,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             float y;
             interpoledHeight(x, z, out y);
 
-            pastosCoords.Add(new Vector3(x + 22, y, z + 1));
-            pastosCoords.Add(new Vector3(x + 35, y, z + 2));
-            pastosCoords.Add(new Vector3(x, y, z + 2));
-            pastosCoords.Add(new Vector3(x + 5, y, z + 3));
-            pastosCoords.Add(new Vector3(x + 22, y, z + 3));
+            pastosCoords.Add(new Vector3(x + 22, y, z + 4));
+            pastosCoords.Add(new Vector3(x + 35, y, z + 8));
+            pastosCoords.Add(new Vector3(x, y, z + 8));
+            pastosCoords.Add(new Vector3(x + 5, y, z + 12));
+            pastosCoords.Add(new Vector3(x + 22, y, z + 12));
             pastosCoords.Add(new Vector3(x + 27, y, z));
         }
     }
