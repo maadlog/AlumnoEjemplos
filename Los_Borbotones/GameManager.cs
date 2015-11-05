@@ -572,7 +572,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 enemy.SonidoMovimiento.stop();
             }
-            GAME_OVER = true;
+            GAME_OVER = false;
         }
 
         public Vector3 fireLauncher()
