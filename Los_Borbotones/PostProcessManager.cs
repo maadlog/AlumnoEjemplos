@@ -135,6 +135,7 @@ namespace AlumnoEjemplo.Los_Borbotones
             quadVertexBuffer.SetData(Vertices, 0, LockFlags.None);
 
             GameManager.Instance.Init();
+            HUDManager.Instance.Init();
 
         }
 
