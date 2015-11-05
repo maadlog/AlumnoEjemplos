@@ -13,7 +13,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 {
     public class Pasto
     {
-        public List<string> texture_pastos = new List<string>();
         public List<TgcPlaneWall> partePasto = new List<TgcPlaneWall>();
         public Matrix m_mRotacion = new Matrix();
 
@@ -40,14 +39,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             TgcPlaneWall pastoWall = new TgcPlaneWall();
             pastoWall.AlphaBlendEnable = true;
             pastoWall.setTexture(pasto_texture);
-
-            TgcPlaneWall.Orientations or = TgcPlaneWall.Orientations.XYplane;
-
+            
             //Aplicar valores en pared
             pastoWall.Origin = origen;
             pastoWall.Size = new Vector3(36, 27, 36);
-            pastoWall.Orientation = or;
-            pastoWall.AutoAdjustUv = false;
+            pastoWall.AutoAdjustUv = true;
             pastoWall.UTile = 1;
             pastoWall.VTile = 1;
             pastoWall.updateValues();
