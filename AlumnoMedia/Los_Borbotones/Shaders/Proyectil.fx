@@ -193,9 +193,9 @@ VS_OUTPUT vs_main4( VS_INPUT Input )
    Output.Texcoord = Input.Texcoord;
 
 	// Animar color
-   Input.Color.r = 0;
-   Input.Color.g = 0;
-	Input.Color.b = 255;
+   Input.Color.b = abs(sin(time));
+   Input.Color.g = abs(cos(time));
+	Input.Color.r = 0;
 Input.Color.a = 100;
    
    
@@ -212,7 +212,7 @@ technique RenderScene
  pass Pass_0
    {
 	 VertexShader = compile vs_2_0 vs_main4();
-	  PixelShader = compile ps_2_0 ps_main(); 
+	  PixelShader = compile ps_2_0 ps_main2(); 
 	}
    pass Pass_1
    {
