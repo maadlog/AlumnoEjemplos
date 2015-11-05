@@ -24,7 +24,8 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
 
             instrucciones = new TgcText2d();
             instrucciones.Text = @"    El objetivo del juego es sobrevivir la mayor cantidad de tiempo posible y sumar puntos, el juego termina cuando el jugador es alcanzado por los enemigos y pierde toda su vida.
-    Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom";
+    Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Click izqierdo para disparar, derecho para hacer zoom. N para activar NightVision, Q para cambiar de arma. 
+    Para Debug: F6 para dibujar AABB, F7 para activar GodMode. P para aumentar velocidad de Vuelo, O para decrementar.";
             instrucciones.Color = Color.Crimson;
             instrucciones.Align = TgcText2d.TextAlign.LEFT;
             instrucciones.Position = new Point(0 * widthRatio / 100, 300 * heightRatio / 100);
