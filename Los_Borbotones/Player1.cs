@@ -34,7 +34,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string runSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Player/Run.wav";
         public Vector3 prevEye;
         public int vida;
-        double intensidadMaximaEscalable = Math.Pow(0.7, 2);
+        double intensidadMaximaEscalable = Math.Pow(0.5, 2);
         float sprintTime;
         float tiredTime;
         float MAX_SPRINT_TIME = 5;
@@ -63,6 +63,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             launcher.Init();
 
             weapon = sniper;
+            weapon.muzzle.scale = weapon.scaleMuzzle;
 
             //Mesh auxiliar para el sonido
             TgcSceneLoader loader = new TgcSceneLoader();

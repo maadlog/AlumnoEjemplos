@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcStaticSound weaponSound;
         public MuzzleFlash muzzle;
         Effect currentShader;
+        public Vector3 scaleMuzzle;
 
         public override void Init()
         {

@@ -331,6 +331,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 {
                     player1.weapon = player1.sniper;
                 }
+                player1.weapon.muzzle.scale = player1.weapon.scaleMuzzle;
             }
             if (GuiController.Instance.D3dInput.keyPressed(Microsoft.DirectX.DirectInput.Key.F6))
             {
