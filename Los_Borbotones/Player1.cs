@@ -90,6 +90,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             playSound(walkSound, walkSoundDir, true);
             playSound(runSound, runSoundDir, true);
             runSound.stop();
+            walkSound.stop();
         }
 
         public override void Update(float elapsedTime)
