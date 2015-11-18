@@ -57,6 +57,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite healthSprite;
         TgcSprite hudWeapon;
         TgcSprite scoreSprite;
+        TgcSprite mapBaseSprite;
+        
 
         TgcText2d scoreText;
         
@@ -92,6 +94,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcTexture sniperTexture;
 
         float hudScreenCovered = 0.15f;
+
+        float MAP_RADIUS = 50f;
+        Vector2 mapCenter;
 
 
         public void Init()
@@ -148,9 +153,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\Score.png");
 
             initScoreSprite();
-            //Cargamos las armas
 
+            mapBaseSprite = new TgcSprite();
+            
+            mapBaseSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\MapBase.png");
+            
 
+            initMapBase();
 
             //inicializo audio
             sound = new TgcStaticSound();
@@ -172,7 +181,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 MenuManager.Instance.cargarPantalla(new AlumnoEjemplos.Los_Borbotones.Menus.MainMenu());
                 close();
-                //Init();
             }
             refreshMainWeapon();
         }
@@ -192,6 +200,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             GuiController.Instance.Drawer2D.endDrawSprite();
 
             // TODO, cuando el refresh funque 
+            
+            renderMinimap();
             
 
             scoreText.render();
@@ -248,6 +258,21 @@ namespace AlumnoEjemplos.Los_Borbotones
             HudFront.Position = new Vector2((ScreenWidth * 0.01f) , ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
 
         }
+
+        public void initMapBase()
+        {
+            Size tamaño = mapBaseSprite.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            mapBaseSprite.Scaling = new Vector2(scale, scale);
+            mapBaseSprite.Position = new Vector2((ScreenWidth * 0.01f), (ScreenHeight * 0.01f));
+
+            Vector2 tamañoReal = new Vector2(tamaño.Width * scale, tamaño.Height * scale);
+            tamañoReal.Multiply(0.5f);
+            mapCenter = new Vector2((ScreenWidth * 0.01f) + tamañoReal.X, (ScreenHeight * 0.01f) + tamañoReal.Y);
+
+        }
+
+
 
         public void initScoreSprite()
         {
@@ -391,27 +416,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         private void ChangeTextColor(Color aColor)
         {
             scoreText.Color = aColor;
-            ////cambiamos el color del score segun el puntaje
-            //if (GameManager.Instance.score >= 0)
-            //{
-            //    scoreText.Color = Color.White;
-            //}
-            //if (GameManager.Instance.score > 10)
-            //{
-            //    scoreText.Color = Color.Orange;
-            //}
-            //if (GameManager.Instance.score > 20)
-            //{
-            //    scoreText.Color = Color.Silver;
-            //}
-            //if (GameManager.Instance.score > 30)
-            //{
-            //    scoreText.Color = Color.Gold;
-            //}
-            //if (GameManager.Instance.score > 50)
-            //{
-            //    scoreText.Color = Color.LightCyan;
-            //}
         }
 
         public void playSound(string dir)
@@ -429,6 +433,28 @@ namespace AlumnoEjemplos.Los_Borbotones
             sound.loadSound(dir, PLAYER_VOLUME);
             sound.play(loop);
         }
+
+        public void renderMinimap()
+        {
+            GuiController.Instance.Drawer2D.beginDrawSprite();
+            mapBaseSprite.render();
+            GuiController.Instance.Drawer2D.endDrawSprite();
+            
+
+            foreach(Enemy enemigo in GameManager.Instance.enemies)
+            {
+                Vector3 distance = CustomFpsCamera.Instance.getPosition() - enemigo.getPosicionActual();
+                Vector2 dist = new Vector2(distance.X, distance.Z);
+                if (Vector2.Length(dist) <= 2500)
+                {
+                    enemigo.updatePointer(mapCenter,dist);
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    enemigo.pointer.render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                }
+            }
+        }
+
         public void close()
         {
             specialKillText.dispose();
