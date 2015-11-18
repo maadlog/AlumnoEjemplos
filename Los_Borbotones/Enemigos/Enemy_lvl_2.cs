@@ -8,6 +8,7 @@ using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Sound;
+using System.Drawing;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -36,7 +37,23 @@ namespace AlumnoEjemplos.Los_Borbotones
             //realizamos el init() comun a todos los enemigos
             base.Init();
 
-            //setBaseEffect();
+            mesh.Effect = GameManager.Instance.envMap;
+            mesh.Technique = "SimpleEnvironmentMapTechnique";
+            mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+            mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(0, 1000, 0)));
+            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
+            mesh.Effect.SetValue("lightIntensity", 20);
+            mesh.Effect.SetValue("lightAttenuation", 0.3f);
+            mesh.Effect.SetValue("reflection", 0.35f);
+
+            //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
+            mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+            mesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+            mesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+            mesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+            mesh.Effect.SetValue("materialSpecularExp", 9);
+
+            mesh.Effect.SetValue("texCubeMap", GameManager.Instance.cubeMap);
 
             //creamos las boundingbox
             //a pesar de que las naves no tienen legs ni head, le seteamos boxes "vacias" para no tener problemas con Excepciones de null

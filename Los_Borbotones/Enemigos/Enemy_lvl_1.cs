@@ -54,6 +54,26 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             skeletalMesh.playAnimation("Caminando", true);
             skeletalMesh.AnimationEnds += this.onAnimationEnds;
+            
+            skeletalMesh.Effect = GameManager.Instance.skeletalEnvMap;
+            //skeletalMesh.Technique = "SkeletalEnvMap";
+
+            skeletalMesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+            skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(0, 1000, 0)));
+            skeletalMesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
+            skeletalMesh.Effect.SetValue("lightIntensity", 100);
+            skeletalMesh.Effect.SetValue("lightAttenuation", 0.3f);
+            skeletalMesh.Effect.SetValue("reflection", 0.35f);
+
+            //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
+            skeletalMesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
+            skeletalMesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
+            skeletalMesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+            skeletalMesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+            skeletalMesh.Effect.SetValue("materialSpecularExp", 9);
+
+            skeletalMesh.Effect.SetValue("texCubeMap", GameManager.Instance.cubeMap);
+            
             //realizamos el init() comun a todos los enemigos
             base.Init();
             //Creamos boundingBox nuevas para la cabeza, pecho y piernas del robot

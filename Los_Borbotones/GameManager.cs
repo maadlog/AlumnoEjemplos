@@ -49,6 +49,9 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public Player1 player1 = new Player1();
         public List<Enemy> enemies;
+        public Effect envMap;
+        public Effect skeletalEnvMap;
+        public CubeTexture cubeMap;
         public List<Proyectil> proyectiles;
         string alumnoDir = GuiController.Instance.AlumnoEjemplosDir;
         string exampleDir = GuiController.Instance.ExamplesMediaDir;
@@ -114,7 +117,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void Init()
         {
-            
+            Device d3dDevice = GuiController.Instance.D3dDevice;
+
             score = 0; //lleva el score del jugador
             
             killMultiTracker = 0;
@@ -130,6 +134,15 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.ModeloNave = scene2.Meshes[0];
             TgcScene scene3 = loader2.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Meshes\\proyectiles\\EnergyBall-TgcScene.xml");
             this.ModeloProyectil = scene3.Meshes[0];
+
+            //Cargar textura de CubeMap para Environment Map
+            cubeMap = TextureLoader.FromCubeFile(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
+            
+            //Cargar Shader de DynamicLights
+            envMap = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap.fx");
+            envMap.Technique = "SimpleEnvironmentMapTechnique";
+
+            skeletalEnvMap = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\" + "SkeletalEnvMap.fx");
 
             //Creo skybox
             skyBox = new CustomSkyBox();
@@ -231,7 +244,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             quadTree.createDebugQuadtreeMeshes();
 
             //seteamos niebla
-            Device d3dDevice = GuiController.Instance.D3dDevice;
             //d3dDevice.RenderState.FogTableMode = FogMode.Linear;
             d3dDevice.RenderState.FogTableMode = FogMode.Exp2;
             d3dDevice.RenderState.FogVertexMode = FogMode.None;
@@ -514,7 +526,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             foreach (Enemy enemigo in enemies)
             {
-                enemigo.Render(elapsedTime);
+                TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, enemigo.mesh.BoundingBox);
+                if (result == TgcCollisionUtils.FrustumResult.INSIDE || result == TgcCollisionUtils.FrustumResult.INTERSECT)
+                {
+                    enemigo.Render(elapsedTime);
+                }
             }
 
             proyectiles.ForEach(proyectil => proyectil.Render(elapsedTime));

@@ -9,6 +9,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
+using System.Drawing;
 
 
 namespace AlumnoEjemplos.Los_Borbotones
@@ -67,8 +68,6 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             this.posicionActual = matScale * giroInicial * matt;
             posicionAnterior = posicionActual;
-
-            //setBaseEffect();
 
         }
 
