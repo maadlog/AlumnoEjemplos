@@ -40,11 +40,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh.Effect = GameManager.Instance.envMap;
             mesh.Technique = "SimpleEnvironmentMapTechnique";
             mesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-            mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(0, 1000, 0)));
+            mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.getPosicionActual()));
             mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
             mesh.Effect.SetValue("lightIntensity", 20);
-            mesh.Effect.SetValue("lightAttenuation", 0.3f);
-            mesh.Effect.SetValue("reflection", 0.35f);
+            mesh.Effect.SetValue("lightAttenuation", 0.35f);
+            mesh.Effect.SetValue("reflection", 0.25f);
 
             //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
             mesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
@@ -75,6 +75,9 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public override void Render(float elapsedTime)
         {
+            mesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.getPosicionActual() + this.vectorDireccion * 100));
+            mesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
+
             if (!muerto)
             {
                 base.Render(elapsedTime);

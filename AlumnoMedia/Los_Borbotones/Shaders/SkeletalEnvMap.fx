@@ -167,6 +167,7 @@ struct PS_DIFFUSE_MAP
 //Input del Pixel Shader
 struct PS_INPUT_SIMPLE 
 {
+	float4 Color : COLOR0; 
 	float2 Texcoord : TEXCOORD0;
 	float3 WorldPosition : TEXCOORD4;
 	float3 WorldNormal	: TEXCOORD1;
@@ -188,7 +189,7 @@ float4 ps_simpleEnv(PS_INPUT_SIMPLE input) : COLOR0
 	float3 Ln = normalize(input.LightVec);
     
 	//Obtener texel de la textura
-	float4 texelColor = tex2D(diffuseMap, input.Texcoord);
+	float4 texelColor = tex2D(diffuseMap, input.Texcoord) * input.Color;
 	
 	//Obtener texel de CubeMap
 	float3 Vn = normalize(eyePosition.xyz - input.WorldPosition);
