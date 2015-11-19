@@ -59,18 +59,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             //skeletalMesh.Technique = "SkeletalEnvMap";
 
             skeletalMesh.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-            skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.getPosicionActual()));
+            skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(0,1400,0)));
             skeletalMesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
-            skeletalMesh.Effect.SetValue("lightIntensity", 20);
-            skeletalMesh.Effect.SetValue("lightAttenuation", 0.35f);
-            skeletalMesh.Effect.SetValue("reflection", 0.25f);
+            skeletalMesh.Effect.SetValue("lightIntensity", 0.3f);
+            skeletalMesh.Effect.SetValue("lightAttenuation", 0.3f);
+            skeletalMesh.Effect.SetValue("reflection", 0.65f);
 
             //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
             skeletalMesh.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.Black));
             skeletalMesh.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.White));
             skeletalMesh.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
             skeletalMesh.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-            skeletalMesh.Effect.SetValue("materialSpecularExp", 9);
+            skeletalMesh.Effect.SetValue("materialSpecularExp", 7);
 
             skeletalMesh.Effect.SetValue("texCubeMap", GameManager.Instance.cubeMap);
             
@@ -102,6 +102,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             SonidoMovimiento.play(true);
 
             //setBaseEffect();
+            skeletalMesh.computeNormals();
 
         }
         override
@@ -134,7 +135,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         }
         public override void Render(float elapsedTime)
         {
-            skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.getPosicionActual() + this.vectorDireccion * 100));
+            //skeletalMesh.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(this.getPosicionActual() + this.vectorDireccion * 100));
             skeletalMesh.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(CustomFpsCamera.Instance.getPosition()));
 
             //setBaseEffectValues(elapsedTime);

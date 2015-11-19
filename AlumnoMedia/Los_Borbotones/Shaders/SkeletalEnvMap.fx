@@ -197,8 +197,9 @@ float4 ps_simpleEnv(PS_INPUT_SIMPLE input) : COLOR0
     float3 reflectionColor = texCUBE(cubeMap, R).rgb;
 	
 	//Calcular intensidad de luz, con atenuacion por distancia
-	float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
-	float intensity = lightIntensity / distAtten;
+	//float distAtten = length(lightPosition.xyz - input.WorldPosition) * lightAttenuation;
+	//float intensity = lightIntensity / distAtten;
+	float intensity = lightIntensity;
 
 	//Ambient
 	float3 ambientLight = intensity * lightColor * materialAmbientColor;
