@@ -136,7 +136,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.ModeloProyectil = scene3.Meshes[0];
 
             //Cargar textura de CubeMap para Environment Map
-            cubeMap = TextureLoader.FromCubeFile(d3dDevice, GuiController.Instance.ExamplesMediaDir + "Shaders\\CubeMap.dds");
+            cubeMap = TextureLoader.FromCubeFile(d3dDevice, GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\CubemapRobot.dds");
             
             //Cargar Shader de DynamicLights
             envMap = TgcShaders.loadEffect(GuiController.Instance.ExamplesMediaDir + "Shaders\\EnvironmentMap.fx");

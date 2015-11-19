@@ -17,7 +17,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             base.Init();
             ATTACK_RANGE = 700f;
-            skeletalMesh.setColor(Color.MediumPurple);
+            skeletalMesh.setColor(Color.Silver);
         }
 
         public override void startAttack()

@@ -73,6 +73,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             skeletalMesh.Effect.SetValue("materialSpecularExp", 7);
 
             skeletalMesh.Effect.SetValue("texCubeMap", GameManager.Instance.cubeMap);
+
+            skeletalMesh.setColor(Color.Peru);
             
             //realizamos el init() comun a todos los enemigos
             base.Init();
