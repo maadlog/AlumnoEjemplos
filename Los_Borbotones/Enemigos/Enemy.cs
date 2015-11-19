@@ -54,6 +54,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix MatOrientarMuerto;
         public Vector3 direccionMuerto;
         public float tiempoMuerte;
+        public Vector2 pointerSize;
 
         //Puntero en el Minimap
         float hudScreenCovered = 0.15f;
@@ -84,6 +85,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Size tamaño = pointer.Texture.Size;
             float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered *0.20f/ tamaño.Width;
             pointer.Scaling = new Vector2(scale, scale);
+            pointerSize = new Vector2(pointer.Texture.Size.Width * pointer.Scaling.X, pointer.Texture.Size.Height * pointer.Scaling.Y);
         }
 
         public override void Update(float elapsedTime)
@@ -383,14 +385,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void updatePointer(Vector2 mapCenter,Vector2 dist)
         {
-            Vector2 tamanio = new Vector2(pointer.Texture.Size.Width * pointer.Scaling.X, pointer.Texture.Size.Height * pointer.Scaling.Y);
-            
-            Vector2 pos = new Vector2(mapCenter.X - tamanio.X / 2
+            Vector2 pos = new Vector2(mapCenter.X - pointerSize.X / 2
                 + (dist.X * 5 / 250)
-                , mapCenter.Y - tamanio.Y / 2
+                , mapCenter.Y - pointerSize.Y / 2
                 + (dist.Y * 5 / 250));
             
-            pointer.Position = pos;
+            pointer.Position = new Vector2(pos.Y,pos.X);
 
         }
 
