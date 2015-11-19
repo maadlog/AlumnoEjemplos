@@ -10,7 +10,7 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Sound;
 using System.Drawing;
-
+using TgcViewer.Utils._2D;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
@@ -55,6 +55,10 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Vector3 direccionMuerto;
         public float tiempoMuerte;
 
+        //Puntero en el Minimap
+        float hudScreenCovered = 0.15f;
+        public TgcSprite pointer;
+
         public override void Init()   
         {
             mesh.AutoTransformEnable = false;
@@ -69,6 +73,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.posicionActual = matScale * giroInicial * matt;
             posicionAnterior = posicionActual;
 
+            pointer = new TgcSprite();
+            pointer.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\EnemyPointer.png");
+            initPointer();
+
+        }
+
+        public void initPointer()
+        {
+            Size tamaño = pointer.Texture.Size;
+            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered *0.20f/ tamaño.Width;
+            pointer.Scaling = new Vector2(scale, scale);
         }
 
         public override void Update(float elapsedTime)
@@ -265,7 +280,6 @@ namespace AlumnoEjemplos.Los_Borbotones
                 
             }
             
-            
         }
 
         virtual public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
@@ -341,6 +355,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.CHEST_BOUNDINGBOX.dispose();
             this.HEADSHOT_BOUNDINGBOX.dispose();
             this.LEGS_BOUNDINGBOX.dispose();
+            this.pointer.dispose();
         }
 
         virtual public void startAttack()
@@ -363,6 +378,19 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         virtual public void sangrar(Vector3 dir, float yOffset)
         {
+
+        }
+
+        public void updatePointer(Vector2 mapCenter,Vector2 dist)
+        {
+            Vector2 tamanio = new Vector2(pointer.Texture.Size.Width * pointer.Scaling.X, pointer.Texture.Size.Height * pointer.Scaling.Y);
+            
+            Vector2 pos = new Vector2(mapCenter.X - tamanio.X / 2
+                + (dist.X * 5 / 250)
+                , mapCenter.Y - tamanio.Y / 2
+                + (dist.Y * 5 / 250));
+            
+            pointer.Position = pos;
 
         }
 
