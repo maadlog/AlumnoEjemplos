@@ -58,6 +58,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite hudWeapon;
         TgcSprite scoreSprite;
         TgcSprite mapBaseSprite;
+        TgcSprite playerPointerSprite;
         
 
         TgcText2d scoreText;
@@ -97,6 +98,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         float MAP_RADIUS = 50f;
         Vector2 mapCenter;
+        Vector2 initialPos = new Vector2(0f, 1f);
 
 
         public void Init()
@@ -157,9 +159,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             mapBaseSprite = new TgcSprite();
             
             mapBaseSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\MapBase.png");
-            
 
             initMapBase();
+
+            playerPointerSprite = new TgcSprite();
+            playerPointerSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\playerPointer.png");
+
+            initPlayerPointer();
 
             //inicializo audio
             sound = new TgcStaticSound();
@@ -272,6 +278,30 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         }
 
+        public void initPlayerPointer()
+        {
+            Size tamaño = playerPointerSprite.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered / tamaño.Width;
+            playerPointerSprite.Scaling = new Vector2(scale, scale);
+            playerPointerSprite.Position = new Vector2((ScreenWidth * 0.01f), (ScreenHeight * 0.01f));
+
+            playerPointerSprite.RotationCenter = new Vector2(tamaño.Width,tamaño.Height) * scale * 0.5f;
+            
+        }
+
+        public void updatePlayerPointer()
+        {
+
+            Vector3 currentView = CustomFpsCamera.Instance.getLookAt() - CustomFpsCamera.Instance.getPosition();
+
+            Vector2 cur = new Vector2(currentView.X, currentView.Z);
+
+            float rot = Vector2.Dot(initialPos,cur);
+
+            float arc = (float)Math.Acos(rot/cur.Length());
+
+            playerPointerSprite.Rotation = Math.Abs(arc) < (Math.PI) ? (float)Math.PI / 2 - arc : (float)Math.PI/2 + arc;// (float)Math.Acos(rot / cur.Length());// : (float)Math.PI/2 + (float)Math.Acos(rot);
+        }
 
 
         public void initScoreSprite()
@@ -436,18 +466,23 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void renderMinimap()
         {
+            updatePlayerPointer();
+
             GuiController.Instance.Drawer2D.beginDrawSprite();
             mapBaseSprite.render();
+            playerPointerSprite.render();
             GuiController.Instance.Drawer2D.endDrawSprite();
+            
             
 
             foreach(Enemy enemigo in GameManager.Instance.enemies)
             {
-                Vector3 distance = CustomFpsCamera.Instance.getPosition() - enemigo.getPosicionActual();
+                Vector3 distance = Vector3.Subtract(enemigo.getPosicionActual(),CustomFpsCamera.Instance.getPosition());// - enemigo.getPosicionActual();
                 Vector2 dist = new Vector2(distance.X, distance.Z);
                 if (Vector2.Length(dist) <= 2500)
                 {
                     enemigo.updatePointer(mapCenter,dist);
+
                     GuiController.Instance.Drawer2D.beginDrawSprite();
                     enemigo.pointer.render();
                     GuiController.Instance.Drawer2D.endDrawSprite();
