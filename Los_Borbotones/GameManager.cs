@@ -184,12 +184,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             
             vegetation = Vegetation.Meshes;
             int i;
-            Matrix scale = Matrix.Scaling(new Vector3(0.06f, 0.4f, 0.06f));
             for (i = 1; i < vegetation.Count; i++)
             {
+                float randScaleXZ = (float)random.Next(90, 110) / 100;
+                float randScaleY = (float)random.Next(75, 125) / 100;
+                Matrix scale = Matrix.Scaling(new Vector3(0.06f * randScaleXZ, 0.4f * randScaleY, 0.06f * randScaleXZ));
+
                 vegetation[i].setColor(Color.Purple);
                 vegetation[i].Effect = windShader;
                 vegetation[i].Technique = "WindTree";
+                vegetation[i].Scale = new Vector3(randScaleXZ, randScaleY, randScaleXZ);
                 Vector3 center = vegetation[i].BoundingBox.calculateBoxCenter();
                 float y;
                 interpoledHeight(center.X, center.Z, out y);
