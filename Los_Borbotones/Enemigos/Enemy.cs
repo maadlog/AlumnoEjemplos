@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void initPointer()
         {
             Size tamaño = pointer.Texture.Size;
-            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered *0.20f/ tamaño.Width;
+            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered *0.10f/ tamaño.Width;
             pointer.Scaling = new Vector2(scale, scale);
             pointerSize = new Vector2(pointer.Texture.Size.Width * pointer.Scaling.X, pointer.Texture.Size.Height * pointer.Scaling.Y);
         }

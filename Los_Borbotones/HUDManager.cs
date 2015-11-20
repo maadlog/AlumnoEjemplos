@@ -295,12 +295,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             Vector3 currentView = CustomFpsCamera.Instance.getLookAt() - CustomFpsCamera.Instance.getPosition();
 
             Vector2 cur = new Vector2(currentView.X, currentView.Z);
+            cur.Normalize();
+            float rot = (float)FastMath.Acos(Vector2.Dot(initialPos,cur));
+            float cross = Vector2.Ccw(initialPos,cur);
 
-            float rot = Vector2.Dot(initialPos,cur);
+            float arc = cross > 0 ? rot : -rot;
 
-            float arc = (float)Math.Acos(rot/cur.Length());
-
-            playerPointerSprite.Rotation = Math.Abs(arc) < (Math.PI) ? (float)Math.PI / 2 - arc : (float)Math.PI/2 + arc;// (float)Math.Acos(rot / cur.Length());// : (float)Math.PI/2 + (float)Math.Acos(rot);
+            playerPointerSprite.Rotation = (float)Math.PI / 2 - arc;
+            
         }
 
 
@@ -479,7 +481,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 Vector3 distance = Vector3.Subtract(enemigo.getPosicionActual(),CustomFpsCamera.Instance.getPosition());// - enemigo.getPosicionActual();
                 Vector2 dist = new Vector2(distance.X, distance.Z);
-                if (Vector2.Length(dist) <= 2500)
+                if (Vector2.Length(dist) <= 2500 && !enemigo.muerto)
                 {
                     enemigo.updatePointer(mapCenter,dist);
 
