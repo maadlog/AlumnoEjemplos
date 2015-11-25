@@ -62,6 +62,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         
 
         TgcText2d scoreText;
+        TgcText2d captureText;
         
         TgcText2d specialKillText;
         float TEXT_DELAY;
@@ -125,6 +126,13 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText.Text = GameManager.Instance.score.ToString();
             scoreText.Color = Color.LightBlue;
             scoreText.changeFont(new System.Drawing.Font("Arial", 20, FontStyle.Bold));
+
+            //texto para el capturas
+            captureText = new TgcText2d();
+            captureText.Text = GameManager.Instance.capturas.ToString() + "/10";
+            captureText.Color = Color.FloralWhite;
+            captureText.Position = new Point(450,0);
+            captureText.changeFont(new System.Drawing.Font("Arial", 20, FontStyle.Bold));
 
             // cargamos los sprites
             screenCovered = SMALL_SCOPE;
@@ -211,6 +219,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             
 
             scoreText.render();
+            captureText.render();
             if (TEXT_DELAY > 0) {
                 int alphaLerp = (int)(TEXT_DELAY * 255 / TEXT_DELAY_MAX);
                 specialKillText.Color = Color.FromArgb(alphaLerp, specialKillText.Color);
@@ -373,6 +382,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             scoreText.Text = GameManager.Instance.score.ToString();
         }
 
+        public void refreshCapture()
+        {
+            captureText.Text = GameManager.Instance.capturas.ToString() + "/10";
+        }
+
         public void headShot()
         {
             specialKillText.Text = "HEADSHOT!!";
@@ -434,7 +448,8 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void gameOver()
         {
-            specialKillText.Text = "GAME OVER";
+            if (GameManager.Instance.WINNER) specialKillText.Text = "WINNER";
+            else specialKillText.Text = "GAME OVER";
             specialKillTextInit();
             GAME_OVER = true;
         }
@@ -496,6 +511,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             specialKillText.dispose();
             scoreText.dispose();
+            captureText.dispose();
             normalScope.dispose();
             zoomedScope.dispose();
             ambient.dispose();

@@ -62,6 +62,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         int rand;
 
         public TgcScene Vegetation;
+        public TgcScene Tesoros;
         Effect windShader;
         CustomTerrain terrain;
         int heightmapResolution;
@@ -72,6 +73,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        private List<TgcMesh> tesoros;
         List<TgcMesh> obstaculos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
@@ -80,11 +82,14 @@ namespace AlumnoEjemplos.Los_Borbotones
         CustomSkyBox skyBox;
 
         public float score;
+        public float capturas;
 
         int killMultiTracker;
         float KILL_DELAY;
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
+        public bool WINNER;
+        bool CaptureControlled;
  
         public int MAX_ENEMIES = 20;
         public TgcMesh ModeloRobot;
@@ -120,6 +125,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             Device d3dDevice = GuiController.Instance.D3dDevice;
 
             score = 0; //lleva el score del jugador
+            capturas = 0;
+            WINNER = false;
+            CaptureControlled = false;
             
             killMultiTracker = 0;
             KILL_DELAY = 0;
@@ -201,6 +209,14 @@ namespace AlumnoEjemplos.Los_Borbotones
                 Matrix trans = Matrix.Translation(center + new Vector3(-4f, 0, 0));
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
+
+            //Creacion de la Tesoros
+            this.tesoros = new List<TgcMesh>();
+            TgcSceneLoader loader5 = new TgcSceneLoader();
+            Tesoros = loader5.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Tesoros-TgcScene.xml");
+
+            tesoros = Tesoros.Meshes;
+
             //Creacion de barriles 
             this.meshesBarril = new List<TgcMesh>();
             TgcSceneLoader loader4 = new TgcSceneLoader();
@@ -428,6 +444,28 @@ namespace AlumnoEjemplos.Los_Borbotones
                 tRightMoved2 -= 0.01f;
                 if (tLeftMoved2 <= minMoved) positiveMove2 = true;
             }
+
+            bool capture = false;
+            TgcMesh captured = null;
+            foreach (TgcMesh tesoro in tesoros)
+            {
+                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, tesoro.BoundingBox);
+                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                {
+                    capturas += 1;
+                    captured = tesoro;
+                    capture = true;
+                    HUDManager.Instance.refreshCapture();
+                }
+            }
+            if(capture) tesoros.Remove(captured);
+            if (capturas == 2) WINNER = true;
+
+            if (WINNER && !CaptureControlled)
+            {
+                CaptureControlled = true;
+                gameOver();
+            }
         }
 
         public void updateYEliminarMuertos(float elapsedTime, Enemy enemy)
@@ -519,6 +557,11 @@ namespace AlumnoEjemplos.Los_Borbotones
                 barril.Render(elapsedTime);
 
             }
+            
+            foreach (TgcMesh tesoro in tesoros)
+            {
+                tesoro.render();
+            }
 
             player1.Render(elapsedTime);
         }
@@ -569,9 +612,15 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemy.dispose();
             }
             enemies.Clear();
+            
             foreach (Pasto pasto in pastos)
             {
                 pasto.dispose();
+            }
+
+            foreach (TgcMesh tesoro in tesoros)
+            {
+                tesoro.dispose();
             }
         }
 
