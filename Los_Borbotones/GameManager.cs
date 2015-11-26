@@ -73,7 +73,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
-        private List<TgcMesh> tesoros;
+        public List<TgcMesh> tesoros;
         List<TgcMesh> obstaculos;
         public int vegetacionVisible = 0;
         public int terrenosVisibles = 0;
@@ -119,6 +119,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         float tRightMoved2 = 0;
         float maxMoved = 5;
         float minMoved = -5;
+
+        public List<TgcSprite> pointers = new List<TgcSprite>();
+        TgcTexture pointerTexture;
+        Vector2 pointerSize;
+        Vector2 pointerScaling;
+
 
         internal void Init()
         {
@@ -217,9 +223,19 @@ namespace AlumnoEjemplos.Los_Borbotones
             Tesoros = loader5.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Tesoros-TgcScene.xml");
 
             tesoros = Tesoros.Meshes;
+            pointerTexture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\TreasurePointer.png");
+            initPointer();
+            int k;
+            for (k = 1; k < tesoros.Count; k++)
+            {
+                TgcSprite pointer = new TgcSprite();
+                pointer.Texture = pointerTexture;
+                pointer.Scaling = pointerScaling;
+                pointers.Add(pointer);
+            }
 
-            //Creacion de barriles 
-            this.meshesBarril = new List<TgcMesh>();
+                //Creacion de barriles 
+                this.meshesBarril = new List<TgcMesh>();
             TgcSceneLoader loader4 = new TgcSceneLoader();
             Barriles = loader4.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Barriles2-TgcScene.xml");
             Barriles.setMeshesEnabled(true);
@@ -447,19 +463,25 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
 
             bool capture = false;
-            TgcMesh captured = null;
-            foreach (TgcMesh tesoro in tesoros)
+            int v, captured = 0;
+            for (v = 1; v < tesoros.Count; v++)
             {
-                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, tesoro.BoundingBox);
+                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, tesoros[v].BoundingBox);
                 if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                 {
                     capturas += 1;
-                    captured = tesoro;
+                    captured = v;
                     capture = true;
                     HUDManager.Instance.refreshCapture();
                 }
             }
-            if(capture) tesoros.Remove(captured);
+            if (capture)
+            {
+                tesoros[captured].dispose();
+                tesoros.RemoveAt(captured);
+                pointers[captured].dispose();
+                pointers.RemoveAt(captured);
+            }
             if (capturas == 2) WINNER = true;
 
             if (WINNER && !CaptureControlled)
@@ -622,6 +644,11 @@ namespace AlumnoEjemplos.Los_Borbotones
             foreach (TgcMesh tesoro in tesoros)
             {
                 tesoro.dispose();
+            }
+
+            foreach (TgcSprite pointer in pointers)
+            {
+                pointer.dispose();
             }
         }
 
@@ -1059,6 +1086,26 @@ namespace AlumnoEjemplos.Los_Borbotones
             pastosCoords.Add(new Vector3(x + 5, y, z + 12));
             pastosCoords.Add(new Vector3(x + 22, y, z + 12));
             pastosCoords.Add(new Vector3(x + 27, y, z));
+        }
+
+        public void initPointer()
+        {
+            float hudScreenCovered = 0.15f;
+            Size tamaño = pointerTexture.Size;
+            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered * 0.10f / tamaño.Width;
+            pointerScaling = new Vector2(scale, scale);
+            pointerSize = new Vector2(pointerTexture.Size.Width * pointerScaling.X, pointerTexture.Size.Height * pointerScaling.Y);
+        }
+
+        public void updatePointer(Vector2 mapCenter, Vector2 dist, int index)
+        {
+            Vector2 pos = new Vector2(mapCenter.X - pointerSize.X / 2
+                + (dist.X * 5 / 250)
+                , mapCenter.Y - pointerSize.Y / 2
+                + (dist.Y * 5 / 250));
+
+            pointers[index].Position = new Vector2(pos.Y, pos.X);
+
         }
     }
 }

@@ -535,6 +535,21 @@ namespace AlumnoEjemplos.Los_Borbotones
                     GuiController.Instance.Drawer2D.endDrawSprite();
                 }
             }
+
+            int t;
+            for (t = 1; t < GameManager.Instance.tesoros.Count; t++)
+            {
+                Vector3 distance = Vector3.Subtract(GameManager.Instance.tesoros[t].Position, CustomFpsCamera.Instance.getPosition());
+                Vector2 dist = new Vector2(distance.X, distance.Z);
+                if (Vector2.Length(dist) <= 2500)
+                {
+                    GameManager.Instance.updatePointer(mapCenter, dist, t);
+
+                    GuiController.Instance.Drawer2D.beginDrawSprite();
+                    GameManager.Instance.pointers[t].render();
+                    GuiController.Instance.Drawer2D.endDrawSprite();
+                }
+            }
         }
 
         public void close()
