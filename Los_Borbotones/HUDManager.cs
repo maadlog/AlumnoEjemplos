@@ -560,6 +560,20 @@ namespace AlumnoEjemplos.Los_Borbotones
             normalScope.dispose();
             zoomedScope.dispose();
             ambient.dispose();
+
+
+            HudFront.dispose();
+            cross.dispose();
+            healthSprite.dispose();
+            hudWeapon.dispose();
+            scoreSprite.dispose();
+            mapBaseSprite.dispose();
+            playerPointerSprite.dispose();
+            highScoreSprite.dispose();
+            sound.dispose();
+            launcherTexture.dispose();
+            sniperTexture.dispose();
+            
         }
     }
 }
