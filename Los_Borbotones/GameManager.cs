@@ -62,6 +62,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         int rand;
 
         public TgcScene Vegetation;
+        public TgcScene Arbustos;
         public TgcScene Tesoros;
         Effect windShader;
         CustomTerrain terrain;
@@ -73,6 +74,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float currentScaleXZ = 100f;
         float currentScaleY = 8f;
         private List<TgcMesh> vegetation;
+        private List<TgcMesh> arbustos;
         public List<TgcMesh> tesoros;
         List<TgcMesh> obstaculos;
         public int vegetacionVisible = 0;
@@ -89,7 +91,6 @@ namespace AlumnoEjemplos.Los_Borbotones
         float KILL_DELAY_MAX = 5;
         public bool GAME_OVER;
         public bool WINNER;
-        bool CaptureControlled;
  
         public int MAX_ENEMIES = 20;
         public TgcMesh ModeloRobot;
@@ -133,7 +134,6 @@ namespace AlumnoEjemplos.Los_Borbotones
             score = 0; //lleva el score del jugador
             capturas = 0;
             WINNER = false;
-            CaptureControlled = false;
 
 
             killMultiTracker = 0;
@@ -217,6 +217,13 @@ namespace AlumnoEjemplos.Los_Borbotones
                 vegetation[i].BoundingBox.transform(scale * trans);
             }
 
+            //Creacion de la Arbustos
+            this.arbustos = new List<TgcMesh>();
+            TgcSceneLoader loader6 = new TgcSceneLoader();
+            Arbustos = loader6.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Arbustos-TgcScene.xml");
+
+            arbustos = Arbustos.Meshes;
+
             //Creacion de la Tesoros
             this.tesoros = new List<TgcMesh>();
             TgcSceneLoader loader5 = new TgcSceneLoader();
@@ -275,6 +282,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             obstaculos = new List<TgcMesh>();
             obstaculos.AddRange(vegetation);
             obstaculos.AddRange(meshesBarril);
+            obstaculos.AddRange(arbustos);
 
             quadTree = new Quadtree();
             quadTree.create(obstaculos, Vegetation.BoundingBox);
@@ -469,7 +477,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, tesoros[v].BoundingBox);
                 if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                 {
-                    capturas += 1;
+                    capturas++;
                     captured = v;
                     capture = true;
                     HUDManager.Instance.refreshCapture();
@@ -484,11 +492,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             if (capturas == 2) WINNER = true;
 
-            if (WINNER && !CaptureControlled)
-            {
-                CaptureControlled = true;
-                gameOver();
-            }
+            if (WINNER) gameWinner();
         }
 
         public void updateYEliminarMuertos(float elapsedTime, Enemy enemy)
@@ -524,6 +528,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             skyBox.render();
             quadTree.render(frustum, drawBoundingBoxes, "ArbolBosque");
+            quadTree.render(frustum, drawBoundingBoxes, "ArbustoComplejo");
 
             if (drawBoundingBoxes) { CustomFpsCamera.Instance.boundingBox.render(); }
 
@@ -634,6 +639,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             cubeMap.Dispose();
 
             Vegetation.disposeAll();
+            Arbustos.disposeAll();
             terrain.dispose();
             player1.dispose();
 
@@ -697,6 +703,15 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemy.SonidoMovimiento.stop();
             }
             GAME_OVER = false;
+        }
+
+        public void gameWinner()
+        {
+            HUDManager.Instance.gameWinner();
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.SonidoMovimiento.stop();
+            }
         }
 
         public Vector3 fireLauncher()

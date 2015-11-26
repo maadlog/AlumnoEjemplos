@@ -130,7 +130,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             //texto para el capturas
             captureText = new TgcText2d();
-            captureText.Text = GameManager.Instance.capturas.ToString() + "/10";
+            captureText.Text = GameManager.Instance.capturas.ToString() + "/11";
             captureText.Color = Color.FloralWhite;
             captureText.Position = new Point(450,0);
             captureText.changeFont(new System.Drawing.Font("Arial", 20, FontStyle.Bold));
@@ -413,7 +413,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void refreshCapture()
         {
-            captureText.Text = GameManager.Instance.capturas.ToString() + "/10";
+            captureText.Text = GameManager.Instance.capturas.ToString() + "/11";
         }
 
         public void headShot()
@@ -478,9 +478,18 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void gameOver()
         {
             if (reachedHighScore) GuiController.Instance.UserVars.setValue("High Score", GameManager.Instance.score);
-            if (GameManager.Instance.WINNER) specialKillText.Text = "WINNER";
-            else specialKillText.Text = "GAME OVER";
+            specialKillText.Text = "GAME OVER";
             specialKillTextInit();
+            GAME_OVER = true;
+        }
+
+        public void gameWinner()
+        {
+            if (reachedHighScore) GuiController.Instance.UserVars.setValue("High Score", GameManager.Instance.score);
+            specialKillText.Text = "WINNER";
+            specialKillTextInit();
+            GameManager.Instance.capturas++;
+            GameManager.Instance.WINNER = false;
             GAME_OVER = true;
         }
 
