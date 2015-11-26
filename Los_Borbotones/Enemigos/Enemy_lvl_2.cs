@@ -82,6 +82,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 base.Render(elapsedTime);
             }
+        }
+
+        public override void renderParticulas(float elapsedTime)
+        {
             if (muerto)
             {
                 explo.render(elapsedTime);

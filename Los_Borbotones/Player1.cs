@@ -17,7 +17,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    public class Player1:GameObject
+    public class Player1 : GameObject
     {
         public Weapon weapon;
         public Sniper sniper;
@@ -39,7 +39,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         float tiredTime;
         float MAX_SPRINT_TIME = 5;
         float TIRED_TIME = 4.5f;
-        
+
         float ZOOM_DELAY = 0;
         float MAX_ZOOM_DELAY = 0.2f;
 
@@ -78,7 +78,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //Por default la camara FPS viene desactivada
             GuiController.Instance.RotCamera.Enable = false;
             CustomFpsCamera.Instance.Enable = true;
-            GuiController.Instance.CurrentCamera =  CustomFpsCamera.Instance;
+            GuiController.Instance.CurrentCamera = CustomFpsCamera.Instance;
             //Configurar posicion y hacia donde se mira
             CustomFpsCamera.Instance.setCamera(new Vector3(0, 930, 0), new Vector3(-400, 930, 0));
 
@@ -95,19 +95,19 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public override void Update(float elapsedTime)
         {
-           /* string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
-            switch (weap)
-            {
-                case "Sniper":
-                    weapon = sniper;
-                    break;
+            /* string weap = (string)GuiController.Instance.Modifiers.getValue("Arma");
+             switch (weap)
+             {
+                 case "Sniper":
+                     weapon = sniper;
+                     break;
                 
-                case "Rocket Launcher":
-                    weapon = launcher;
-                    break;
-            }*/
+                 case "Rocket Launcher":
+                     weapon = launcher;
+                     break;
+             }*/
 
-            
+
 
             //update de la pos del mesh auxiliar
             meshAuxiliarParaSonido.Position = CustomFpsCamera.Instance.eye;
@@ -144,13 +144,14 @@ namespace AlumnoEjemplos.Los_Borbotones
                     walkSound.stop();
                     running = true;
                 }
-                if (sprintTime > MAX_SPRINT_TIME) 
+                if (sprintTime > MAX_SPRINT_TIME)
                 {
                     breathSound.play(true);
-                    tiredTime = 0; 
+                    tiredTime = 0;
                 }
             }
-            else { 
+            else
+            {
                 CustomFpsCamera.Instance.MovementSpeed = CustomFpsCamera.DEFAULT_MOVEMENT_SPEED;
                 tiredTime += elapsedTime;
                 if (running)
@@ -159,10 +160,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                     walkSound.play(true);
                     running = false;
                 }
-                if (tiredTime > TIRED_TIME && sprintTime != 0) 
+                if (tiredTime > TIRED_TIME && sprintTime != 0)
                 {
                     breathSound.stop();
-                    sprintTime = 0; 
+                    sprintTime = 0;
                 }
             }
 
@@ -180,7 +181,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             GameManager.Instance.interpoledHeight(prevEye.X, prevEye.Z, out yAnterior);
             double diferenciaPotenciada = Math.Pow((yActual - yAnterior) / (movspeed * elapsedTime), 2);
 
-            if ( diferenciaPotenciada >= intensidadMaximaEscalable)
+            if (diferenciaPotenciada >= intensidadMaximaEscalable)
             {
                 CustomFpsCamera.Instance.eye = prevEye;
                 CustomFpsCamera.Instance.reconstructViewMatrix(false);
@@ -193,26 +194,29 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             foreach (TgcMesh obstaculo in obstaculos)
             {
-                Vector3 dirMov = CustomFpsCamera.Instance.eye - prevEye;
-
-                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
-                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                if (!obstaculo.Name.StartsWith("ArbustoComplejo"))
                 {
-                    CustomFpsCamera.Instance.eye = prevEye + new Vector3(dirMov.X, 0, 0);
-                    CustomFpsCamera.Instance.reconstructViewMatrix(false);
-                    TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
-                    if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
-                    {
-                        CustomFpsCamera.Instance.eye = prevEye + new Vector3(0, 0, dirMov.Z);
-                        CustomFpsCamera.Instance.reconstructViewMatrix(false);
+                    Vector3 dirMov = CustomFpsCamera.Instance.eye - prevEye;
 
-                        TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
-                        if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    {
+                        CustomFpsCamera.Instance.eye = prevEye + new Vector3(dirMov.X, 0, 0);
+                        CustomFpsCamera.Instance.reconstructViewMatrix(false);
+                        TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                        if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
                         {
-                            CustomFpsCamera.Instance.eye = prevEye;
+                            CustomFpsCamera.Instance.eye = prevEye + new Vector3(0, 0, dirMov.Z);
+                            CustomFpsCamera.Instance.reconstructViewMatrix(false);
+
+                            TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(CustomFpsCamera.Instance.boundingBox, obstaculo.BoundingBox);
+                            if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                            {
+                                CustomFpsCamera.Instance.eye = prevEye;
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
             }
 
@@ -221,7 +225,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 walkSound.stop();
                 runSound.stop();
             }
-            else if(!running) { walkSound.play(true); }
+            else if (!running) { walkSound.play(true); }
 
             prevEye = CustomFpsCamera.Instance.eye;
         }
@@ -230,7 +234,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             weapon.Render(elapsedTime);
             if (launcher.explosion != null) { launcher.explosion.render(elapsedTime); }
-           // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
+            // GuiController.Instance.D3dDevice.Transform.World = Matrix.Identity;
         }
 
         public override void dispose()
@@ -244,12 +248,12 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void recibirAtaque(int damage)
         {
-            
+
             hitSound.play(false);
             weapon.FIRE_DELAY = 0.5f;
             vida -= damage;
             HUDManager.Instance.refreshHealth();
-            if(vida <= 0)
+            if (vida <= 0)
             {
                 GameManager.Instance.gameOver();
             }

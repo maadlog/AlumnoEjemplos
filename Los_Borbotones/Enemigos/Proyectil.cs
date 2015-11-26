@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.Los_Borbotones
 {
-    public class Proyectil:GameObject
+    public class Proyectil : GameObject
     {
         public Matrix shooterMatrix;
         float MOVEMENT_SPEED = 4000f;
@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             posActual = scale * shooterMatrix;
             mesh.Transform = posActual;
             Vector3 vectorPosActual = new Vector3(posActual.M41, posActual.M42, posActual.M43);
-            vectorDireccion = (vectorPosActual -CustomFpsCamera.Instance.Position);
+            vectorDireccion = (vectorPosActual - CustomFpsCamera.Instance.Position);
             vectorDireccion.Normalize();
         }
 
@@ -63,11 +63,14 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             foreach (TgcMesh obstaculo in obstaculos)
             {
-                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
-                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                if (!obstaculo.Name.StartsWith("ArbustoComplejo"))
                 {
-                    GameManager.Instance.eliminarProyectil(this);
-                    return;
+                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    {
+                        GameManager.Instance.eliminarProyectil(this);
+                        return;
+                    }
                 }
             }
             effect.SetValue("time", time);

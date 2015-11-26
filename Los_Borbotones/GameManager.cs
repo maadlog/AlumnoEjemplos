@@ -201,8 +201,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             int i;
             for (i = 1; i < vegetation.Count; i++)
             {
-                float randScaleXZ = (float)random.Next(90, 110) / 100;
-                float randScaleY = (float)random.Next(75, 125) / 100;
+                float randScaleXZ = (float)random.Next(85, 115) / 100;
+                float randScaleY = (float)random.Next(70, 130) / 100;
                 Matrix scale = Matrix.Scaling(new Vector3(0.06f * randScaleXZ, 0.4f * randScaleY, 0.06f * randScaleXZ));
 
                 vegetation[i].setColor(Color.Purple);
@@ -223,6 +223,17 @@ namespace AlumnoEjemplos.Los_Borbotones
             Arbustos = loader6.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Mapas\\Arbustos-TgcScene.xml");
 
             arbustos = Arbustos.Meshes;
+
+            for (i = 1; i < arbustos.Count; i++)
+            {
+                float randScaleXZ = (float)random.Next(90, 110) / 100;
+                float randScaleY = (float)random.Next(75, 125) / 100;
+
+                arbustos[i].Effect = windShader;
+                arbustos[i].Technique = "WindTree";
+                arbustos[i].setColor(Color.DarkViolet);
+                arbustos[i].Scale = new Vector3(randScaleXZ, randScaleY, randScaleXZ);
+            }
 
             //Creacion de la Tesoros
             this.tesoros = new List<TgcMesh>();
@@ -572,6 +583,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             //dibujamos todos los enemigos
             foreach (Enemy enemigo in enemies)
             {
+                enemigo.renderParticulas(elapsedTime);
                 TgcCollisionUtils.FrustumResult result = TgcCollisionUtils.classifyFrustumAABB(frustum, enemigo.mesh.BoundingBox);
                 if (result == TgcCollisionUtils.FrustumResult.INSIDE || result == TgcCollisionUtils.FrustumResult.INTERSECT)
                 {

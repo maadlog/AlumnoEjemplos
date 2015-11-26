@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public float ATTACK_DELAY = 3f;
         public float attackDelay = 0;
         public float MOVEMENT_SPEED = 175f;
-        public float SPAWN_RADIUS= 5000f;
+        public float SPAWN_RADIUS = 5000f;
         public Matrix posicionActual;
         public Vector3 Normal;
         public float MESH_SCALE;
@@ -33,7 +33,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Vector3 vectorDireccionRotacion;
         Device d3dDevice = GuiController.Instance.D3dDevice;
         public float SPAWN_HEIGHT = 0;
-        public  Matrix giroInicial;
+        public Matrix giroInicial;
         public TgcBoundingBox HEADSHOT_BOUNDINGBOX;
         public TgcBoundingBox CHEST_BOUNDINGBOX;
         public TgcBoundingBox LEGS_BOUNDINGBOX;
@@ -48,8 +48,8 @@ namespace AlumnoEjemplos.Los_Borbotones
         public Matrix posicionAnteriorLegs;
         public Vector3 vectorDireccionAnterior;
         public Vector3 vectorDireccionRotacionAnterior;
-        public Tgc3dSound SonidoMovimiento ;
-        public float tiempoDesdeMuerto ;
+        public Tgc3dSound SonidoMovimiento;
+        public float tiempoDesdeMuerto;
         public Boolean muerto = false;
         public Matrix MatOrientarMuerto;
         public Vector3 direccionMuerto;
@@ -60,12 +60,12 @@ namespace AlumnoEjemplos.Los_Borbotones
         float hudScreenCovered = 0.15f;
         public TgcSprite pointer;
 
-        public override void Init()   
+        public override void Init()
         {
             mesh.AutoTransformEnable = false;
             //seteamos la posicion inicial del enemigo
             mesh.Transform = CreatorMatrixPosition();
-            
+
             mesh.BoundingBox.transform(CreatorMatrixPosition());
 
             Matrix matt = Matrix.Translation(new Vector3(mesh.Transform.M41, mesh.Transform.M42, mesh.Transform.M43));
@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         public void initPointer()
         {
             Size tamaño = pointer.Texture.Size;
-            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered *0.10f/ tamaño.Width;
+            float scale = GuiController.Instance.D3dDevice.PresentationParameters.BackBufferWidth * hudScreenCovered * 0.10f / tamaño.Width;
             pointer.Scaling = new Vector2(scale, scale);
             pointerSize = new Vector2(pointer.Texture.Size.Width * pointer.Scaling.X, pointer.Texture.Size.Height * pointer.Scaling.Y);
         }
@@ -99,8 +99,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             if (!attacking && !muerto)
             {
                 vectorDireccion = (CustomFpsCamera.Instance.Position - vectorPosActual);
-                if (vectorDireccion.Length() <= ATTACK_RANGE && attackDelay <= 0) 
-                { 
+                if (vectorDireccion.Length() <= ATTACK_RANGE && attackDelay <= 0)
+                {
                     startAttack();
                 }
                 vectorDireccionRotacion = new Vector3(vectorDireccion.X, 0, vectorDireccion.Z);
@@ -112,7 +112,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             }
             //realizamos el movimiento del enemigo
             updateMovementMatrix(elapsedTime, vectorDireccion);
-            
+
             //Colision con otros enemigos
             foreach (Enemy enemy in GameManager.Instance.enemies)
             {
@@ -136,7 +136,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                         enemy.posicionActualHeadshot = enemy.posicionAnteriorHeadshot;
                         enemy.posicionActualChest = enemy.posicionAnteriorChest;
                         enemy.posicionActualLegs = enemy.posicionAnteriorLegs;
-                        enemy.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
+                        enemy.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
                     }
                     else
                     {
@@ -144,52 +144,55 @@ namespace AlumnoEjemplos.Los_Borbotones
                         this.posicionActualHeadshot = this.posicionAnteriorHeadshot;
                         this.posicionActualChest = this.posicionAnteriorChest;
                         this.posicionActualLegs = this.posicionAnteriorLegs;
-                        this.updateMovementMatrix(elapsedTime, new Vector3(0,0,0));
+                        this.updateMovementMatrix(elapsedTime, new Vector3(0, 0, 0));
                     }
                 }
             }
-            
+
             //Colision de enemigos con vegetacion, hecho para que no se queden trabados con o sin "ayuda" del player
             List<TgcMesh> obstaculos = new List<TgcMesh>();
             obstaculos = GameManager.Instance.quadTree.findMeshesToCollide(mesh.BoundingBox);
 
             foreach (TgcMesh obstaculo in obstaculos)
             {
-                TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
-                if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                if (!obstaculo.Name.StartsWith("ArbustoComplejo"))
                 {
-                    posicionActual = posicionAnterior;
-                    posicionActualHeadshot = posicionAnteriorHeadshot;
-                    posicionActualChest = posicionAnteriorChest;
-                    posicionActualLegs = posicionAnteriorLegs;
-                    vectorDireccionRotacion = vectorDireccionRotacionAnterior;
-                    vectorDireccion = vectorDireccionAnterior;
-                    Vector3 dirX = new Vector3(vectorDireccion.X, 0, 0);
-                    dirX.Normalize();
-                    updateMovementMatrix(elapsedTime, dirX);
-
-                    TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
-                    if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                    TgcCollisionUtils.BoxBoxResult result = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                    if (result == TgcCollisionUtils.BoxBoxResult.Adentro || result == TgcCollisionUtils.BoxBoxResult.Atravesando)
                     {
                         posicionActual = posicionAnterior;
                         posicionActualHeadshot = posicionAnteriorHeadshot;
                         posicionActualChest = posicionAnteriorChest;
                         posicionActualLegs = posicionAnteriorLegs;
-                        Vector3 dirZ = new Vector3(0, 0, vectorDireccion.Z);
-                        dirZ.Normalize();
-                        updateMovementMatrix(elapsedTime, dirZ);
+                        vectorDireccionRotacion = vectorDireccionRotacionAnterior;
+                        vectorDireccion = vectorDireccionAnterior;
+                        Vector3 dirX = new Vector3(vectorDireccion.X, 0, 0);
+                        dirX.Normalize();
+                        updateMovementMatrix(elapsedTime, dirX);
 
-                        TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
-                        if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                        TgcCollisionUtils.BoxBoxResult resultX = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                        if (resultX == TgcCollisionUtils.BoxBoxResult.Adentro || resultX == TgcCollisionUtils.BoxBoxResult.Atravesando)
                         {
                             posicionActual = posicionAnterior;
                             posicionActualHeadshot = posicionAnteriorHeadshot;
                             posicionActualChest = posicionAnteriorChest;
                             posicionActualLegs = posicionAnteriorLegs;
-                            
+                            Vector3 dirZ = new Vector3(0, 0, vectorDireccion.Z);
+                            dirZ.Normalize();
+                            updateMovementMatrix(elapsedTime, dirZ);
+
+                            TgcCollisionUtils.BoxBoxResult resultZ = TgcCollisionUtils.classifyBoxBox(mesh.BoundingBox, obstaculo.BoundingBox);
+                            if (resultZ == TgcCollisionUtils.BoxBoxResult.Adentro || resultZ == TgcCollisionUtils.BoxBoxResult.Atravesando)
+                            {
+                                posicionActual = posicionAnterior;
+                                posicionActualHeadshot = posicionAnteriorHeadshot;
+                                posicionActualChest = posicionAnteriorChest;
+                                posicionActualLegs = posicionAnteriorLegs;
+
+                            }
                         }
+                        break;
                     }
-                    break;
                 }
             }
 
@@ -223,7 +226,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             m_mWorld.M13 = v.Z;
             m_mWorld.M14 = 0;
 
-            m_mWorld.M21 = 0; 
+            m_mWorld.M21 = 0;
             m_mWorld.M22 = 1;
             m_mWorld.M23 = 0;
             m_mWorld.M24 = 0;
@@ -259,7 +262,7 @@ namespace AlumnoEjemplos.Los_Borbotones
             Matrix Resultado = escala * radio * giro * fpsPos;
 
             Normal = (CustomFpsCamera.Instance.Position - (new Vector3(Resultado.M41, 0, Resultado.M43)));
-           
+
             Normal.Normalize();
             return Resultado;
 
@@ -279,16 +282,18 @@ namespace AlumnoEjemplos.Los_Borbotones
                 this.HEADSHOT_BOUNDINGBOX.render();
                 this.CHEST_BOUNDINGBOX.render();
                 this.LEGS_BOUNDINGBOX.render();
-                
+
             }
-            
+
         }
+
+        virtual public void renderParticulas(float elapsedTime){}
 
         virtual public void updateMovementMatrix(float elapsedTime, Vector3 Direccion)
         {
             //nivelamos al enemigo con el terreno
             Vector3 vectorPosActual = new Vector3(posicionActual.M41, posicionActual.M42, posicionActual.M43);
-            
+
             float y;
             GameManager.Instance.interpoledHeight(vectorPosActual.X, vectorPosActual.Z, out y);
             float headOffsetY = posicionActualHeadshot.M42 - posicionActual.M42;
@@ -305,18 +310,18 @@ namespace AlumnoEjemplos.Los_Borbotones
             //hacemos que sigan al player
             Traslacion = Matrix.Translation(Direccion * MOVEMENT_SPEED * elapsedTime);
             Matrix transform = MatOrientarObjeto * posicionActual * Traslacion;
-           /* if (muerto)
-            {
-                Matrix tr = Matrix.Translation(new Vector3(0, 40, 0));
-                vectorDireccionRotacion.Normalize();
-                Vector3 Direc = Vector3.Cross(this.vectorDireccion, new Vector3(0, 1, 0));
-                Direc.Normalize();
-                Matrix ro = Matrix.RotationX((float)Math.PI);
-                Matrix po = Matrix.Translation(posicionActual.M41, posicionActual.M42, posicionActual.M43);
-                transform = ro * po;
-            }*/
+            /* if (muerto)
+             {
+                 Matrix tr = Matrix.Translation(new Vector3(0, 40, 0));
+                 vectorDireccionRotacion.Normalize();
+                 Vector3 Direc = Vector3.Cross(this.vectorDireccion, new Vector3(0, 1, 0));
+                 Direc.Normalize();
+                 Matrix ro = Matrix.RotationX((float)Math.PI);
+                 Matrix po = Matrix.Translation(posicionActual.M41, posicionActual.M42, posicionActual.M43);
+                 transform = ro * po;
+             }*/
 
-            
+
             //aplicamos las transformaciones
             this.mesh.Transform = transform;
 
@@ -333,9 +338,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             this.LEGS_BOUNDINGBOX.transform(MatOrientarObjeto * posicionActualLegs * Traslacion);
             posicionActualLegs = posicionActualLegs * Traslacion;
 
-           
+
         }
-        
+
         public virtual void setBaseEffect()
         {
             mesh.Effect = TgcShaders.loadEffect(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Shaders\\enemyBasic.fx");
@@ -348,8 +353,9 @@ namespace AlumnoEjemplos.Los_Borbotones
             mesh.Effect.SetValue("g_time", elapsedTime);
         }
 
-        override public void dispose(){
-           
+        override public void dispose()
+        {
+
             this.SonidoMovimiento.play(false);
             this.SonidoMovimiento.stop();
             this.SonidoMovimiento.dispose();
@@ -369,7 +375,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         {
             GameManager.Instance.player1.recibirAtaque(attackDamage);
             GameManager.Instance.eliminarEnemigo(this);
-            
+
         }
         public Vector3 getPosicionActual()
         {
@@ -383,24 +389,23 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         }
 
-        public void updatePointer(Vector2 mapCenter,Vector2 dist)
+        public void updatePointer(Vector2 mapCenter, Vector2 dist)
         {
             Vector2 pos = new Vector2(mapCenter.X - pointerSize.X / 2
                 + (dist.X * 5 / 250)
                 , mapCenter.Y - pointerSize.Y / 2
                 + (dist.Y * 5 / 250));
-            
-            pointer.Position = new Vector2(pos.Y,pos.X);
+
+            pointer.Position = new Vector2(pos.Y, pos.X);
 
         }
 
         virtual public void morirse()
-
         {
             muerto = true;
             tiempoDesdeMuerto = 0f;
             MOVEMENT_SPEED = 0;
-            MatOrientarMuerto = MatOrientarObjeto ;
+            MatOrientarMuerto = MatOrientarObjeto;
             direccionMuerto = vectorDireccionRotacion;
             SonidoMovimiento.stop();
         }

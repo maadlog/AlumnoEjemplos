@@ -157,6 +157,10 @@ namespace AlumnoEjemplos.Los_Borbotones
                 this.LEGS_BOUNDINGBOX.render();
             }
 
+        }
+
+        public override void renderParticulas(float elapsedTime)
+        {
             if (blood != null)
             {
                 SystemState_Particulas.Instance.SetRenderState();
