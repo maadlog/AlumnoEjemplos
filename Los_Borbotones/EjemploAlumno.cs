@@ -77,6 +77,10 @@ Presionar L para capturar el mouse. WASD para moverse. L-Shift Para correr. Clic
             //Cargar valor en UserVar
             GuiController.Instance.UserVars.setValue("N Sub-terrenos Visibles", 0);
 
+            GuiController.Instance.UserVars.addVar("High Score", 0f);
+
+            //GuiController.Instance.UserVars.setValue("High Score", 0);
+
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addInterval("RenderFlux", new string[] {
                 "RenderAll",

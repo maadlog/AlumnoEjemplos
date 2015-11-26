@@ -128,7 +128,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             capturas = 0;
             WINNER = false;
             CaptureControlled = false;
-            
+
+
             killMultiTracker = 0;
             KILL_DELAY = 0;
             SPAWN_TIME_COUNTER = 0f;

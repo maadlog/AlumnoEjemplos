@@ -59,7 +59,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         TgcSprite scoreSprite;
         TgcSprite mapBaseSprite;
         TgcSprite playerPointerSprite;
-        
+        TgcSprite highScoreSprite;
 
         TgcText2d scoreText;
         TgcText2d captureText;
@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         string monsterSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/monsterkill.wav";
         string massacreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/massacre.wav";
         string deniedSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/denied.wav";
-
+        string highScoreSoundDir = GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Audio/Anunciador/highScore.wav"; 
 
         float SMALL_SCOPE = 0.10f; // 20% of screen covered by scope (X-Axis)
         float BIGASS_SCOPE = 2f;  // 200%
@@ -101,6 +101,7 @@ namespace AlumnoEjemplos.Los_Borbotones
         Vector2 mapCenter;
         Vector2 initialPos = new Vector2(0f, 1f);
 
+        public bool reachedHighScore = false;
 
         public void Init()
         {
@@ -175,6 +176,11 @@ namespace AlumnoEjemplos.Los_Borbotones
 
             initPlayerPointer();
 
+            highScoreSprite = new TgcSprite();
+            highScoreSprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "Los_Borbotones\\Sprites\\highScore.png");
+
+            initHighScore();
+
             //inicializo audio
             sound = new TgcStaticSound();
             ambient = new TgcStaticSound();
@@ -182,7 +188,8 @@ namespace AlumnoEjemplos.Los_Borbotones
             ambient.loadSound(dir, -1500);
             ambient.play(true);
 
-            
+            reachedHighScore = false;
+
         }
 
         public void Update(float elapsedTime)
@@ -208,7 +215,10 @@ namespace AlumnoEjemplos.Los_Borbotones
             HudFront.render();
             scoreSprite.render();
             hudWeapon.render();
+            if (reachedHighScore) highScoreSprite.render();
+
             cross.render();
+            
 
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
@@ -273,6 +283,16 @@ namespace AlumnoEjemplos.Los_Borbotones
             HudFront.Position = new Vector2((ScreenWidth * 0.01f) , ScreenHeight - (ScreenHeight * 0.01f) - (tamaño.Height * scale));
 
         }
+
+        public void initHighScore()
+        {
+            Size tamaño = highScoreSprite.Texture.Size;
+            float scale = ScreenWidth * hudScreenCovered/5f / tamaño.Width;
+            highScoreSprite.Scaling = new Vector2(scale, scale);
+            highScoreSprite.Position = new Vector2((ScreenWidth * 0.5f) - (tamaño.Width * scale / 2), tamaño.Height * scale); 
+
+        }
+
 
         public void initMapBase()
         {
@@ -379,7 +399,16 @@ namespace AlumnoEjemplos.Los_Borbotones
         //SCORE
         public void refreshScore()
         {
-            scoreText.Text = GameManager.Instance.score.ToString();
+            float score = GameManager.Instance.score;
+            float highScore = (float)GuiController.Instance.UserVars.getValue("High Score");
+            scoreText.Text = score.ToString();
+            if(!reachedHighScore && score > highScore)
+            {
+                playSound(highScoreSoundDir);
+                reachedHighScore = true;
+            }
+
+
         }
 
         public void refreshCapture()
@@ -448,6 +477,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         public void gameOver()
         {
+            if (reachedHighScore) GuiController.Instance.UserVars.setValue("High Score", GameManager.Instance.score);
             if (GameManager.Instance.WINNER) specialKillText.Text = "WINNER";
             else specialKillText.Text = "GAME OVER";
             specialKillTextInit();

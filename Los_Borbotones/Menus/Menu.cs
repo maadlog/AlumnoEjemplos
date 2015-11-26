@@ -54,13 +54,13 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
             {
                 selectedText++;
             }
-            if (selectedText == texts.Length)
+            if (selectedText == texts.Length -1)
             {
                 selectedText = 0;
             }
             else if(selectedText < 0)
             {
-                selectedText = texts.Length -1;
+                selectedText = texts.Length -2;
             }
 
             //size = texts[selectedText].Size;

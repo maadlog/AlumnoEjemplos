@@ -17,6 +17,7 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
         TgcText2d playText;
         TgcText2d helpText;
         TgcText2d creditsText;
+        TgcText2d highScoreText;
 
         internal override void Init()
         {
@@ -46,7 +47,13 @@ namespace AlumnoEjemplos.Los_Borbotones.Menus
             creditsText.Position = new Point(100 * widthRatio / 100, 500 * heightRatio / 100);
             creditsText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
 
-            texts = new TgcText2d[3] { playText, helpText, creditsText };
+            highScoreText = new TgcText2d();
+            highScoreText.Text = "High Score: " + GuiController.Instance.UserVars.getValue("High Score");
+            highScoreText.Color = Color.Crimson;
+            highScoreText.Position = new Point(375 * widthRatio / 100, 500 * heightRatio / 100);
+            highScoreText.changeFont(new System.Drawing.Font("TimesNewRoman", 25, FontStyle.Bold));
+
+            texts = new TgcText2d[4] { playText, helpText, creditsText, highScoreText };
             base.Init();
         }
 
