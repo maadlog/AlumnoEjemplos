@@ -624,6 +624,15 @@ namespace AlumnoEjemplos.Los_Borbotones
 
         internal void close()
         {
+            ModeloRobot.dispose();
+            ModeloNave.dispose();
+            ModeloProyectil.dispose();
+
+            windShader.Dispose();
+            envMap.Dispose();
+            skeletalEnvMap.Dispose();
+            cubeMap.Dispose();
+
             Vegetation.disposeAll();
             terrain.dispose();
             player1.dispose();
@@ -635,6 +644,19 @@ namespace AlumnoEjemplos.Los_Borbotones
                 enemy.dispose();
             }
             enemies.Clear();
+
+            foreach(Proyectil proy in proyectiles)
+            {
+                proy.dispose();
+            }
+            proyectiles.Clear();
+
+            foreach (Barril barril in barriles)
+            {
+                barril.dispose();
+            }
+            barriles.Clear();
+            Barriles.disposeAll();
             
             foreach (Pasto pasto in pastos)
             {
@@ -645,11 +667,14 @@ namespace AlumnoEjemplos.Los_Borbotones
             {
                 tesoro.dispose();
             }
+            tesoros.Clear();
+            Tesoros.disposeAll();
 
             foreach (TgcSprite pointer in pointers)
             {
                 pointer.dispose();
             }
+            pointers.Clear();
         }
 
         void compareAssign(float n, float max)
