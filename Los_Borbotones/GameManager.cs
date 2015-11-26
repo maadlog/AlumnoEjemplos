@@ -231,7 +231,7 @@ namespace AlumnoEjemplos.Los_Borbotones
 
                 arbustos[i].Effect = windShader;
                 arbustos[i].Technique = "WindTree";
-                arbustos[i].setColor(Color.DarkViolet);
+                arbustos[i].setColor(Color.DarkOrange);
                 arbustos[i].Scale = new Vector3(randScaleXZ, randScaleY, randScaleXZ);
             }
 
