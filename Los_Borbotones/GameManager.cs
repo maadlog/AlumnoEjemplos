@@ -490,7 +490,7 @@ namespace AlumnoEjemplos.Los_Borbotones
                 pointers[captured].dispose();
                 pointers.RemoveAt(captured);
             }
-            if (capturas == 2) WINNER = true;
+            if (capturas == 11) WINNER = true;
 
             if (WINNER) gameWinner();
         }
