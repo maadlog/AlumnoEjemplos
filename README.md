@@ -8,3 +8,4 @@ Juego realizado con propositos academicos con el framework TGCViewer y DirectX9
 * [Santiago Foster](https://github.com/SantiagoFoster)
 * [Diego Quiros](https://github.com/DiegoQuirosUTN)
 * [Gonzalo Furci](https://github.com/Gonzalo-F)
+* [Martin Loguancio](https://github.com/maadlog)
